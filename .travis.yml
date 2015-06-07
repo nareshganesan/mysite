@@ -16,9 +16,9 @@ install:
 before_script:
 #   - "pep8 --exclude=migrations --ignore=E501,E225 src"
 #   - pyflakes -x W src
-  - mysql -e 'create database mysite;'
-  - mysql -e "CREATE USER 'naresh'@'localhost' IDENTIFIED BY ’naresh';"
-  - mysql -e "GRANT ALL ON mysite.test TO 'naresh'@'localhost';"
+  - mysql -e "create database IF NOT EXISTS mysite;" -uroot
+  - mysql -e "CREATE USER 'naresh'@'localhost' IDENTIFIED BY ’naresh';" -uroot
+  - mysql -e "GRANT ALL ON mysite.test TO 'naresh'@'localhost';" -uroot
   - python manage.py syncdb --noinput
 script:
   - python manage.py test
