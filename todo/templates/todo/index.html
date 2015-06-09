@@ -1,0 +1,11 @@
+<h2> Todo List</h2>
+{% if latest_todo_list %}
+    <table>
+        <tr><td> Name </td> <td> Description</td> <td>Priority</td></tr>
+        {% for todo in latest_todo_list %}
+            <tr><td> {{ todo.name }} </td> <td> {{ todo.description }}</td> <td>{{ todo.priority }}</td></tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p> Yay!!! No todo's. </p>
+{% endif %}
