@@ -3,7 +3,7 @@
     <table>
         <tr><td> Name </td> <td> Description</td> <td>Priority</td></tr>
         {% for todo in latest_todo_list %}
-            <tr><td> {{ todo.name }} </td> <td> {{ todo.description }}</td> <td>{{ todo.priority }}</td></tr>
+            <tr><td><a href="{% url 'detail' todo.id %}">{{ todo.name }} </a> </td> <td> <a href="{% url 'detail' todo.id %}"> {{ todo.description }}</a></td> <td><a href="{% url 'detail' todo.id %}">{{ todo.priority }}</a></td></tr>
         {% endfor %}
     </table>
 {% else %}

@@ -1,0 +1,10 @@
+<h2>Todo Detail View</h2>
+
+{% if todo %}
+    <table>
+        <tr><td> Name </td> <td> Description</td> <td>Priority</td></tr>
+            <tr><td>{{ todo.name }} </td> <td> {{ todo.description }}</td> <td>{{ todo.priority }}</td></tr>
+    </table>
+{% endif %}
+
+<a href="{%url 'index' %}">Home</a>
