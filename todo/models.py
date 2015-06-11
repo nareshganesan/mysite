@@ -17,7 +17,7 @@ class Todo(models.Model):
     address = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
-		return self.name + " priority : "+self.priority
+		return unicode(self.name + " priority : "+self.priority)
 
 
 class CompletedTodo(models.Model):
@@ -32,7 +32,7 @@ class CompletedTodo(models.Model):
     address = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
-		return self.name + " priority : "+self.priority
+		return unicode(self.name + " priority : "+self.priority)
 
 
 class DeletedTodo(models.Model):
@@ -47,4 +47,4 @@ class DeletedTodo(models.Model):
     address = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
-		return self.name + " priority : "+self.priority
+		return unicode(self.name + " priority : "+self.priority)

@@ -2,8 +2,28 @@
 
 {% if todo %}
     <table>
-        <tr><td> Name </td> <td> Description</td> <td>Priority</td></tr>
-            <tr><td>{{ todo.name }} </td> <td> {{ todo.description }}</td> <td>{{ todo.priority }}</td></tr>
+        <tr>
+            <td> Name </td>
+            <td> Description </td>
+            <td> Priority </td>
+            <td> notes </td>
+            <td> tags </td>
+            <td> project </td>
+            <td> email </td>
+            <td> phone_number </td>
+            <td> address </td>
+        </tr>
+        <tr>
+            <td>{{ todo.name }} </td>
+            <td> {{ todo.description }}</td>
+            <td>{{ todo.priority }}</td>
+            <td>{{ todo.notes }}</td>
+            <td>{{ todo.tags }}</td>
+            <td>{{ todo.project }}</td>
+            <td>{{ todo.email }}</td>
+            <td>{{ todo.phone_number }}</td>
+            <td>{{ todo.address }}</td>
+        </tr>
     </table>
 {% endif %}
 
