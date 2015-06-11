@@ -69,18 +69,16 @@ $( "input[name^='quickedit']" ).click(function() {
              "border-width":"1px",
              "border-style":"solid"}
       )
-//      alert(todoPriority);
-//      create_post(todoId,todoName, todoPriority);
 });
 
 $( "input[name^='quicksave']" ).click(function() {
-      console.log("form submitted!")  // sanity check
+//      console.log("form submitted!")  // sanity check
       var btnSub = this.id;
       var todoId = btnSub.substring(9)
       var todoName = $("#todoname"+todoId).val()
       var todoPriority = $("#todopriority"+todoId).val()
 //      alert(todoPriority);
-      create_post(todoId,todoName, todoPriority);
+      quickedit_todo(todoId,todoName, todoPriority);
       $("#todoname"+todoId).prop("readonly" , true)
       $("#todopriority"+todoId).prop("readonly" , true)
       $("#todoname"+todoId).css({"border-color": "#000000",
@@ -96,18 +94,18 @@ $( "input[name^='quicksave']" ).click(function() {
 });
 
 
-// Submit post on submit
-$('#post-form').on('submit', function(event){
+// Todo Quick edit post on submit
+$('#quickedit-todo-form').on('submit', function(event){
     event.preventDefault();
 
 });
 
-// AJAX for posting
-function create_post(todoId,todoName, todoPriority) {
-    console.log("create post is working!") // sanity check
-    console.log(todoId+ "  "+todoName+"  " +todoPriority)
+// AJAX for Todo Quick edit
+function quickedit_todo(todoId,todoName, todoPriority) {
+    /*console.log("create post is working!") // sanity check
+    console.log(todoId+ "  "+todoName+"  " +todoPriority)*/
      $.ajax({
-        url : "create_post/", // the endpoint
+        url : "quickedit_todo/", // the endpoint
         type : "POST", // http method
         // data sent with the post request
         data : { 'todoid' : todoId, 'todoname' : todoName , 'todopriority' : todoPriority},
@@ -115,18 +113,18 @@ function create_post(todoId,todoName, todoPriority) {
         // handle a successful response
         success : function(json) {
             $('#todoname'+todoId).val(''); // remove the value from the input
-            //            var returnedData = JSON.parse(json);
+            //  var returnedData = JSON.parse(json);
             $("#todoname"+todoId).val(json.todoname)
             $("#todopriority"+todoId).val(json.todopriority)
-//            console.log(json.todoid); // log the returned json to the console
-            console.log("success"); // another sanity check
+           /* console.log(json.todoid); // log the returned json to the console
+            console.log("success"); // another sanity check*/
         },
 
         // handle a non-successful response
         error : function(xhr,errmsg,err) {
             $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
                 " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
-            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+//            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
         }
     });
 };

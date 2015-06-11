@@ -6,14 +6,14 @@
 
 <h2> Todo List</h2>
 {% if latest_todo_list %}
-    <form method="POST" id="post-form">
+    <form method="POST" id="quickedit-todo-form">
         {% csrf_token %}
         <table>
             <tr>
                 <td> Name </td>
                 <td>Priority</td>
                 <td>Quick Edit</td>
-                <td>Details page</td>
+                <td>Todo page</td>
             </tr>
             {% for todo in latest_todo_list %}
 

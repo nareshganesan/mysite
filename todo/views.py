@@ -21,7 +21,7 @@ def tododetail(request, todo_id):
         raise Http404("Todo does not exist.")
     return render(request, 'todo/detail.html', {'todo': todo})
 
-def create_post(request):
+def quickedit_todo(request):
     if request.method == 'POST':
         todoid = request.POST.get('todoid')
         todoname = request.POST.get('todoname')
