@@ -20,12 +20,10 @@
                 <tr>
                     <td>
                         <!--<a href="{% url 'detail' todo.id %}">{{ todo.name }} </a>-->
-                        <label for="todoname{{ todo.id }}"><a href="{% url 'detail' todo.id %}">{{ todo.name }}</a></label>
                         <input type="text" name="todoname" id="todoname{{ todo.id }}" value="{{ todo.name }}" readonly>
                     </td>
                     <td>
                         <!--<a href="{% url 'detail' todo.id %}">{{ todo.priority }}</a>-->
-                        <label for="todopriority{{ todo.id }}"><a href="{% url 'detail' todo.id %}">{{ todo.priority }}</a></label>
                         <input type="text" name="todopriority" id="todopriority{{ todo.id }}" value="{{ todo.priority }}" readonly>
                     </td>
                     <td>

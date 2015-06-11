@@ -1,8 +1,6 @@
 
 $(window).load(function() {
   // Handler for .load() called.
-  // Hide all the input box on load. To display label as link to todo-details page.
-  $( "input[name^='todo']" ).css({"display": "none"})
 
 });
 // This function gets cookie with a given name
@@ -59,13 +57,6 @@ $.ajaxSetup({
 $( "input[name^='quickedit']" ).click(function() {
       var btnSub = this.id;
       var todoId = btnSub.substring(9)
-      var todoNameLabel = 'label[for=todoname'+todoId+']'
-      var todoPriorityLabel = 'label[for=todopriority'+todoId+']'
-
-      $(todoNameLabel).hide();
-      $(todoPriorityLabel).hide();
-       $("#todoname"+todoId).css("display" , "")
-      $("#todopriority"+todoId).css("display" , "")
       $("#quickedit"+todoId).css('display', 'none');
       $("#quicksave"+todoId).css('display' , 'inline-block')
       $("#todoname"+todoId).prop("readonly" , false)
@@ -78,8 +69,6 @@ $( "input[name^='quickedit']" ).click(function() {
              "border-width":"1px",
              "border-style":"solid"}
       )
-      var todoName = $("#todoname"+todoId).val()
-      var todoPriority = $("#todopriority"+todoId).val()
 //      alert(todoPriority);
 //      create_post(todoId,todoName, todoPriority);
 });
@@ -92,12 +81,6 @@ $( "input[name^='quicksave']" ).click(function() {
       var todoPriority = $("#todopriority"+todoId).val()
 //      alert(todoPriority);
       create_post(todoId,todoName, todoPriority);
-      var todoNameLabel = 'label[for=todoname'+todoId+']'
-      var todoPriorityLabel = 'label[for=todopriority'+todoId+']'
-      $(todoNameLabel).show();
-      $(todoPriorityLabel).show();
-       $("#todoname"+todoId).css("display" , "none")
-      $("#todopriority"+todoId).css("display" , "none")
       $("#todoname"+todoId).prop("readonly" , true)
       $("#todopriority"+todoId).prop("readonly" , true)
       $("#todoname"+todoId).css({"border-color": "#000000",
@@ -133,10 +116,6 @@ function create_post(todoId,todoName, todoPriority) {
         success : function(json) {
             $('#todoname'+todoId).val(''); // remove the value from the input
             //            var returnedData = JSON.parse(json);
-            var todoNameLabel = 'label[for=todoname'+todoId+']'
-            var todoPriorityLabel = 'label[for=todopriority'+todoId+']'
-            $(todoNameLabel+" > a").text(json.todoname)
-            $(todoPriorityLabel+" > a").text(json.todopriority)
             $("#todoname"+todoId).val(json.todoname)
             $("#todopriority"+todoId).val(json.todopriority)
 //            console.log(json.todoid); // log the returned json to the console
