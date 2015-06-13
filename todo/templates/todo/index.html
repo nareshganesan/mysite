@@ -1,10 +1,12 @@
 {% load staticfiles %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'todo/css/todo.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'todo/css/w2ui-1.4.2.min.css' %}" />
 
 <body  >
 
 <h2> Todo List</h2>
+<p><a href="{% url 'todo:add_todo' %}" >Add Todo</a></p>
 {% if latest_todo_list %}
     <form method="POST" id="quickedit-todo-form">
         {% csrf_token %}
@@ -14,20 +16,21 @@
                 <td>Priority</td>
                 <td>Quick Edit</td>
                 <td>Todo page</td>
+                <td>Delete Todo </td>
             </tr>
             {% for todo in latest_todo_list %}
 
                 <tr>
                     <td>
-                        <!--<a href="{% url 'detail' todo.id %}">{{ todo.name }} </a>-->
+                        <!--<a href="{% url 'todo:detail' todo.id %}">{{ todo.name }} </a>-->
                         <input type="text" name="todoname" id="todoname{{ todo.id }}" value="{{ todo.name }}" readonly>
                     </td>
                     <td>
-                        <!--<a href="{% url 'detail' todo.id %}">{{ todo.priority }}</a>-->
+                        <!--<a href="{% url 'todo:detail' todo.id %}">{{ todo.priority }}</a>-->
                         <input type="text" name="todopriority" id="todopriority{{ todo.id }}" value="{{ todo.priority }}" readonly>
                     </td>
                     <td>
-                        <!--<a href="{% url 'detail' todo.id %}" id="quickedit{{todo.id}}" name="quickedit{{todo.id}}" > edit</a>-->
+                        <!--<a href="{% url 'todo:detail' todo.id %}" id="quickedit{{todo.id}}" name="quickedit{{todo.id}}" > edit</a>-->
 
                             <!--<div class="fieldWrapper" id="the_post">-->
                                 <!--quickedit{{todo.id}}-->
@@ -37,8 +40,12 @@
                             <input type="submit" id="quicksave{{todo.id}}" name="quicksave{{todo.id}}" value="update" class="tiny button" style="display:none;">
                     </td>
                     <td>
-                        <a href="{% url 'detail' todo.id %}">view </a>
+                        <a href="{% url 'todo:detail' todo.id %}">view </a>
                     </td>
+                     <td>
+                        <a href="{% url 'todo:delete_todo' todo.id %}">delete</a>
+                    </td>
+
                 </tr>
             {% endfor %}
         </table>
@@ -48,11 +55,24 @@
     <p> Yay!!! No todo's. </p>
 {% endif %}
 
+<div id="add_todo_div">
+
+</div>
+
+<!--<div id="overlay-inAbox" class="overlay">-->
+    <!--<div class="toolbar"><a class="close" href="#"><span>x</span> close</a></div>-->
+    <!--<div class="wrapper">-->
+        <!--<object type="text/html" data="{% url 'todo:add_todo' %}" width="500px" height="350px" ></object>-->
+
+    <!--</div>-->
+<!--</div>-->
 
 
 
 <script type="text/javascript" src="{% static 'todo/js/jquery-1.11.3.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'todo/js/w2ui-1.4.2.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'todo/js/todo.js' %}"></script>
+
 
 
 </body>
