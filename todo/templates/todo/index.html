@@ -6,7 +6,10 @@
 <body  >
 
 <h2> Todo List</h2>
-<p><a href="{% url 'todo:add_todo' %}" >Add Todo</a></p>
+<p>
+    <a href="{% url 'todo:add_todo' %}" >Add Todo</a> <br/>
+    <a href="/accounts/logout" >Logout</a>
+</p>
 {% if latest_todo_list %}
     <form method="POST" id="quickedit-todo-form">
         {% csrf_token %}

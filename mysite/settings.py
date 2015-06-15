@@ -82,7 +82,7 @@ DATABASES = {
         'NAME': 'mysite',
         'USER': 'travis',
         'PASSWORD': '',
-        'HOST':'127.0.0.1',
+        'HOST': '127.0.0.1',
         'PORT': '3306',
         }
 }
@@ -106,3 +106,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/dev/howto/static-files/
 
 STATIC_URL = '/static/'
+
+LOGIN_URL = '/accounts/login'
+
+LOGOUT_URL = '/accounts/logout/'
+
+
+TEMPLATE_DIRS = (
+    'todo/templates',
+    'polls/templates',
+)

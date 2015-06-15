@@ -17,7 +17,16 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
+    # Home page for the site.
+    url(r'^$', 'todo.views.home', name='home'),
+    # login page for the site.
+    url(r'^accounts/login', 'django.contrib.auth.views.login'),
+    # logout page for the site.
+    url(r'^accounts/logout', 'django.contrib.auth.views.logout'),
+    # admin module provided by django.
     url(r'^admin/', include(admin.site.urls)),
+    # Polls app created from the django book tutorial.
     url(r'^polls/', include('polls.urls', namespace="polls")),
+    # Todo app created on my own for learning purpose.
     url(r'^todo/', include('todo.urls', namespace="todo")),
 ]
