@@ -16,7 +16,7 @@ from .models import Todo
 @login_required
 def todolist(request):
     'list view of the todo app.'
-    latest_todo_list = Todo.objects.order_by('-priority')[:10]
+    latest_todo_list = Todo.objects.filter(user=request.user.id).order_by('-priority')[:10]
     context = {'latest_todo_list': latest_todo_list}
     return render(request, 'todo/index.html', context)
 
@@ -36,9 +36,11 @@ def quickedit_todo(request):
         todoid = request.POST.get('todoid')
         todoname = request.POST.get('todoname')
         todopriority = request.POST.get('todopriority')
+        todouser = request.user
+        print todouser
         response_data = {}
 
-        t = Todo(id=todoid, name=todoname, priority=todopriority)
+        t = Todo(id=todoid, name=todoname, priority=todopriority, user_id=todouser)
         t.save()
 
         response_data['result'] = 'Update Todo successful!'
@@ -69,7 +71,9 @@ def create_todo(request):
         # Have we been provided with a valid form?
         if form.is_valid():
             # Save the new todo to the database.
-            form.save(commit=True)
+            newtodo = form.save(commit=True)
+            newtodo.user = request.user
+            newtodo.save()
 
             # Now call the index() view.
             # The user will be shown the homepage.

@@ -22,7 +22,7 @@ urlpatterns = [
     # login page for the site.
     url(r'^accounts/login', 'django.contrib.auth.views.login'),
     # logout page for the site.
-    url(r'^accounts/logout', 'django.contrib.auth.views.logout'),
+    url(r'^accounts/logout', 'django.contrib.auth.views.logout', {'next_page': '/accounts/login/?next=/'}),
     # admin module provided by django.
     url(r'^admin/', include(admin.site.urls)),
     # Polls app created from the django book tutorial.

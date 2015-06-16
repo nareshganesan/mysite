@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'polls',
     'todo',
+    # 'south',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -57,7 +58,7 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -84,9 +85,15 @@ DATABASES = {
         'PASSWORD': '',
         'HOST': '127.0.0.1',
         'PORT': '3306',
+        # 'STORAGE_ENGINE': 'INNODB'
         }
 }
 
+# Django - DB Migration Tool called South
+# South Migration adapter settings got MySQL
+# SOUTH_DATABASE_ADAPTERS = {
+#     'default': "south.db.mysql"
+# }
 
 # Internationalization
 # https://docs.djangoproject.com/en/dev/topics/i18n/
