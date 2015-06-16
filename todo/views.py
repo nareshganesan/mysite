@@ -16,7 +16,7 @@ from .models import Todo
 @login_required
 def todolist(request):
     'list view of the todo app.'
-    latest_todo_list = Todo.objects.filter(user=request.user.id).order_by('-priority')[:10]
+    latest_todo_list = Todo.objects.filter(user=request.user.id).order_by('-priority')[:25]
     context = {'latest_todo_list': latest_todo_list}
     return render(request, 'todo/index.html', context)
 

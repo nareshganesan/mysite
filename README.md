@@ -1,4 +1,12 @@
 # mysite
-Sample Django website
+Django website
 
-I'm just trying to complete the Django tutorial given in Django Docs (1.9).
+It Contains Polls app tutorial and a Todo App in progress.
+
+Todo App: (User specific)
+    create a todo
+    update a todo
+    delete a todo
+    mark as completed. (in progress)
+    list view (in progress)
+    Filter Todo list by priority, tags, project etc. (in progress)
