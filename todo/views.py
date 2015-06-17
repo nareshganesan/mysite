@@ -17,7 +17,11 @@ from .models import Todo
 def todolist(request):
     'list view of the todo app.'
     latest_todo_list = Todo.objects.filter(user=request.user.id).order_by('-priority')[:25]
-    context = {'latest_todo_list': latest_todo_list}
+    prioritylist = Todo.PRIORITY_LIST
+    context = {
+        'latest_todo_list': latest_todo_list,
+        'prioritylist': prioritylist,
+    }
     return render(request, 'todo/index.html', context)
 
 @login_required
@@ -36,7 +40,7 @@ def quickedit_todo(request):
         todoid = request.POST.get('todoid')
         todoname = request.POST.get('todoname')
         todopriority = request.POST.get('todopriority')
-        todouser = request.user
+        todouser = request.user.id
         print todouser
         response_data = {}
 
@@ -57,6 +61,36 @@ def quickedit_todo(request):
             json.dumps({"No Data": "Are you kidding me !! :)"}),
             content_type="application/json"
         )
+
+@login_required
+def quickadd_todo(request):
+    'add an individual todo.'
+    if request.method == 'POST':
+        todoname = request.POST.get('todoname')
+        todopriority = request.POST.get('todopriority')
+        tododescription = request.POST.get('tododescription')
+        todouser = request.user.id
+        print todouser
+        response_data = {}
+
+        t = Todo(name=todoname, priority=todopriority, user_id=todouser, description=tododescription)
+        t.save()
+
+        response_data['result'] = 'Update Todo successful!'
+        response_data['todoid'] = t.pk
+        response_data['todoname'] = t.name
+        response_data['todopriority'] = t.priority
+
+        return HttpResponse(
+            json.dumps(response_data),
+            content_type="application/json"
+        )
+    else:
+        return HttpResponse(
+            json.dumps({"No Data": "Are you kidding me !! :)"}),
+            content_type="application/json"
+        )
+
 
 @login_required
 def create_todo(request):

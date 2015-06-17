@@ -61,6 +61,11 @@ $( "input[name^='quickedit']" ).click(function() {
       $("#quicksave"+todoId).css('display' , 'inline-block')
       $("#todoname"+todoId).prop("readonly" , false)
       $("#todopriority"+todoId).prop("readonly" , false)
+      $("#todopriority"+todoId).css('display' , 'none')
+//      alert($("#priority_dropdown"+todoId).val())
+      $("#priority_dropdown"+todoId).val($("#todopriority"+todoId).val())
+      $("#priority_dropdown"+todoId).css('display', '');
+//      alert($("#priority_dropdown"+todoId).val())
       $("#todoname"+todoId).css({"border-color": "#84C8FA",
              "border-width":"1px",
              "border-style":"solid"}
@@ -76,11 +81,14 @@ $( "input[name^='quicksave']" ).click(function() {
       var btnSub = this.id;
       var todoId = btnSub.substring(9)
       var todoName = $("#todoname"+todoId).val()
-      var todoPriority = $("#todopriority"+todoId).val()
+      var todoPriority = $("#priority_dropdown"+todoId).val()
 //      alert(todoPriority);
       quickedit_todo(todoId,todoName, todoPriority);
       $("#todoname"+todoId).prop("readonly" , true)
       $("#todopriority"+todoId).prop("readonly" , true)
+      $("#todopriority"+todoId).css('display' , '')
+      $("#todopriority"+todoId).val($("#priority_dropdown"+todoId).val())
+      $("#priority_dropdown"+todoId).css('display', 'none');
       $("#todoname"+todoId).css({"border-color": "#bbb",
              "border-width":"1px",
              "border-style":"solid"}
@@ -127,74 +135,50 @@ function quickedit_todo(todoId,todoName, todoPriority) {
 //            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
         }
     });
-};
-
-
-function openOverlay(olEl) {
-    $oLay = $(olEl);
-
-    if ($('#overlay-shade').length == 0)
-        $('body').prepend('<div id="overlay-shade"></div>');
-
-    $('#overlay-shade').fadeTo(300, 0.6, function() {
-        var props = {
-            oLayWidth       : $oLay.width(),
-            scrTop          : $(window).scrollTop(),
-            viewPortWidth   : $(window).width()
-        };
-
-        var leftPos = (props.viewPortWidth - props.oLayWidth) / 2;
-
-        $oLay
-            .css({
-                display : 'block',
-                opacity : 0,
-                top : '-=300',
-                left : leftPos+'px'
-            })
-            .animate({
-                top : props.scrTop + 40,
-                opacity : 1
-            }, 600);
-    });
 }
 
-function closeOverlay() {
-    $('.overlay').animate({
-        top : '-=300',
-        opacity : 0
-    }, 400, function() {
-        $('#overlay-shade').fadeOut(300);
-//        console.log("1"+$(this).val());
-//        console.log("2"+$(this).text());
-//        console.log("3"+$(this).html());
-//        console.log("4"+$(this).value);
-        $(this).css('display','none');
-    });
+function showAddTodoDiv() {
+    $("#add_todo_div").css('display', 'block');
 }
 
-$('#overlay-shade, .overlay a').on('click', function(e) {
-    closeOverlay();
-    if ($(this).attr('href') == '#') e.preventDefault();
-});
-
-
-// Usage
-$('#overlaylaunch-inAbox').click(function(e) {
-   openOverlay('#overlay-inAbox');
-   e.preventDefault();
-});
-
-$('#addTodoSubmit').on('click',function(e) {
-   $('.overlay').css('display','none');
-   console.log("3a"+$('.overlay').html());
-   e.preventDefault();
-
-});
-
-
-$('#addTodoSubmit').on('submit', function(event){
-    console.log("3b"+$('.overlay').html());
+$('#todo_form').on('submit', function(event){
     event.preventDefault();
 
 });
+
+$( "#addTodoSubmit" ).click(function() {
+    var todoname = $("#id_name").val()
+    var tododescription = $("#id_description").val()
+    var todopriority = $("#id_priority").val()
+//    alert(todoname+" : "+tododescription +" : "+todopriority)
+
+    $.ajax({
+        url : "quickadd_todo/", // the endpoint
+        type : "POST", // http method
+        // data sent with the post request
+        data : {
+        'todoname' : todoname ,
+        'todopriority' : todopriority,
+        'tododescription' : tododescription
+        },
+
+        // handle a successful response
+        success : function(json) {
+            //  var returnedData = JSON.parse(json);
+            /*$("#todoname"+todoId).val(json.todoname)
+            $("#todopriority"+todoId).val(json.todopriority)*/
+            console.log(json.todoid +" : "+json.todoname); // log the returned json to the console
+            console.log("success"); // another sanity check
+            location.reload();
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+//            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+        }
+    });
+});
+
+

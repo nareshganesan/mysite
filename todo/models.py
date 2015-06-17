@@ -1,5 +1,5 @@
 import datetime
-
+from django.forms import forms
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -7,9 +7,19 @@ from django.utils import timezone
 # Create your models here.
 
 class Todo(models.Model):
+    HIGH = 'high'
+    LOW = 'low'
+    MEDIUM = 'medium'
+    SEVERE = 'severe'
+    PRIORITY_LIST = (
+        (HIGH, 'high'),
+        (MEDIUM, 'medium'),
+        (LOW, 'low'),
+        (SEVERE, 'severe'),
+    )
     name = models.CharField(max_length=200, blank=False)
     description = models.CharField(max_length=400, blank=True)
-    priority = models.CharField(max_length=8, blank=False)
+    priority = models.CharField(max_length=6, choices = PRIORITY_LIST, default = LOW,  blank=False)
     notes = models.CharField(max_length=300, blank=True)
     tags = models.CharField(max_length=100, blank=True)
     project = models.CharField(max_length=200, blank=True)
@@ -23,9 +33,19 @@ class Todo(models.Model):
 
 
 class CompletedTodo(models.Model):
+    HIGH = 'high'
+    LOW = 'low'
+    MEDIUM = 'medium'
+    SEVERE = 'severe'
+    PRIORITY_LIST = (
+        (HIGH, 'high'),
+        (MEDIUM, 'medium'),
+        (LOW, 'low'),
+        (SEVERE, 'severe'),
+    )
     name = models.CharField(max_length=200, blank=False)
     description = models.CharField(max_length=400, blank=True)
-    priority = models.CharField(max_length=8, blank=False)
+    priority = models.CharField(max_length=6, choices = PRIORITY_LIST, default = LOW,  blank=False)
     notes = models.CharField(max_length=300, blank=True)
     tags = models.CharField(max_length=100, blank=True)
     project = models.CharField(max_length=200, blank=True)
@@ -39,9 +59,19 @@ class CompletedTodo(models.Model):
 
 
 class DeletedTodo(models.Model):
+    HIGH = 'high'
+    LOW = 'low'
+    MEDIUM = 'medium'
+    SEVERE = 'severe'
+    PRIORITY_LIST = (
+        (HIGH, 'high'),
+        (MEDIUM, 'medium'),
+        (LOW, 'low'),
+        (SEVERE, 'severe'),
+    )
     name = models.CharField(max_length=200, blank=False)
     description = models.CharField(max_length=400, blank=True)
-    priority = models.CharField(max_length=8, blank=False)
+    priority = models.CharField(max_length=6, choices = PRIORITY_LIST, default = LOW,  blank=False)
     notes = models.CharField(max_length=300, blank=True)
     tags = models.CharField(max_length=100, blank=True)
     project = models.CharField(max_length=200, blank=True)

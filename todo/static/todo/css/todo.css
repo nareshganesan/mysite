@@ -6,8 +6,8 @@ input[name^="todo"], input[name^="todo"]:focus, input[name^="todo"]:hover {
 
 #add_todo_div {
     display: none;
-    width: 400px;
-    height: 200px;
+/*    width: 400px;
+    height: 200px;*/
     overflow: auto
 }
 

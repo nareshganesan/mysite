@@ -1,13 +1,13 @@
 {% load staticfiles %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'todo/css/todo.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'todo/css/w2ui-1.4.2.min.css' %}" />
 
 <body  >
 
 <h2> Todo List</h2>
 <p>
-    <a href="{% url 'todo:add_todo' %}" >Add Todo</a> <br/>
+    <!--<a href="{% url 'todo:add_todo' %}" >Add Todo</a> <br/>-->
+    <a href="#" onclick="showAddTodoDiv()" >Add Todo</a> <br/>
     <a href="/accounts/logout" >Logout</a>
 </p>
 {% if latest_todo_list %}
@@ -31,6 +31,12 @@
                     <td>
                         <!--<a href="{% url 'todo:detail' todo.id %}">{{ todo.priority }}</a>-->
                         <input type="text" name="todopriority" id="todopriority{{ todo.id }}" value="{{ todo.priority }}" readonly>
+                         <select id="priority_dropdown{{ todo.id }}" style="display: none;">
+                                <option value="high" >High</option>
+                                <option value="medium" >Medium</option>
+                                <option value="low" >Low</option>
+                             <option value="severe" >Severe</option>
+                         </select>
                     </td>
                     <td>
                         <!--<a href="{% url 'todo:detail' todo.id %}" id="quickedit{{todo.id}}" name="quickedit{{todo.id}}" > edit</a>-->
@@ -58,7 +64,69 @@
     <p> Yay!!! No todo's. </p>
 {% endif %}
 
-<div id="add_todo_div">
+<div id="add_todo_div" style="display:none; ">
+
+    <h1>Add a Todo</h1>
+
+    <a href="{%url 'todo:index' %}">Todo-Home</a> <br/> <br/>
+
+    <form id="todo_form" method="post" action="{% url 'todo:quickadd_todo' %}">
+             {% csrf_token %}
+            <input type='hidden' name='csrfmiddlewaretoken' value='zNObDx5f6dVAFz88rmxWRrJ7n1f5vJup' />
+                <div style="display:inline-block;"> Please enter the Todo name. </div>
+                <div style="display:inline-block;"> <input id="id_name" maxlength="200" name="name" type="text" /> </div>
+            <br>
+
+
+                <div style="display:inline-block;">Optional Todo description..</div>
+                <div style="display:inline-block;"><input id="id_description" maxlength="400" name="description" type="text" /></div>
+            <br>
+
+
+                <div style="display:inline-block;">Please enter the Todo priority.</div>
+                <div style="display:inline-block;">
+                    <select id="id_priority" style="display: ;">
+                                <option value="high" >High</option>
+                                <option value="medium" >Medium</option>
+                                <option value="low" >Low</option>
+                             <option value="severe" >Severe</option>
+                         </select>
+                </div>
+            <br>
+
+
+                <div style="display:inline-block;">Optional Todo notes.</div>
+                <div style="display:inline-block;"><input id="id_notes" maxlength="300" name="notes" type="text" /></div>
+            <br>
+
+
+                <div style="display:inline-block;">Optional Todo tags.</div>
+                <div style="display:inline-block;"><input id="id_tags" maxlength="100" name="tags" type="text" /></div>
+            <br>
+
+
+                <div style="display:inline-block;">Optional Todo project.</div>
+                <div style="display:inline-block;"><input id="id_project" maxlength="200" name="project" type="text" /></div>
+            <br>
+
+
+                <div style="display:inline-block;">Optional Todo email.</div>
+                <div style="display:inline-block;"><input id="id_email" maxlength="100" name="email" type="text" /></div>
+            <br>
+
+
+                <div style="display:inline-block;">Optional Todo phone number.</div>
+                <div style="display:inline-block;"><input id="id_phone_number" maxlength="12" name="phone_number" type="text" /></div>
+            <br>
+
+
+                <div style="display:inline-block;">Optional Todo address.</div>
+                <div style="display:inline-block;"><input id="id_address" maxlength="200" name="address" type="text" /></div>
+            <br>
+
+
+            <input type="submit" id="addTodoSubmit" name="submit" value="Add Todo" />
+        </form>
 
 </div>
 
@@ -73,7 +141,6 @@
 
 
 <script type="text/javascript" src="{% static 'todo/js/jquery-1.11.3.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'todo/js/w2ui-1.4.2.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'todo/js/todo.js' %}"></script>
 
 
