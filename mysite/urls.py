@@ -19,6 +19,10 @@ from django.contrib import admin
 urlpatterns = [
     # Home page for the site.
     url(r'^$', 'todo.views.home', name='home'),
+    # registration page for the site.
+    url(r'^accounts/register', 'views.register'),
+    # registration page for the site.
+    url(r'^accounts/profile', 'todo.views.home'),
     # login page for the site.
     url(r'^accounts/login', 'django.contrib.auth.views.login'),
     # logout page for the site.

@@ -5,12 +5,25 @@
     <title>Home Page</title>
 </head>
 <body>
-
+    <!--
+        This is the Homepage for the whole project. It is home to multiple projects.
+        Please do not delete it or be sure about the changes if you do so.
+    -->
     <h2> This is my home page. </h2>
-    <ol>
-        <li> <a href="{% url 'polls:index' %}"> Polls </a></li>
-        <li> <a href="{% url 'todo:index' %}"> Todo </a></li>
-    </ol>
+
+    {% if user.is_authenticated %}
+        <a href="/accounts/logout">logout</a>
+        <ol>
+            <li> <a href="{% url 'polls:index' %}"> Polls </a></li>
+            <li> <a href="{% url 'todo:index' %}"> Todo </a></li>
+        </ol>
+    {% else %}
+        <a href="/accounts/login">login</a>
+        <a href="/accounts/register" >Register</a>
+        <ol>
+            <li>There is no content of unauthenticated user.!!!</li>
+        </ol>
+    {% endif %}
 
 </body>
 </html>
