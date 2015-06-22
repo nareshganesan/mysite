@@ -1,29 +1,87 @@
 <!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>Home Page</title>
-</head>
-<body>
-    <!--
-        This is the Homepage for the whole project. It is home to multiple projects.
-        Please do not delete it or be sure about the changes if you do so.
-    -->
-    <h2> This is my home page. </h2>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="images/favicon.ico">
 
-    {% if user.is_authenticated %}
-        <a href="/accounts/logout">logout</a>
-        <ol>
-            <li> <a href="{% url 'polls:index' %}"> Polls </a></li>
-            <li> <a href="{% url 'todo:index' %}"> Todo </a></li>
-        </ol>
-    {% else %}
-        <a href="/accounts/login">login</a>
-        <a href="/accounts/register" >Register</a>
-        <ol>
-            <li>There is no content of unauthenticated user.!!!</li>
-        </ol>
-    {% endif %}
+    <title>Django Practice Apps Home Page</title>
+
+    {% load staticfiles %}
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'todo/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" href="{% static 'todo/css/dashboard.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'todo/css/todo.css' %}" />
+
+</head>
+<body id="body-home-pg">
+{% if user.is_authenticated %}
+    {% include "todo/header.html" with isAuthenticated="True"%}
+{% else %}
+    {% include "todo/header.html" %}
+{% endif %}
+<!--
+    This is the Homepage for the whole project. It is home to multiple projects.
+    Please do not delete it or be sure about the changes if you do so.
+-->
+
+<div class="container">
+
+    <!-- Main component for a primary marketing message or call to action -->
+    <div class="jumbotron">
+        <h1>Django Apps</h1>
+        <p> This is a template for apps which I'm creating using Django 1.9. The Templates are
+            responsive and so it adapts to your viewport and device.</p>
+        <p>
+            <!--<a class="btn btn-lg btn-primary" href="#" role="button">View navbar docs &raquo;</a>-->
+        </p>
+    </div>
+
+</div> <!-- /container -->
+
+<div class="container">
+    <div class="col-lg-6">
+        {% if user.is_authenticated %}
+            <h4><a href="{% url 'polls:index' %}"> Polls </a> </h4>
+        {% else %}
+            <h4><a href="{% url 'login' %}"> Polls </a> </h4>
+        {% endif %}
+        <p>Django app to create new polls, user based polls. </p>
+        {% if user.is_authenticated %}
+            <h4><a href="{% url 'todo:index' %}"> Todo </a></h4>
+        {% else %}
+            <h4><a href="{% url 'login' %}"> Todo </a></h4>
+        {% endif %}
+
+        <p>Django app to create, edit, delete Todo's. I will be adding more features as I keep developing.
+            The Todo's are user specific and you can add Tags, Projects and prioritise Todo's.
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- Loading Javascript / Jquery files -->
+
+<script type="text/javascript" src="{% static 'todo/js/jquery-1.11.3.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'todo/js/todo.js' %}"></script>
+<!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+<!--[if lt IE 9]><script src="{% static 'todo/js/ie8-responsive-file-warning.js' %}"></script><![endif]-->
+<script src="{% static 'todo/js/ie-emulation-modes-warning.js' %}"></script>
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
 
 </body>
 </html>

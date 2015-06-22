@@ -1,8 +1,4 @@
 
-$(window).load(function() {
-  // Handler for .load() called.
-
-});
 // This function gets cookie with a given name
 function getCookie(name) {
     var cookieValue = null;
@@ -53,6 +49,8 @@ $.ajaxSetup({
         }
     }
 });
+
+/* Quick edit start*/
 
 $( "input[name^='quickedit']" ).click(function() {
       var btnSub = this.id;
@@ -124,6 +122,7 @@ function quickedit_todo(todoId,todoName, todoPriority) {
             //  var returnedData = JSON.parse(json);
             $("#todoname"+todoId).val(json.todoname)
             $("#todopriority"+todoId).val(json.todopriority)
+            $("#priority_dropdown"+todoId+" option[value="+json.todopriority+"]").attr('selected','selected');
            /* console.log(json.todoid); // log the returned json to the console
             console.log("success"); // another sanity check*/
         },
@@ -136,6 +135,10 @@ function quickedit_todo(todoId,todoName, todoPriority) {
         }
     });
 }
+
+/* Quick edit stop. */
+
+/* Quick add start. */
 
 function showAddTodoDiv() {
     $("#add_todo_div").css('display', 'block');
@@ -167,8 +170,8 @@ $( "#addTodoSubmit" ).click(function() {
             //  var returnedData = JSON.parse(json);
             /*$("#todoname"+todoId).val(json.todoname)
             $("#todopriority"+todoId).val(json.todopriority)*/
-            console.log(json.todoid +" : "+json.todoname); // log the returned json to the console
-            console.log("success"); // another sanity check
+//            console.log(json.todoid +" : "+json.todoname); // log the returned json to the console
+//            console.log("success"); // another sanity check
             location.reload();
         },
 
@@ -179,6 +182,231 @@ $( "#addTodoSubmit" ).click(function() {
 //            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
         }
     });
+});
+
+/* Quick add end. */
+
+/* Quick delete start. */
+
+function showDeleteTodoDiv(todoname, todoid) {
+
+    $("#deleteTodoName").html(todoname);
+    $("#deleteTodoId").html(todoid);
+
+    showTodoElementsById(todo_features_header.DELETEFEATURE);
+    showTodoElementsById(todo_features_div.DELETEFEATURE);
+    $("#"+todo_features_header.LISTFEATURE).css('display', 'none');
+    $("#"+todo_features_div.LISTFEATURE).css('display', 'none');
+    $("#"+todo_features_header.ADDFEATURE).css('display', 'none');
+    $("#"+todo_features_div.ADDFEATURE).css('display', 'none');
+
+}
+
+function showDetailTodoDiv(todoname, todoid) {
+
+    $("#detail-todo-id").html(todoid);
+    $("#detail-todo-name").html(todoname);
+
+    showTodoElementsById(todo_features_header.DETAILFEATURE);
+    showTodoElementsById(todo_features_div.DETAILFEATURE);
+    $("#"+todo_features_header.LISTFEATURE).css('display', 'none');
+    $("#"+todo_features_div.LISTFEATURE).css('display', 'none');
+    $("#"+todo_features_header.ADDFEATURE).css('display', 'none');
+    $("#"+todo_features_div.ADDFEATURE).css('display', 'none');
+    $("#"+todo_features_header.DELETEFEATURE).css('display', 'none');
+    $("#"+todo_features_div.DELETEFEATURE).css('display', 'none');
+
+    var todo_detail_url = "quickdetail_todo/";
+    console.log(todo_detail_url);
+    $.ajax({
+        url : todo_detail_url, // the endpoint
+        type : "POST", // http method
+        // data sent with the post request
+        data : {
+        'todoid' : todoid
+        },
+
+        // handle a successful response
+        success : function(json) {
+            console.log(json.todoid +" : "+json.todoname);
+            console.log("success"); // another sanity check
+            //  var returnedData = JSON.parse(json);
+            $("#body-todo-detail-name").val(json.todoname)
+            $("#body-todo-detail-priority option[value="+json.todopriority+"]").attr('selected','selected');
+            $("#body-todo-detail-description").val(json.tododescription)
+//            location.reload();
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log("Quick Edit failed"); // another sanity check
+            $('#results').html("Quick Edit failed");
+            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+        }
+    });
+
+}
+
+//  detailTodoUpdate
+
+$( "#detailTodoUpdate" ).click(function() {
+    var todoid = $("#detail-todo-id").html()
+    var todoname = $("#body-todo-detail-name").val()
+    var todopriority = $("#body-todo-detail-priority").val()
+    var tododescription = $("#body-todo-detail-description").val()
+    var todonotes = $("#body-todo-detail-notes").val()
+    var todotags = $("#body-todo-detail-tags").val()
+    var todoproject = $("#body-todo-detail-project").val()
+    var todoemail = $("#body-todo-detail-email").val()
+    var todophone = $("#body-todo-detail-phone").val()
+    var todoaddress = $("#body-todo-detail-address").val()
+
+//    alert(todoid+" : "+todoname +" : "+todopriority+" : "+tododescription+" : "+todonotes
+//    +" : "+todotags+" : "+todoproject+" : "+todoemail+ " : "+todophone+" : "+
+//    todoaddress +" : "+todoproject +" : "+todoemail);
+
+    var edit_detail_url = "edit_todo/";
+    $.ajax({
+        url : edit_detail_url, // the endpoint
+        type : "POST", // http method
+        // data sent with the post request
+        data : {
+        'todoid' : todoid ,
+        'todoname' : todoname,
+        'todopriority' : todopriority,
+        'tododescription' : tododescription,
+        'todonotes' : todonotes,
+        'todotags' : todotags,
+        'todoproject' : todoproject,
+        'todoemail' : todoemail,
+        'todophone' : todophone,
+        'todoaddress' : todoaddress
+        },
+
+        // handle a successful response
+        success : function(json) {
+            console.log("success"); // another sanity check
+            $("#body-todo-detail-name").val(json.todoname)
+            $("#body-todo-detail-priority option[value="+json.todopriority+"]").attr('selected','selected');
+            $("#body-todo-detail-description").val(json.tododescription)
+            $("#body-todo-detail-notes").val(json.todonotes)
+            $("#body-todo-detail-tags").val(json.todotags)
+            $("#body-todo-detail-project").val(json.todoproject)
+            $("#body-todo-detail-email").val(json.todoemail)
+            $("#body-todo-detail-phone").val(json.todophone)
+            $("#body-todo-detail-address").val(json.todoaddress)
+//            location.reload();
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log("Detail Update failed"); // another sanity check
+            $('#results').html("Detail Update failed");
+            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+        }
+    });
+});
+
+
+$( "#deleteTodoSubmit" ).click(function() {
+    var todoid = $("#deleteTodoId").html()
+    var todoname = $("#deleteTodoName").html()
+    /*alert(todoid+" : "+todoname )*/
+
+   $.ajax({
+        url : "quickdelete_todo/", // the endpoint
+        type : "POST", // http method
+        // data sent with the post request
+        data : {
+        'todoid' : todoid ,
+        'todoname' : todoname
+        },
+
+        // handle a successful response
+        success : function(json) {
+//            console.log("success"); // another sanity check
+            location.reload();
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+//            console.log("delete failed"); // another sanity check
+            $('#results').html("delete failed");
+            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+        }
+    });
+});
+
+/* Quick delete end. */
+
+
+
+function showTodoElementsById(elementId) {
+    $("#" + elementId).css('display', 'block');
+}
+
+$(document).ready(function() {
+    /* scroll to a div with the ID "scrollToThis" by clicking a link with the class "scrollLink" */
+    $('#scrollTo').click( function() {
+        $('html, body').animate({
+            scrollTop: $('#todo-delete-div').offset().top
+        }, 1000);
+    });
+
+    /* scroll to the top of the page */
+    if ($('#scrollTop')){
+        $('#scrollTop').click(function(){
+            $('html,body').animate({ scrollTop: 0 }, 1000);
+        });
+    }
+
+    $('#scrollTo').click( function() {
+        $('html, body').animate({
+            scrollTop: $('#todo-delete-div').offset().top
+        }, 1000);
+    });
+
+    showTodoElementsById(todo_features_header.LISTFEATURE);
+    showTodoElementsById(todo_features_div.LISTFEATURE);
+
+    $('#link-show-add').click( function() {
+        showTodoElementsById(todo_features_header.ADDFEATURE);
+        showTodoElementsById(todo_features_div.ADDFEATURE);
+        $("#"+todo_features_header.LISTFEATURE).css('display', 'none');
+        $("#"+todo_features_div.LISTFEATURE).css('display', 'none');
+        $("#"+todo_features_header.DETAILFEATURE).css('display', 'none');
+        $("#"+todo_features_div.DETAILFEATURE).css('display', 'none');
+        $("#"+todo_features_header.DELETEFEATURE).css('display', 'none');
+        $("#"+todo_features_div.DELETEFEATURE).css('display', 'none');
+
+    });
+
+    $('#detailTodoCancel').click( function() {
+        showTodoElementsById(todo_features_header.LISTFEATURE);
+        showTodoElementsById(todo_features_div.LISTFEATURE);
+        $("#"+todo_features_header.DETAILFEATURE).css('display', 'none');
+        $("#"+todo_features_div.DETAILFEATURE).css('display', 'none');
+        $("#"+todo_features_header.ADDFEATURE).css('display', 'none');
+        $("#"+todo_features_div.ADDFEATURE).css('display', 'none');
+        $("#"+todo_features_header.DETAILFEATURE).css('display', 'none');
+        $("#"+todo_features_div.DETAILFEATURE).css('display', 'none');
+        $("#"+todo_features_header.DELETEFEATURE).css('display', 'none');
+        $("#"+todo_features_div.DELETEFEATURE).css('display', 'none');
+
+    });
+
+    $('#deleteTodoCancel').click( function() {
+        showTodoElementsById(todo_features_header.LISTFEATURE);
+        showTodoElementsById(todo_features_div.LISTFEATURE);
+        $("#"+todo_features_header.ADDFEATURE).css('display', 'none');
+        $("#"+todo_features_div.ADDFEATURE).css('display', 'none');
+        $("#"+todo_features_header.DETAILFEATURE).css('display', 'none');
+        $("#"+todo_features_div.DETAILFEATURE).css('display', 'none');
+        $("#"+todo_features_header.DELETEFEATURE).css('display', 'none');
+        $("#"+todo_features_div.DELETEFEATURE).css('display', 'none');
+
+    });
+
 });
 
 

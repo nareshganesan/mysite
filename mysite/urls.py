@@ -20,13 +20,13 @@ urlpatterns = [
     # Home page for the site.
     url(r'^$', 'todo.views.home', name='home'),
     # registration page for the site.
-    url(r'^accounts/register', 'views.register'),
+    url(r'^accounts/register', 'views.register', name='register'),
     # registration page for the site.
-    url(r'^accounts/profile', 'todo.views.home'),
+    url(r'^accounts/profile', 'todo.views.home', name='profile'),
     # login page for the site.
-    url(r'^accounts/login', 'django.contrib.auth.views.login'),
-    # logout page for the site.
-    url(r'^accounts/logout', 'django.contrib.auth.views.logout', {'next_page': '/accounts/login/?next=/'}),
+    url(r'^accounts/login', 'django.contrib.auth.views.login', name='login'),
+    # logout page for the site. # {'next_page': '/accounts/login/?next=/'}
+    url(r'^accounts/logout', 'django.contrib.auth.views.logout', {'next_page': '/'}, name='logout'),
     # admin module provided by django.
     url(r'^admin/', include(admin.site.urls)),
     # Polls app created from the django book tutorial.

@@ -1,4 +1,9 @@
 {% extends "admin/base.html" %}
+{% if user.is_authenticated %}
+    {% include "todo/header.html" with isAuthenticated="True"%}
+{% else %}
+    {% include "todo/header.html" %}
+{% endif %}
 
 {% block content %}
 
