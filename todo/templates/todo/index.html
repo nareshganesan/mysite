@@ -20,6 +20,7 @@
     <!--<link rel="stylesheet" type="text/css" href="{% static 'todo/css/dashboard.css' %}" />-->
     <link rel="stylesheet" type="text/css" href="{% static 'todo/css/todo.css' %}" />
 
+    <!-- Javscript constants -->
     <script type="text/javascript" src="{% static 'todo/js/todo-constants.js' %}"></script>
 
 
@@ -33,38 +34,12 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-sm-3 col-md-2 custom-sidebar">
-            <ul class="nav nav-sidebar">
-                <li class="active"><a href="#">Todo Home <span class="sr-only">(current)</span></a></li>
-                <li><a href="#" id="scrollTo">Reports</a></li>
-                <li><a href="#">Projects</a></li>
-                <li><a href="#">Tags</a></li>
-                <li><a href="#">Login</a></li>
-                <li><a href="#">Logout</a></li>
-                <li><a href="#">Register</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#" id="scrollTop">Back to Top</a></li>
-            </ul>
-            <!--<ul class="nav nav-sidebar">-->
-                <!--<li><a href="">Nav item</a></li>-->
-                <!--<li><a href="">Nav item again</a></li>-->
-                <!--<li><a href="">One more nav</a></li>-->
-                <!--<li><a href="">Another nav item</a></li>-->
-                <!--<li><a href="">More navigation</a></li>-->
-            <!--</ul>-->
-            <!--<ul class="nav nav-sidebar">-->
-                <!--<li><a href="">Nav item again</a></li>-->
-                <!--<li><a href="">One more nav</a></li>-->
-                <!--<li><a href="">Another nav item</a></li>-->
-            <!--</ul>-->
-        </div>
+        {% include "todo/sidebar.html" %}
         <div class="col-sm-9 col-md-10 custom-main">
             <h2 class="page-header" id="header-todo-list">Todo's</h2>
             <div class="row placeholders" id="div-todo-list">
                 <p>
-                    <!--<a href="{% url 'todo:add_todo' %}" >Add Todo</a> <br/>-->
-                    <a href="#" id="link-show-add"  >Add Todo</a> <br/>
-                    <a href="/accounts/logout" >Logout</a>
+                    <span><a href="#" id="link-show-add"  >Add Todo</a> </span>
                 </p>
                 {% if latest_todo_list %}
                     <form method="POST" id="quickedit-todo-form">
@@ -81,11 +56,9 @@
 
                                 <tr>
                                     <td>
-                                        <!--<a href="{% url 'todo:detail' todo.id %}">{{ todo.name }} </a>-->
                                         <input type="text" name="todoname" id="todoname{{ todo.id }}" value="{{ todo.name }}" readonly>
                                     </td>
                                     <td>
-                                        <!--<a href="{% url 'todo:detail' todo.id %}">{{ todo.priority }}</a>-->
                                         <input type="text" name="todopriority" id="todopriority{{ todo.id }}" value="{{ todo.priority }}" readonly>
                                          <select id="priority_dropdown{{ todo.id }}" style="display: none;">
                                                 <option value="high" >High</option>
@@ -95,44 +68,24 @@
                                          </select>
                                     </td>
                                     <td>
-                                        <!--<a href="{% url 'todo:detail' todo.id %}" id="quickedit{{todo.id}}" name="quickedit{{todo.id}}" > edit</a>-->
-
-                                            <!--<div class="fieldWrapper" id="the_post">-->
-                                                <!--quickedit{{todo.id}}-->
-                                            <!--</div>-->
-
                                             <input type="button" id="quickedit{{todo.id}}" name="quickedit{{todo.id}}" value="edit" class="tiny button">
                                             <input type="submit" id="quicksave{{todo.id}}" name="quicksave{{todo.id}}" value="update" class="tiny button" style="display:none;">
                                     </td>
-                                    <!--<td>
-                                        <a href="{% url 'todo:detail' todo.id %}">view </a>
-                                    </td>-->
                                     <td>
                                         <a href="#" onclick="showDetailTodoDiv('{{ todo.name }}', '{{ todo.id }}')" >view </a>
                                     </td>
                                      <td>
-                                       <!-- <a href="{% url 'todo:delete_todo' todo.id %}">delete</a>-->
                                          <a href="#"  onclick="showDeleteTodoDiv('{{ todo.name }}', '{{ todo.id }}')">delete</a>
                                     </td>
 
                                 </tr>
                             {% endfor %}
                         </table>
-                        <div id="results"></div>
+                        <div id="error-results"></div>
                     </form>
                 {% else %}
                     <p> Yay!!! No todo's. </p>
                 {% endif %}
-
-
-
-                <!--<div id="overlay-inAbox" class="overlay">-->
-                    <!--<div class="toolbar"><a class="close" href="#"><span>x</span> close</a></div>-->
-                    <!--<div class="wrapper">-->
-                        <!--<object type="text/html" data="{% url 'todo:add_todo' %}" width="500px" height="350px" ></object>-->
-
-                    <!--</div>-->
-                <!--</div>-->
 
             </div>
 
@@ -196,7 +149,8 @@
                             <br>
 
 
-                            <input type="submit" id="addTodoSubmit" name="submit" value="Add Todo" />
+                            <input type="submit" id="addTodoSubmit" class="btn btn-primary" name="submit" value="Add Todo" />
+                        <input type="button" id="addTodoCancel" class="btn btn-primary" name="cancel" value="cancel" />
                         </form>
 
                 </div>
@@ -207,7 +161,9 @@
                 <a href="{%url 'todo:index' %}">Todo-Home</a> <br/> <br/>
                 <div id="detail-todo-id" style="display: none; " ></div>
                 <div id="detail-todo-name" style="display: none; " ></div>
+                <div id="detail-update-success" class="alert alert-success" role="alert" style="display: none;">
 
+                </div>
                 <div class="well-sm">
                   <form class="form-horizontal" action="" method="post">
                   <fieldset>
@@ -225,7 +181,6 @@
                     <div class="form-group">
                       <label class="col-md-3 control-label" for="body-todo-detail-priority">Priority</label>
                       <div class="col-md-9">
-                        <!--<input id="bo-todo-detail-priority" name="body-todo-detail-priority" type="text" placeholder="Priority" class="form-control">-->
                         <select id="body-todo-detail-priority" class="form-control">
                             <option value="high" >High</option>
                             <option value="medium" >Medium</option>
@@ -345,20 +300,13 @@
     </div>
 </div>
 
+<!-- Loading Footer , Javascript / Jquery files -->
 
-<!-- Loading Javascript / Jquery files -->
-
-<script type="text/javascript" src="{% static 'todo/js/jquery-1.11.3.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'todo/js/todo.js' %}"></script>
-<!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-<!--[if lt IE 9]><script src="{% static 'todo/js/ie8-responsive-file-warning.js' %}"></script><![endif]-->
-<script src="{% static 'todo/js/ie-emulation-modes-warning.js' %}"></script>
-
-<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-<!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+{% if user.is_authenticated %}
+    {% include "todo/footer.html" with isAuthenticated="True"%}
+{% else %}
+    {% include "todo/footer.html" %}
+{% endif %}
 
 
 </body>

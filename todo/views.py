@@ -5,6 +5,8 @@ from django.http import Http404
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 
+from django.db.models import Count
+
 from todo.forms import TodoForm
 
 import json
@@ -23,15 +25,6 @@ def todolist(request):
         'prioritylist': prioritylist,
     }
     return render(request, 'todo/index.html', context)
-
-@login_required
-def tododetail(request, todo_id):
-    'detailed view of a individual todo.'
-    try:
-        todo = Todo.objects.filter(user=request.user.id).get(pk=todo_id)
-    except Todo.DoesNotExist:
-        raise Http404("Todo does not exist.")
-    return render(request, 'todo/detail.html', {'todo': todo})
 
 @login_required
 def edit_todo(request):
@@ -194,48 +187,6 @@ def quickadd_todo(request):
             content_type="application/json"
         )
 
-
-@login_required
-def create_todo(request):
-    'Create a individual todo.'
-    # Get the context from the request.
-    context = RequestContext(request)
-
-    # A HTTP POST?
-    if request.method == 'POST':
-        form = TodoForm(request.POST)
-
-        # Have we been provided with a valid form?
-        if form.is_valid():
-            # Save the new todo to the database.
-            newtodo = form.save(commit=True)
-            newtodo.user = request.user
-            newtodo.save()
-
-            # Now call the index() view.
-            # The user will be shown the homepage.
-            return HttpResponseRedirect(reverse('todo:index'))
-        else:
-            # The supplied form contained errors - just print them to the terminal.
-            print form.errors
-    else:
-        # If the request was not a POST, display the form to enter details.
-        form = TodoForm()
-
-    # Bad form (or form details), no form supplied...
-    # Render the form with error messages (if any).
-    return render_to_response('todo/add_todo.html', {'form': form}, context)
-
-@login_required
-def remove_todo(request, todo_id):
-    'delete an individual todo.'
-    todo = get_object_or_404(Todo, pk=todo_id)
-    template_name = 'todo/todo_confirm_delete.html'
-    if request.method == 'POST':
-        todo.delete()
-        return HttpResponseRedirect(reverse('todo:index'))
-    return render(request, template_name, {'object' : todo.name})
-
 @login_required
 def quickdelete_todo(request):
     'delete an individual todo.'
@@ -246,8 +197,34 @@ def quickdelete_todo(request):
         return HttpResponseRedirect(reverse('todo:index'))
     return HttpResponseRedirect(reverse('todo:index'))
 
+@login_required
+def todo_reports(request):
+    'View Todo\'s as a report in terms of Completion rate, priority completion rate.'
+    if request.method == 'GET':
+        data = {
+            'priority': [],
+            'values': []
+        }
+        report = Todo.objects.values('priority').annotate(Count('id'))
+        for priorityType in report:
+            priority = priorityType['priority']
+            prioritycount = priorityType['id__count']
+            data['priority'].append(priority)
+            data['values'].append(prioritycount)
 
+        return HttpResponse(
+            json.dumps(data),
+            content_type="application/json"
+        )
+    else:
+        return HttpResponse(
+            json.dumps({"No Report Data": "Are you kidding me !! :)"}),
+            content_type="application/json"
+        )
 
+@login_required
+def reports(request):
+    return render(request, 'todo/reports.html')
 
 def home(request):
 	return render(request, 'todo/home.html')
