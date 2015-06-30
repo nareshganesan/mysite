@@ -18,7 +18,7 @@ from .models import Todo
 @login_required
 def todolist(request):
     'list view of the todo app.'
-    latest_todo_list = Todo.objects.filter(user=request.user.id).order_by('-priority')[:25]
+    latest_todo_list = Todo.objects.filter(user=request.user.id).filter(iscompleted=False).filter(isdeleted=False).order_by('-created_date')[:25]
     prioritylist = Todo.PRIORITY_LIST
     context = {
         'latest_todo_list': latest_todo_list,
@@ -188,14 +188,47 @@ def quickadd_todo(request):
         )
 
 @login_required
+def mark_as_completed(request):
+    'Mark a todo as Completed.'
+    if request.method == 'POST':
+        todoid = request.POST.get('todoid')
+        todo = get_object_or_404(Todo, pk=todoid)
+        todo.iscompleted = True
+        todo.save()
+        response_data = {}
+        response_data['responsetype'] = 'success'
+        return HttpResponse(
+            json.dumps(response_data),
+            content_type="application/json"
+        )
+    return HttpResponse(
+            json.dumps({"No Data": "Are you kidding me !! :)"}),
+            content_type="application/json"
+        )
+
+
+@login_required
 def quickdelete_todo(request):
     'delete an individual todo.'
     if request.method == 'POST':
         todoid = request.POST.get('todoid')
         todo = get_object_or_404(Todo, pk=todoid)
-        todo.delete()
+        todo.isdeleted = True
+        todo.save()
         return HttpResponseRedirect(reverse('todo:index'))
     return HttpResponseRedirect(reverse('todo:index'))
+
+@login_required
+def completedlist(request):
+    'List of Completed Todo\'s.'
+    completed_todo_list = Todo.objects.filter(user=request.user.id).filter(iscompleted=True).filter(isdeleted=False).order_by('-priority')[:25]
+    prioritylist = Todo.PRIORITY_LIST
+    context = {
+        'completed_todo_list': completed_todo_list,
+        'prioritylist': prioritylist,
+    }
+    return render(request, 'todo/index.html', context)
+
 
 @login_required
 def todo_reports(request):

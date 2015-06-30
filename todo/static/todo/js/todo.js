@@ -208,10 +208,10 @@ function showDetailTodoDiv(todoname, todoid) {
     $("#"+todo_features_header.DELETEFEATURE).css('display', 'none');
     $("#"+todo_features_div.DELETEFEATURE).css('display', 'none');
 
-    var todo_detail_url = "quickdetail_todo/";
-    console.log(todo_detail_url);
+    var todo_mark_as_completed_url = "quickdetail_todo/";
+    console.log(todo_mark_as_completed_url);
     $.ajax({
-        url : todo_detail_url, // the endpoint
+        url : todo_mark_as_completed_url, // the endpoint
         type : "POST", // http method
         // data sent with the post request
         data : {
@@ -317,6 +317,34 @@ $( "#deleteTodoSubmit" ).click(function() {
     });
 
 /* Quick Detail update end */
+
+/* Mark todo as Completed start  */
+
+function markasCompleted(todoname, todoid) {
+
+    var todo_mark_as_completed_url = "mark_as_completed/";
+    $.ajax({
+        url : todo_mark_as_completed_url, // the endpoint
+        type : "POST", // http method
+        // data sent with the post request
+        data : {
+        'todoid' : todoid
+        },
+
+        // handle a successful response
+        success : function(json) {
+            location.reload();
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            $('#error-results').html("Quick Edit failed");
+        }
+    });
+
+}
+
+/* Mark todo as Completed end. */
 
 function showTodoElementsById(elementId) {
     $("#" + elementId).css('display', 'block');

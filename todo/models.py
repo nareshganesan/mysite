@@ -2,6 +2,7 @@ import datetime
 from django.forms import forms
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
 from django.utils import timezone
 
 # Create your models here.
@@ -27,6 +28,10 @@ class Todo(models.Model):
     phone_number = models.CharField(max_length=12, blank=True)
     address = models.CharField(max_length=200, blank=True)
     user = models.ForeignKey(User, default=1)
+    created_date = models.DateTimeField(default=datetime.now(), blank=False)
+    completed_date = models.DateTimeField(default=datetime.now(),blank=True)
+    iscompleted = models.BooleanField(default=False)
+    isdeleted = models.BooleanField(default=False)
 
     def __str__(self):
 		return unicode(self.name + " priority : "+self.priority)

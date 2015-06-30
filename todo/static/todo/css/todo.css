@@ -150,6 +150,11 @@ h2[id*='header-todo-'], div[id*='div-todo-'] {
     display:none;
 }
 
+/* Todo Completed checkbox align center  */
+table>tbody>tr>td>div {
+    text-align: center;
+}
+
 /* Home page styling */
 #body-home-pg {
   min-height: 2000px;

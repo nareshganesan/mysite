@@ -17,7 +17,6 @@
     <link href="{% static 'todo/css/bootstrap.min.css' %}" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <!--<link rel="stylesheet" type="text/css" href="{% static 'todo/css/dashboard.css' %}" />-->
     <link rel="stylesheet" type="text/css" href="{% static 'todo/css/todo.css' %}" />
 
     <!-- Javscript constants -->
@@ -34,7 +33,11 @@
 
 <div class="container">
     <div class="row">
-        {% include "todo/sidebar.html" %}
+        {% if user.is_authenticated %}
+            {% include "todo/sidebar.html" with isAuthenticated="True"%}
+        {% else %}
+            {% include "todo/sidebar.html" %}
+        {% endif %}
         <div class="col-sm-9 col-md-10 custom-main">
             <h2 class="page-header" id="header-todo-list">Todo's</h2>
             <div class="row placeholders" id="div-todo-list">
@@ -50,7 +53,9 @@
                                 <td>Priority</td>
                                 <td>Quick Edit</td>
                                 <td>Todo page</td>
+                                <td>Todo Completed</td>
                                 <td>Delete Todo </td>
+                                <!--<td>Created Date </td>-->
                             </tr>
                             {% for todo in latest_todo_list %}
 
@@ -64,21 +69,30 @@
                                                 <option value="high" >High</option>
                                                 <option value="medium" >Medium</option>
                                                 <option value="low" >Low</option>
-                                             <option value="severe" >Severe</option>
+                                                <option value="severe" >Severe</option>
                                          </select>
                                     </td>
                                     <td>
-                                            <input type="button" id="quickedit{{todo.id}}" name="quickedit{{todo.id}}" value="edit" class="tiny button">
+                                            <input type="button" id="quickedit{{todo.id}}" name="quickedit{{todo.id}}" value="edit" class="tiny button btn-primary">
                                             <input type="submit" id="quicksave{{todo.id}}" name="quicksave{{todo.id}}" value="update" class="tiny button" style="display:none;">
                                     </td>
                                     <td>
                                         <a href="#" onclick="showDetailTodoDiv('{{ todo.name }}', '{{ todo.id }}')" >view </a>
                                     </td>
+                                    <td>
+                                        <div>
+                                            <input type="checkbox" name="todocompleted" id="todocompleted{{ todo.id }}" value="{{ todo.iscompleted }}" onclick="markasCompleted('{{ todo.name }}', '{{ todo.id }}')" >
+                                        </div>
+                                    </td>
                                      <td>
                                          <a href="#"  onclick="showDeleteTodoDiv('{{ todo.name }}', '{{ todo.id }}')">delete</a>
                                     </td>
+                                    <!--<td>
+                                        <input type="text" name="createddate" id="createddate{{ todo.id }}" value="{{ todo.created_date|date:'D d M Y' }}{{ todo.created_date|time:'H:i' }}" readonly>
+                                    </td>-->
 
                                 </tr>
+
                             {% endfor %}
                         </table>
                         <div id="error-results"></div>
