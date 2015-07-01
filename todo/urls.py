@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^reports/todo_reports/$', views.todo_reports, name='todo_reports'),
     url(r'^reports/$', views.reports, name='reports'),
     url(r'^mark_as_completed/$', views.mark_as_completed, name='mark_as_completed'),
+    url(r'^search/$', views.todo_search, name='todo_search'),
 ]

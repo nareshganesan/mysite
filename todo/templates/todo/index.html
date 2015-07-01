@@ -39,7 +39,16 @@
             {% include "todo/sidebar.html" %}
         {% endif %}
         <div class="col-sm-9 col-md-10 custom-main">
-            <h2 class="page-header" id="header-todo-list">Todo's</h2>
+            <!--<h2 class="sub-header" id="header-todo-list">Todo's</h2>-->
+            <!-- /search-box-group -->
+            <div class="input-group" id="search-box-container" style="margin-top: 30px; margin-bottom: 10px;">
+              <span class="input-group-btn">
+                <button class="btn btn-default" id="search-button" type="button">Go!</button>
+              </span>
+              <input type="text" id="search-box" class="form-control" placeholder="Search for...">
+            </div>
+            <!-- /search-box-group -->
+
             <div class="row placeholders" id="div-todo-list">
                 <p>
                     <span><a href="#" id="link-show-add"  >Add Todo</a> </span>
@@ -77,7 +86,7 @@
                                             <input type="submit" id="quicksave{{todo.id}}" name="quicksave{{todo.id}}" value="update" class="tiny button" style="display:none;">
                                     </td>
                                     <td>
-                                        <a href="#" onclick="showDetailTodoDiv('{{ todo.name }}', '{{ todo.id }}')" >view </a>
+                                        <a href="#" onclick="showDetailTodoDiv('{{ todo.name }}', '{{ todo.id }}', 'False')" >view </a>
                                     </td>
                                     <td>
                                         <div>
@@ -170,9 +179,12 @@
                 </div>
             </div>
 
-            <h2 class="sub-header" id="header-todo-detail"> Todo Details</h2>
+            <h2 class="sub-header" id="header-todo-detail"> View / Edit Todo</h2>
             <div class="row placeholders" id="div-todo-detail" >
-                <a href="{%url 'todo:index' %}">Todo-Home</a> <br/> <br/>
+                <div>
+                    <a href="{%url 'todo:index' %}">Todo-Home</a>
+                    <a href="#" id="show-search-results" style="display: none; ">Search Results</a>
+                </div>
                 <div id="detail-todo-id" style="display: none; " ></div>
                 <div id="detail-todo-name" style="display: none; " ></div>
                 <div id="detail-update-success" class="alert alert-success" role="alert" style="display: none;">
@@ -181,7 +193,7 @@
                 <div class="well-sm">
                   <form class="form-horizontal" action="" method="post">
                   <fieldset>
-                    <legend class="" id="header-todo-detail-name">View / Edit Todo</legend>
+                    <!--<legend class="" id="header-todo-detail-name">View / Edit Todo</legend>-->
 
                     <!-- Name input-->
                     <div class="form-group">
@@ -302,6 +314,24 @@
 
             <h2 class="sub-header" id="header-todo-project" > Project Todo's</h2>
             <div class="row placeholders" id="div-todo-project" >
+
+            </div>
+
+            <h4 class="sub-header" id="header-todo-search"> Search Results</h4>
+            <div class="row placeholders" id="div-todo-search" >
+
+                <ol id="search-results">
+                    <!--<li>
+                        <div class="rh">
+                                <h3 class="h"></h3>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="rc">
+                                <h3 class="c"></h3>
+                        </div>
+                    </li>-->
+                </ol>
 
             </div>
 

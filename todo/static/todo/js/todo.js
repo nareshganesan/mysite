@@ -194,7 +194,7 @@ function showDeleteTodoDiv(todoname, todoid) {
 
 }
 
-function showDetailTodoDiv(todoname, todoid) {
+function showDetailTodoDiv(todoname, todoid, showsearchdiv) {
 
     $("#detail-todo-id").html(todoid);
     $("#detail-todo-name").html(todoname);
@@ -207,6 +207,11 @@ function showDetailTodoDiv(todoname, todoid) {
     $("#"+todo_features_div.ADDFEATURE).css('display', 'none');
     $("#"+todo_features_header.DELETEFEATURE).css('display', 'none');
     $("#"+todo_features_div.DELETEFEATURE).css('display', 'none');
+    $("#"+todo_features_header.SEARCHFEATURE).css('display', 'none');
+    $("#"+todo_features_div.SEARCHFEATURE).css('display', 'none');
+    if(showsearchdiv == 'True') {
+        $("#show-search-results").css('display', 'inline-block');
+    }
 
     var todo_mark_as_completed_url = "quickdetail_todo/";
     console.log(todo_mark_as_completed_url);
@@ -345,6 +350,92 @@ function markasCompleted(todoname, todoid) {
 }
 
 /* Mark todo as Completed end. */
+
+
+/* Todo Search Feature  start */
+
+$('#search-box').keyup(function(e){
+    var searchQuery = $(this).val();
+    if(e.keyCode == 13)
+    {
+
+//      alert('Entered!!! ' + searchQuery);
+    } else {
+
+    }
+});
+
+$('#search-button').click(function(e){
+    var searchQuery = $('#search-box').val();
+//     alert('Search button clicked!!! ' + searchQuery);
+    showTodoElementsById(todo_features_header.SEARCHFEATURE);
+    showTodoElementsById(todo_features_div.SEARCHFEATURE);
+    $("#"+todo_features_header.LISTFEATURE).css('display', 'none');
+    $("#"+todo_features_div.LISTFEATURE).css('display', 'none');
+    $("#"+todo_features_header.DETAILFEATURE).css('display', 'none');
+    $("#"+todo_features_div.DETAILFEATURE).css('display', 'none');
+    $("#"+todo_features_header.DELETEFEATURE).css('display', 'none');
+    $("#"+todo_features_div.DELETEFEATURE).css('display', 'none');
+    $("#"+todo_features_header.ADDFEATURE).css('display', 'none');
+    $("#"+todo_features_div.ADDFEATURE).css('display', 'none');
+     todoSearch(searchQuery);
+
+});
+
+$('#show-search-results').click(function(e){
+    showTodoElementsById(todo_features_header.SEARCHFEATURE);
+    showTodoElementsById(todo_features_div.SEARCHFEATURE);
+    $("#"+todo_features_header.LISTFEATURE).css('display', 'none');
+    $("#"+todo_features_div.LISTFEATURE).css('display', 'none');
+    $("#"+todo_features_header.DETAILFEATURE).css('display', 'none');
+    $("#"+todo_features_div.DETAILFEATURE).css('display', 'none');
+    $("#"+todo_features_header.DELETEFEATURE).css('display', 'none');
+    $("#"+todo_features_div.DELETEFEATURE).css('display', 'none');
+    $("#"+todo_features_header.ADDFEATURE).css('display', 'none');
+    $("#"+todo_features_div.ADDFEATURE).css('display', 'none');
+     todoSearch(searchQuery);
+
+});
+
+function todoSearch(Query) {
+    var todo_search_url = "search/";
+    $.ajax({
+        url : todo_search_url, // the endpoint
+        type : "POST", // http method
+        // data sent with the post request
+        data : {
+        'searchQuery' : Query
+        },
+
+        // handle a successful response
+        success : function(json) {
+            var resCount = json.length;
+            for (var i =0; i < resCount; i ++ ) {
+                resultelement = "<li><div class='rh'><h5 class='h'> ";
+                anchor =   "<a href='#' onclick='showDetailTodoDiv(";
+                anchorparam = '"' + json[i].name + '" , "'+ json[i].id + '")'+"'>";
+                test = '"' + json[i].name + '" , "'+ json[i].id + '",'
+                showSearchBackLink = '"True"' + ')'+"'>";
+                anchortext = json[i].name + "</a> </h5> </div>";
+                console.log(resultelement+anchor+test+showSearchBackLink+anchortext)
+                resultheader = resultelement+anchor+test+showSearchBackLink+anchortext
+                resultcontent = '<div class="rc"><h6 class="c">' + json[i].description + '</h6> </div> </li>'
+                $( "#search-results" ).append( resultheader );
+                $( "#search-results" ).append( resultcontent );
+            }
+
+
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            $('#error-results').html("Search failed");
+        }
+    });
+
+}
+
+/* Todo Search Feature  end */
 
 function showTodoElementsById(elementId) {
     $("#" + elementId).css('display', 'block');

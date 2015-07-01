@@ -4,6 +4,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.http import Http404
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
+from django.db.models import Q
+from django.core import serializers
 
 from django.db.models import Count
 
@@ -49,7 +51,7 @@ def edit_todo(request):
                  address=todoaddress, user_id=todouser)
         updatedtodo.save()
 
-        response_data = {}
+        response_data = dict()
         todo = Todo.objects.filter(user=todouser).get(pk=todoid)
         todoname = todo.name
         todopriority = todo.priority
@@ -93,7 +95,7 @@ def quickdetail_todo(request):
 
         todoid = request.POST.get('todoid')
         todouser = request.user.id
-        response_data = {}
+        response_data = dict()
         todo = Todo.objects.filter(user=todouser).get(pk=todoid)
         todoname = todo.name
         todopriority = todo.priority
@@ -138,7 +140,7 @@ def quickedit_todo(request):
         todopriority = request.POST.get('todopriority')
         todouser = request.user.id
         print todouser
-        response_data = {}
+        response_data = dict()
 
         t = Todo(id=todoid, name=todoname, priority=todopriority, user_id=todouser)
         t.save()
@@ -167,7 +169,7 @@ def quickadd_todo(request):
         tododescription = request.POST.get('tododescription')
         todouser = request.user.id
         print todouser
-        response_data = {}
+        response_data = dict()
 
         t = Todo(name=todoname, priority=todopriority, user_id=todouser, description=tododescription)
         t.save()
@@ -195,7 +197,7 @@ def mark_as_completed(request):
         todo = get_object_or_404(Todo, pk=todoid)
         todo.iscompleted = True
         todo.save()
-        response_data = {}
+        response_data = dict()
         response_data['responsetype'] = 'success'
         return HttpResponse(
             json.dumps(response_data),
@@ -254,6 +256,57 @@ def todo_reports(request):
             json.dumps({"No Report Data": "Are you kidding me !! :)"}),
             content_type="application/json"
         )
+
+@login_required
+def todo_search(request):
+    'Search Todo on any dimension available in the app.'
+    if request.method == 'POST':
+
+        searchquery = request.POST.get('searchQuery')
+        if searchquery is not None:
+            searchresults = Todo.objects.filter(
+                Q( name__icontains = searchquery ) |
+                Q( description__icontains = searchquery ) |
+                Q( notes__icontains = searchquery ) |
+                Q( tags__icontains = searchquery ) |
+                Q( project__icontains = searchquery ) |
+                Q( email__icontains = searchquery ) |
+                Q( phone_number__icontains = searchquery ) |
+                Q( address__icontains = searchquery )
+
+            ).order_by('priority')
+
+            # data = serializers.serialize('json', searchresults, fields=('name','description'))
+
+            response_data = dict()
+            response_datarootkey = "searchresults"
+            response_data[response_datarootkey] = []
+            resultscount = 0
+            for result in searchresults:
+                response_data[response_datarootkey].append({
+                    'id': result.id,
+                    'name': result.name,
+                    'description': result.description,
+                    'priority': result.priority
+                })
+                # response_data[response_datarootkey][resultscount]['name'] = result.name
+                # response_data[response_datarootkey][resultscount]['description'] = result.description
+                # response_data[response_datarootkey][resultscount]['priority'] = result.priority
+            print response_data[response_datarootkey]
+            # response_data['searchresults'] = ""
+
+            return HttpResponse(
+                json.dumps(response_data[response_datarootkey]),
+                content_type="application/json"
+            )
+
+    else:
+        return HttpResponse(
+            json.dumps({"No Data": "Use a better search term!!!"}),
+            content_type="application/json"
+        )
+
+
 
 @login_required
 def reports(request):
