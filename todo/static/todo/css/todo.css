@@ -270,3 +270,17 @@ body {
 .search-results {
    list-style : none;
 }
+
+#img-add-todo {
+    width: 23px;
+    margin-bottom: 25px;
+    margin-left: 5px;
+
+}
+
+#img-add-todo:hover{
+  border-color: #66afe9;
+  box-shadow: 0 0 8px rgba(0,255,0, 0.6);
+}
+
+

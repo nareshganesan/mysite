@@ -5,6 +5,7 @@ $(document).ready(function() {
             renderTo: 'reportByPriority',
             type: 'line',
         },
+        credits: {enabled: false},
         legend: {enabled: false},
         title: {text: 'Todo Report'},
         subtitle: {text: 'Last Week'},

@@ -41,18 +41,25 @@
         <div class="col-sm-9 col-md-10 custom-main">
             <!--<h2 class="sub-header" id="header-todo-list">Todo's</h2>-->
             <!-- /search-box-group -->
-            <div class="input-group" id="search-box-container" style="margin-top: 30px; margin-bottom: 10px;">
+            <div class="input-group" id="search-box-container" style="display: inline-table; width: 80%; margin-top: 30px; margin-bottom: 10px;">
               <span class="input-group-btn">
                 <button class="btn btn-default" id="search-button" type="button">Go!</button>
               </span>
               <input type="text" id="search-box" class="form-control" placeholder="Search for...">
             </div>
             <!-- /search-box-group -->
+            <div style="display: inline; width: 20%;" >
+                <a href="#" id="link-show-add"  >
+                    <img id="img-add-todo" src="{% static 'todo/images/plus_sign.png' %}" title="Add Todo"/>
+                </a>
+            </div>
+
+
 
             <div class="row placeholders" id="div-todo-list">
-                <p>
-                    <span><a href="#" id="link-show-add"  >Add Todo</a> </span>
-                </p>
+                <!--<p>-->
+                    <!--<span><a href="#" id="link-show-add"  >Add Todo</a> </span>-->
+                <!--</p>-->
                 {% if latest_todo_list %}
                     <form method="POST" id="quickedit-todo-form">
                         {% csrf_token %}
@@ -112,11 +119,11 @@
 
             </div>
 
-            <h2 class="sub-header" id="header-todo-add">Add Todo</h2>
+            <h4 class="sub-header" id="header-todo-add">Add Todo</h4>
             <div class="row placeholders" id="div-todo-add">
                 <div id="" >
 
-                    <a href="{%url 'todo:index' %}">Todo-Home</a> <br/> <br/>
+                    <!--<a href="{%url 'todo:index' %}">Todo-Home</a> <br/> <br/>-->
 
                     <form id="todo_form" method="post" action="{% url 'todo:quickadd_todo' %}">
                              {% csrf_token %}
@@ -179,10 +186,10 @@
                 </div>
             </div>
 
-            <h2 class="sub-header" id="header-todo-detail"> View / Edit Todo</h2>
+            <h4 class="sub-header" id="header-todo-detail"> View / Edit Todo</h4>
             <div class="row placeholders" id="div-todo-detail" >
                 <div>
-                    <a href="{%url 'todo:index' %}">Todo-Home</a>
+                    <!--<a href="{%url 'todo:index' %}">Todo-Home</a>-->
                     <a href="#" id="show-search-results" style="display: none; ">Search Results</a>
                 </div>
                 <div id="detail-todo-id" style="display: none; " ></div>
@@ -291,7 +298,7 @@
 
             </div>
 
-            <h2 class="sub-header" id="header-todo-delete"> Delete Todo</h2>
+            <h4 class="sub-header" id="header-todo-delete"> Delete Todo</h4>
             <div class="row placeholders" id="div-todo-delete" >
                   <div id="delete_todo_div" >
                     Are you sure you want to delete <span id="deleteTodoName"></span> ?
@@ -302,17 +309,17 @@
                 </div>
             </div>
 
-            <h2 class="sub-header" id="header-todo-complete"> Completed Todo's</h2>
-            <div class="row placeholders" id="div-todo-complete" >
+            <h4 class="sub-header" id="header-todo-completed"> Completed Todo's</h4>
+            <div class="row placeholders" id="div-todo-completed" >
 
             </div>
 
-            <h2 class="sub-header" id="header-todo-report" > Report on Todo's</h2>
+            <h4 class="sub-header" id="header-todo-report" > Report on Todo's</h4>
             <div class="row placeholders" id="todo-report-div" >
 
             </div>
 
-            <h2 class="sub-header" id="header-todo-project" > Project Todo's</h2>
+            <h4 class="sub-header" id="header-todo-project" > Project Todo's</h4>
             <div class="row placeholders" id="div-todo-project" >
 
             </div>
