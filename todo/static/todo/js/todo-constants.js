@@ -8,6 +8,11 @@ var COMPLETEDFEATURE = "CompletedFeature";
 var REPORTFEATURE = "ReportFeature";
 var PROJECTFEATURE = "ProjectFeature";
 
+/* Todo Tabs Constants  */
+var TODOTAB = "TodoTab";
+var COMPLETEDTODOTAB = "CompletedTodoTab";
+var DELETEDTODOTAB = "DeletedTodoTab";
+
 var FEATURELIST = {
     ADDFEATURE: "AddFeature",
     DETAILFEATURE: "DetailFeature",
@@ -45,7 +50,13 @@ var todo_features_div = {
 
 };
 
-/*  */
+var FEATURETABS = {
+    TODO: "#tab-todo",
+    COMPLTEDTODO: "#tab-completed-todo",
+    DELETEDTODO: "#tab-deleted-todo"
+}
+
+/* Todo common features */
 
 function showTodoFeature(todoFeature) {
     for (var feature in FEATURELIST) {
@@ -64,4 +75,50 @@ function showTodoFeature(todoFeature) {
     }
 }
 
-/*  */
+/* Completed Todo common features start */
+
+/* Completed Todo Feature Header element constants */
+var ctodo_features_header = {
+    ADDFEATURE: "header-ctodo-add",
+    DETAILFEATURE: "header-ctodo-detail",
+    DELETEFEATURE: "header-ctodo-delete",
+    LISTFEATURE: "header-ctodo-list",
+    SEARCHFEATURE: "header-ctodo-search",
+    COMPLETEDFEATURE: "header-ctodo-completed",
+    REPORTFEATURE: "header-ctodo-report",
+    PROJECTFEATURE: "header-ctodo-project"
+};
+/* Completed Todo Feature Body element constants */
+var ctodo_features_div = {
+    ADDFEATURE: "div-ctodo-add",
+    DETAILFEATURE: "div-ctodo-detail",
+    DELETEFEATURE: "div-ctodo-delete",
+    LISTFEATURE: "div-ctodo-list",
+    SEARCHFEATURE: "div-ctodo-search",
+    COMPLETEDFEATURE: "div-ctodo-completed",
+    REPORTFEATURE: "div-ctodo-report",
+    PROJECTFEATURE: "div-ctodo-project"
+};
+
+function showCompletedTodoFeature(ctodoFeature) {
+    for (var feature in FEATURELIST) {
+
+        if(typeof(ctodoFeature) == "undefined" || ctodoFeature == null ){
+            return;
+        } else {
+            if(FEATURELIST[feature] == ctodoFeature){
+                showTodoElementsById(ctodo_features_header[feature]);
+                showTodoElementsById(ctodo_features_div[feature]);
+            } else {
+                hideTodoElementsById(ctodo_features_header[feature]);
+                hideTodoElementsById(ctodo_features_div[feature]);
+            }
+        }
+    }
+}
+
+
+
+
+
+/* Completed Todo common features end */

@@ -139,7 +139,6 @@ def quickedit_todo(request):
         todoname = request.POST.get('todoname')
         todopriority = request.POST.get('todopriority')
         todouser = request.user.id
-        print todouser
         response_data = dict()
 
         t = Todo(id=todoid, name=todoname, priority=todopriority, user_id=todouser)
@@ -168,7 +167,6 @@ def quickadd_todo(request):
         todopriority = request.POST.get('todopriority')
         tododescription = request.POST.get('tododescription')
         todouser = request.user.id
-        print todouser
         response_data = dict()
 
         t = Todo(name=todoname, priority=todopriority, user_id=todouser, description=tododescription)
@@ -221,15 +219,25 @@ def quickdelete_todo(request):
     return HttpResponseRedirect(reverse('todo:index'))
 
 @login_required
-def completedlist(request):
+def completed_todolist(request):
     'List of Completed Todo\'s.'
     completed_todo_list = Todo.objects.filter(user=request.user.id).filter(iscompleted=True).filter(isdeleted=False).order_by('-priority')[:25]
     prioritylist = Todo.PRIORITY_LIST
-    context = {
-        'completed_todo_list': completed_todo_list,
-        'prioritylist': prioritylist,
-    }
-    return render(request, 'todo/index.html', context)
+    response_data = dict()
+    response_datarootkey = "completed_todo_list"
+    response_data[response_datarootkey] = []
+
+    for todo in completed_todo_list:
+        response_data[response_datarootkey].append({
+            'id': todo.id,
+            'name': todo.name,
+            'description': todo.description,
+            'priority': todo.priority
+        })
+    return HttpResponse(
+        json.dumps(response_data[response_datarootkey]),
+        content_type="application/json"
+    )
 
 
 @login_required
@@ -289,12 +297,6 @@ def todo_search(request):
                     'description': result.description,
                     'priority': result.priority
                 })
-                # response_data[response_datarootkey][resultscount]['name'] = result.name
-                # response_data[response_datarootkey][resultscount]['description'] = result.description
-                # response_data[response_datarootkey][resultscount]['priority'] = result.priority
-            print response_data[response_datarootkey]
-            # response_data['searchresults'] = ""
-
             return HttpResponse(
                 json.dumps(response_data[response_datarootkey]),
                 content_type="application/json"
@@ -314,3 +316,6 @@ def reports(request):
 
 def home(request):
 	return render(request, 'todo/home.html')
+
+def todo_tab_test(request):
+    return render(request, 'todo/tabstest.html')

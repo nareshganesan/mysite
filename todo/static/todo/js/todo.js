@@ -173,11 +173,21 @@ $( "#addTodoSubmit" ).click(function() {
 
 /* Quick delete start. */
 
-function showDeleteTodoDiv(todoname, todoid) {
+function showDeleteTodoDiv(todoname, todoid, todotype) {
 
-    $("#deleteTodoName").html(todoname);
-    $("#deleteTodoId").html(todoid);
-    showTodoFeature(FEATURELIST.DELETEFEATURE);
+
+    if(todotype == 'todo') {
+        $("#deleteTodoName").html(todoname);
+        $("#deleteTodoId").html(todoid);
+        showTodoFeature(FEATURELIST.DELETEFEATURE);
+    } else if (todotype == 'completedtodo') {
+        $("#deletecTodoName").html(todoname);
+        $("#deletectodoid").html(todoid);
+        showCompletedTodoFeature(FEATURELIST.DELETEFEATURE);
+    } else {
+
+    }
+
 }
 
 
@@ -418,4 +428,69 @@ $(document).ready(function() {
         showTodoFeature(FEATURELIST.LISTFEATURE);
     });
 
+    $('#deletecTodoCancel').click( function() {
+        showCompletedTodoFeature(FEATURELIST.LISTFEATURE);
+    });
+
 });
+
+/* Tabs UI script */
+
+$("#ul-tab-todo-types a").click( function(e){
+    $('#ul-tab-todo-types a:last').tab('show')
+});
+
+$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+      var selectedTab = $(e.target).attr("href");
+      if ((selectedTab == FEATURETABS.TODO)) {
+        showTodoFeature(FEATURELIST.LISTFEATURE);
+      }else if ((selectedTab == FEATURETABS.COMPLTEDTODO)){
+        showCompletedTodoFeature(FEATURELIST.LISTFEATURE);
+        ctodolist();
+      } else {
+         // Operation todo when other tabs load.
+      }
+  });
+
+  /* Completed Todo functions start */
+
+function ctodolist() {
+    var ctodolist_url = "completed_todo_list/";
+    $.ajax({
+        url : ctodolist_url, // the endpoint
+        type : "POST", // http method
+        // data sent with the post request
+        data : {
+        },
+
+        // handle a successful response
+        success : function(json) {
+            $('#table-ctodo-list').empty();
+            var resCount = json.length;
+            if(resCount > 0){
+                var header = "<tr><td> Name </td><td>Priority</td><td>Todo page</td><td>Delete Todo </td></tr>";
+                $('#table-ctodo-list').append(header);
+                     for (var i =0; i < resCount; i ++ ) {
+                        var ctodonameinput = "<input readonly type=\"text\" class=\"ctodoname\" id=\"ctodoname"+json[i].id +"\" value=\""+ json[i].name +"\" />";
+                        var ctodoname = "<td>" + json[i].name + "</td>";
+                        var ctodopriority = "<td>" + json[i].priority + "</td>";
+                        var ctodoview = "<td> view </td>";
+                        var ctododeletelink = "<a href=\"#\"  onclick=\"showDeleteTodoDiv(\'"+ json[i].name +"\', \'"+ json[i].id + "\', \'completedtodo\')\" > delete </a>";
+                        var ctododelete = "<td> " + ctododeletelink + " </td>";
+                        var ctodo = "<tr>" + ctodoname + ctodopriority + ctodoview + ctododelete + "</tr>";
+                        $('#table-ctodo-list').append(ctodo);
+
+                    }
+            }
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            $('#error-results').html("Search failed");
+        }
+    });
+
+}
+
+
+  /* Completed Todo functions end */

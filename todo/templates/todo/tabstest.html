@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="images/favicon.ico">
+
+    <title>Django Practice Apps Home Page</title>
+
+    {% load staticfiles %}
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'todo/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" href="{% static 'todo/css/todo.css' %}" />
+
+    <!-- Javscript constants -->
+    <script type="text/javascript" src="{% static 'todo/js/todo-constants.js' %}"></script>
+
+</head>
+<body >
+{% if user.is_authenticated %}
+    {% include "todo/header.html" with isAuthenticated="True"%}
+{% else %}
+    {% include "todo/header.html" %}
+{% endif %}
+
+<div class="container">
+    <div class="row">
+        {% if user.is_authenticated %}
+            {% include "todo/sidebar.html" with isAuthenticated="True"%}
+        {% else %}
+            {% include "todo/sidebar.html" %}
+        {% endif %}
+        <div class="col-sm-9 col-md-10 custom-main">
+            <!--&lt;!&ndash;<h2 class="sub-header" id="header-todo-list">Todo's</h2>&ndash;&gt;-->
+            <!-- /search-box-group -->
+            <div class="input-group" id="search-box-container" style="display: inline-table; width: 80%; margin-top: 30px; margin-bottom: 10px;">
+              <span class="input-group-btn">
+                <button class="btn btn-default" id="search-button" type="button">Go!</button>
+              </span>
+              <input type="text" id="search-box" class="form-control" placeholder="Search for...">
+            </div>
+            <!-- /search-box-group -->
+            <div style="display: inline; width: 20%;" >
+                <a href="#" id="link-show-add"  >
+                    <img id="img-add-todo" src="{% static 'todo/images/plus_sign.png' %}" title="Add Todo"/>
+                </a>
+            </div>
+
+            <div class="tabbable" id="tabs-todo-types">
+                <ul id="ul-tab-todo-types" class="nav nav-tabs">
+                    <li class="active"><a href="#website" data-target="#tab-todo" data-toggle="tab">Todo</a></li>
+                    <li><a  href="#profile" data-target="#tab-completed-todo" data-toggle="tab">Completed Todo</a></li>
+                    <li><a  href="#tweets" data-target="#tab-deleted-todo" data-toggle="tab">Deleted Todo</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab-todo">
+                        <p>Todo</p>
+                    </div>
+                    <div class="tab-pane" id="tab-completed-todo">
+                        <p>Completed Todo</p>
+                    </div>
+
+                    <div class="tab-pane" id="tab-deleted-todo">
+                        <p>Deleted Todo</p>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+
+<!-- Loading Footer , Javascript / Jquery files -->
+
+{% if user.is_authenticated %}
+    {% include "todo/footer.html" with isAuthenticated="True"%}
+{% else %}
+    {% include "todo/footer.html" %}
+{% endif %}
+
+</body>
+</html>

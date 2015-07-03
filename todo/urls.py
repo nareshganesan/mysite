@@ -13,4 +13,8 @@ urlpatterns = [
     url(r'^reports/$', views.reports, name='reports'),
     url(r'^mark_as_completed/$', views.mark_as_completed, name='mark_as_completed'),
     url(r'^search/$', views.todo_search, name='todo_search'),
+    url(r'^completed_todo_list/$', views.completed_todolist, name='completed_todo_list'),
+
+    # Test url to test UI stuff.
+    url(r'^tabs', views.todo_tab_test, name='todo_tab_test'),
 ]
