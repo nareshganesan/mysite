@@ -14,13 +14,15 @@
     {% load staticfiles %}
 
     <!-- Bootstrap core CSS -->
-    <link href="{% static 'todo/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'todo/css/bootstrap.min.css' %}" rel="stylesheet"/>
 
     <!-- Custom styles for this template -->
-    <link rel="stylesheet" type="text/css" href="{% static 'todo/css/todo.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'todo/css/todo.css' %}" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="{% static 'todo/css/datepicker.min.css' %}" rel="stylesheet" />
 
     <!-- Javscript constants -->
     <script type="text/javascript" src="{% static 'todo/js/todo-constants.js' %}"></script>
+
 
 </head>
 <body >
@@ -73,6 +75,21 @@
                 </div>
             </div>
 
+
+            <div class="form-group">
+                <div style="float: left; width: 50px;" > Start : </div>
+                <div class='input-group date' id='startDate'>
+                    <input type='text' class="form-control" name="startDate" />
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+                <div style="float: left;width: 50px; margin-left: 10px;" > End : </div>
+                <div class='input-group date' id='endDate'>
+                    <input type='text' class="form-control" name="org_endDate" />
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
 
 
         </div>

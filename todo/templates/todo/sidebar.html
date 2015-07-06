@@ -1,7 +1,7 @@
 <div class="col-sm-3 col-md-2 custom-sidebar">
     <ul class="nav nav-sidebar">
-        <li class="active"><a href="{% url 'todo:index'  %}">Todo Home <span class="sr-only">(current)</span></a></li>
-        <li><a href="{% url 'todo:reports'  %}" id="scrollTo">Reports</a></li>
+        <li class="active"><a href="{% url 'todo:index'  %}">Todo's <span class="sr-only">(current)</span></a></li>
+        <li><a href="#" onclick="showReportTodo()" id="scrollTo">Reports</a></li>
         <li><a href="#">Projects</a></li>
         <li><a href="#">Tags</a></li>
         {%if isAuthenticated == "True" %}

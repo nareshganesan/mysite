@@ -18,6 +18,7 @@
 
     <!-- Custom styles for this template -->
     <link rel="stylesheet" type="text/css" href="{% static 'todo/css/todo.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'todo/css/datepicker.min.css' %}" rel="stylesheet" />
 
     <!-- Javscript constants -->
     <script type="text/javascript" src="{% static 'todo/js/todo-constants.js' %}"></script>
@@ -25,389 +26,449 @@
 
 </head>
 <body >
-{% if user.is_authenticated %}
-    {% include "todo/header.html" with isAuthenticated="True"%}
-{% else %}
-    {% include "todo/header.html" %}
-{% endif %}
+    {% if user.is_authenticated %}
+        {% include "todo/header.html" with isAuthenticated="True"%}
+    {% else %}
+        {% include "todo/header.html" %}
+    {% endif %}
 
-<div class="container">
-    <div class="row">
-        {% if user.is_authenticated %}
-            {% include "todo/sidebar.html" with isAuthenticated="True"%}
-        {% else %}
-            {% include "todo/sidebar.html" %}
-        {% endif %}
-        <div class="col-sm-9 col-md-10 custom-main">
-            <!--<h2 class="sub-header" id="header-todo-list">Todo's</h2>-->
-            <!-- /search-box-group -->
-            <div class="input-group" id="search-box-container" style="display: inline-table; width: 80%; margin-top: 30px; margin-bottom: 10px;">
-              <span class="input-group-btn">
-                <button class="btn btn-default" id="search-button" type="button">Go!</button>
-              </span>
-              <input type="text" id="search-box" class="form-control" placeholder="Search for...">
-            </div>
-            <!-- /search-box-group -->
-            <div style="display: inline; width: 20%;" >
-                <a href="#" id="link-show-add"  >
-                    <img id="img-add-todo" src="{% static 'todo/images/plus_sign.png' %}" title="Add Todo"/>
-                </a>
-            </div>
+    <div class="container">
+        <div class="row">
+            {% if user.is_authenticated %}
+                {% include "todo/sidebar.html" with isAuthenticated="True"%}
+            {% else %}
+                {% include "todo/sidebar.html" %}
+            {% endif %}
+            <div class="col-sm-9 col-md-10 custom-main">
+                <!--<h2 class="sub-header" id="header-todo-list">Todo's</h2>-->
+                <!-- /search-box-group -->
+                <div class="input-group" id="search-box-container" style="display: inline-table; width: 80%; margin-top: 30px; margin-bottom: 10px;">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" id="search-button" type="button">Go!</button>
+                  </span>
+                  <input type="text" id="search-box" class="form-control" placeholder="Search for...">
+                </div>
+                <!-- /search-box-group -->
+                <div style="display: inline; width: 20%;" >
+                    <a href="#" id="link-show-add"  >
+                        <img id="img-add-todo" src="{% static 'todo/images/plus_sign.png' %}" title="Add Todo"/>
+                    </a>
+                </div>
 
 
-            <div class="tabbable" id="tabs-todo-types">
-                <ul id="ul-tab-todo-types" class="nav nav-tabs">
-                    <li class="active"><a href="#tab-todo" data-target="#tab-todo" data-toggle="tab">Todo</a></li>
-                    <li><a  href="#tab-completed-todo" data-target="#tab-completed-todo" data-toggle="tab">Completed Todo</a></li>
-                    <li><a  href="#tab-deleted-todo" data-target="#tab-deleted-todo" data-toggle="tab">Deleted Todo</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div id="error-results"></div>
-                    <div class="tab-pane active" id="tab-todo">
+                <div class="tabbable" id="tabs-todo-types">
+                    <ul id="ul-tab-todo-types" class="nav nav-tabs">
+                        <li class="active"><a href="#tab-todo" data-target="#tab-todo" data-toggle="tab">Todo</a></li>
+                        <li><a  href="#tab-completed-todo" data-target="#tab-completed-todo" data-toggle="tab">Completed Todo</a></li>
+                        <li><a  href="#tab-deleted-todo" data-target="#tab-deleted-todo" data-toggle="tab">Deleted Todo</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="error-results"></div>
+                        <div class="tab-pane active" id="tab-todo">
 
-                        <div class="row placeholders" id="div-todo-list">
-                            <!--<p>-->
-                                <!--<span><a href="#" id="link-show-add"  >Add Todo</a> </span>-->
-                            <!--</p>-->
-                            {% if latest_todo_list %}
-                                <form method="POST" id="quickedit-todo-form">
-                                    {% csrf_token %}
-                                    <table class="table table-striped table-hover table-todo-list">
-                                        <tr>
-                                            <td> Name </td>
-                                            <td>Priority</td>
-                                            <td>Quick Edit</td>
-                                            <td>Todo page</td>
-                                            <td>Todo Completed</td>
-                                            <td>Delete Todo </td>
-                                            <!--<td>Created Date </td>-->
-                                        </tr>
-                                        {% for todo in latest_todo_list %}
-
+                            <div class="row placeholders" id="div-todo-list">
+                                <!--<p>-->
+                                    <!--<span><a href="#" id="link-show-add"  >Add Todo</a> </span>-->
+                                <!--</p>-->
+                                {% if latest_todo_list %}
+                                    <form method="POST" id="quickedit-todo-form">
+                                        {% csrf_token %}
+                                        <table class="table table-striped table-hover table-todo-list">
                                             <tr>
-                                                <td>
-                                                    <input type="text" name="todoname" id="todoname{{ todo.id }}" value="{{ todo.name }}" readonly>
-                                                </td>
-                                                <td>
-                                                    <input type="text" name="todopriority" id="todopriority{{ todo.id }}" value="{{ todo.priority }}" readonly>
-                                                     <select id="priority_dropdown{{ todo.id }}" style="display: none;">
-                                                            <option value="high" >High</option>
-                                                            <option value="medium" >Medium</option>
-                                                            <option value="low" >Low</option>
-                                                            <option value="severe" >Severe</option>
-                                                     </select>
-                                                </td>
-                                                <td>
-                                                        <input type="button" id="quickedit{{todo.id}}" name="quickedit{{todo.id}}" value="edit" class="tiny button btn-primary">
-                                                        <input type="submit" id="quicksave{{todo.id}}" name="quicksave{{todo.id}}" value="update" class="tiny button" style="display:none;">
-                                                </td>
-                                                <td>
-                                                    <a href="#" onclick="showDetailTodoDiv('{{ todo.name }}', '{{ todo.id }}', 'False')" >view </a>
-                                                </td>
-                                                <td>
-                                                    <div>
-                                                        <input type="checkbox" name="todocompleted" id="todocompleted{{ todo.id }}" value="{{ todo.iscompleted }}" onclick="markasCompleted('{{ todo.name }}', '{{ todo.id }}')" >
-                                                    </div>
-                                                </td>
-                                                 <td>
-                                                     <a href="#"  onclick="showDeleteTodoDiv('{{ todo.name }}', '{{ todo.id }}', 'todo')">delete</a>
-                                                </td>
-                                                <!--<td>
-                                                    <input type="text" name="createddate" id="createddate{{ todo.id }}" value="{{ todo.created_date|date:'D d M Y' }}{{ todo.created_date|time:'H:i' }}" readonly>
-                                                </td>-->
-
+                                                <td> Name </td>
+                                                <td>Priority</td>
+                                                <td>Quick Edit</td>
+                                                <td>Todo page</td>
+                                                <td>Todo Completed</td>
+                                                <td>Delete Todo </td>
+                                                <!--<td>Created Date </td>-->
                                             </tr>
+                                            {% for todo in latest_todo_list %}
 
-                                        {% endfor %}
-                                    </table>
+                                                <tr>
+                                                    <td>
+                                                        <input type="text" name="todoname" id="todoname{{ todo.id }}" value="{{ todo.name }}" readonly>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" name="todopriority" id="todopriority{{ todo.id }}" value="{{ todo.priority }}" readonly>
+                                                         <select id="priority_dropdown{{ todo.id }}" style="display: none;">
+                                                                <option value="high" >High</option>
+                                                                <option value="medium" >Medium</option>
+                                                                <option value="low" >Low</option>
+                                                                <option value="severe" >Severe</option>
+                                                         </select>
+                                                    </td>
+                                                    <td>
+                                                            <input type="button" id="quickedit{{todo.id}}" name="quickedit{{todo.id}}" value="edit" class="tiny button btn-primary">
+                                                            <input type="submit" id="quicksave{{todo.id}}" name="quicksave{{todo.id}}" value="update" class="tiny button" style="display:none;">
+                                                    </td>
+                                                    <td>
+                                                        <a href="#" onclick="showDetailTodoDiv('{{ todo.id }}', 'False')" >view </a>
+                                                    </td>
+                                                    <td>
+                                                        <div>
 
-                                </form>
-                            {% else %}
-                                <p> Yay!!! No todo's. </p>
-                            {% endif %}
+                                                            <input type="checkbox" name="todocompleted" id="todocompleted{{ todo.id }}" value="{{ todo.iscompleted }}" onclick="markasCompleted('{{ todo.name|safe }}', '{{ todo.id }}')" >
+                                                        </div>
+                                                    </td>
+                                                     <td>
+                                                         <a href="#"  onclick="showDeleteTodoDiv( '{{ todo.id }}', 'todo')">delete</a>
+                                                    </td>
+                                                    <!--<td>
+                                                        <input type="text" name="createddate" id="createddate{{ todo.id }}" value="{{ todo.created_date|date:'D d M Y' }}{{ todo.created_date|time:'H:i' }}" readonly>
+                                                    </td>-->
 
-                        </div>
+                                                </tr>
 
-                        <h4 class="sub-header" id="header-todo-add">Add Todo</h4>
-                        <div class="row placeholders" id="div-todo-add">
-                            <div id="" >
+                                            {% endfor %}
+                                        </table>
 
-                                <!--<a href="{%url 'todo:index' %}">Todo-Home</a> <br/> <br/>-->
-
-                                <form id="todo_form" method="post" action="{% url 'todo:quickadd_todo' %}">
-                                         {% csrf_token %}
-                                            <div style="display:inline-block;"> Please enter the Todo name. </div>
-                                            <div style="display:inline-block;"> <input id="id_name" maxlength="200" name="name" type="text" /> </div>
-                                        <br>
-
-
-                                            <div style="display:inline-block;">Optional Todo description..</div>
-                                            <div style="display:inline-block;"><input id="id_description" maxlength="400" name="description" type="text" /></div>
-                                        <br>
-
-
-                                            <div style="display:inline-block;">Please enter the Todo priority.</div>
-                                            <div style="display:inline-block;">
-                                                <select id="id_priority" style="display: ;">
-                                                            <option value="high" >High</option>
-                                                            <option value="medium" >Medium</option>
-                                                            <option value="low" >Low</option>
-                                                         <option value="severe" >Severe</option>
-                                                     </select>
-                                            </div>
-                                        <br>
-
-
-                                            <div style="display:inline-block;">Optional Todo notes.</div>
-                                            <div style="display:inline-block;"><input id="id_notes" maxlength="300" name="notes" type="text" /></div>
-                                        <br>
-
-
-                                            <div style="display:inline-block;">Optional Todo tags.</div>
-                                            <div style="display:inline-block;"><input id="id_tags" maxlength="100" name="tags" type="text" /></div>
-                                        <br>
-
-
-                                            <div style="display:inline-block;">Optional Todo project.</div>
-                                            <div style="display:inline-block;"><input id="id_project" maxlength="200" name="project" type="text" /></div>
-                                        <br>
-
-
-                                            <div style="display:inline-block;">Optional Todo email.</div>
-                                            <div style="display:inline-block;"><input id="id_email" maxlength="100" name="email" type="text" /></div>
-                                        <br>
-
-
-                                            <div style="display:inline-block;">Optional Todo phone number.</div>
-                                            <div style="display:inline-block;"><input id="id_phone_number" maxlength="12" name="phone_number" type="text" /></div>
-                                        <br>
-
-
-                                            <div style="display:inline-block;">Optional Todo address.</div>
-                                            <div style="display:inline-block;"><input id="id_address" maxlength="200" name="address" type="text" /></div>
-                                        <br>
-
-
-                                        <input type="submit" id="addTodoSubmit" class="btn btn-primary" name="submit" value="Add Todo" />
-                                    <input type="button" id="addTodoCancel" class="btn btn-primary" name="cancel" value="cancel" />
                                     </form>
+                                {% else %}
+                                    <p> Yay!!! No todo's. </p>
+                                {% endif %}
 
                             </div>
-                        </div>
 
-                        <h4 class="sub-header" id="header-todo-detail"> View / Edit Todo</h4>
-                        <div class="row placeholders" id="div-todo-detail" >
-                            <div>
-                                <!--<a href="{%url 'todo:index' %}">Todo-Home</a>-->
-                                <a href="#" id="show-search-results" style="display: none; ">Search Results</a>
-                            </div>
-                            <div id="detail-todo-id" style="display: none; " ></div>
-                            <div id="detail-todo-name" style="display: none; " ></div>
-                            <div id="detail-update-success" class="alert alert-success" role="alert" style="display: none;">
+                            <h4 class="sub-header" id="header-todo-add">Add Todo</h4>
+                            <div class="row placeholders" id="div-todo-add">
+                                <div id="" >
 
-                            </div>
-                            <div class="well-sm">
-                              <form class="form-horizontal" action="" method="post">
-                              <fieldset>
-                                <!--<legend class="" id="header-todo-detail-name">View / Edit Todo</legend>-->
+                                    <!--<a href="{%url 'todo:index' %}">Todo-Home</a> <br/> <br/>-->
 
-                                <!-- Name input-->
-                                <div class="form-group">
-                                  <label class="col-md-3 control-label" for="body-todo-detail-name">Name</label>
-                                  <div class="col-md-9">
-                                    <input id="body-todo-detail-name" name="body-todo-detail-name" type="text" placeholder="Todo name" class="form-control">
-                                  </div>
+                                    <form id="todo_form" method="post" action="{% url 'todo:quickadd_todo' %}">
+                                             {% csrf_token %}
+                                                <div style="display:inline-block;"> Please enter the Todo name. </div>
+                                                <div style="display:inline-block;"> <input id="id_name" maxlength="200" name="name" type="text" /> </div>
+                                            <br>
+
+
+                                                <div style="display:inline-block;">Optional Todo description..</div>
+                                                <div style="display:inline-block;"><input id="id_description" maxlength="400" name="description" type="text" /></div>
+                                            <br>
+
+
+                                                <div style="display:inline-block;">Please enter the Todo priority.</div>
+                                                <div style="display:inline-block;">
+                                                    <select id="id_priority" style="display: ;">
+                                                                <option value="high" >High</option>
+                                                                <option value="medium" >Medium</option>
+                                                                <option value="low" >Low</option>
+                                                             <option value="severe" >Severe</option>
+                                                         </select>
+                                                </div>
+                                            <br>
+
+
+                                                <div style="display:inline-block;">Optional Todo notes.</div>
+                                                <div style="display:inline-block;"><input id="id_notes" maxlength="300" name="notes" type="text" /></div>
+                                            <br>
+
+
+                                                <div style="display:inline-block;">Optional Todo tags.</div>
+                                                <div style="display:inline-block;"><input id="id_tags" maxlength="100" name="tags" type="text" /></div>
+                                            <br>
+
+
+                                                <div style="display:inline-block;">Optional Todo project.</div>
+                                                <div style="display:inline-block;"><input id="id_project" maxlength="200" name="project" type="text" /></div>
+                                            <br>
+
+
+                                                <div style="display:inline-block;">Optional Todo email.</div>
+                                                <div style="display:inline-block;"><input id="id_email" maxlength="100" name="email" type="text" /></div>
+                                            <br>
+
+
+                                                <div style="display:inline-block;">Optional Todo phone number.</div>
+                                                <div style="display:inline-block;"><input id="id_phone_number" maxlength="12" name="phone_number" type="text" /></div>
+                                            <br>
+
+
+                                                <div style="display:inline-block;">Optional Todo address.</div>
+                                                <div style="display:inline-block;"><input id="id_address" maxlength="200" name="address" type="text" /></div>
+                                            <br>
+
+
+                                            <input type="submit" id="addTodoSubmit" class="btn btn-primary" name="submit" value="Add Todo" />
+                                        <input type="button" id="addTodoCancel" class="btn btn-primary" name="cancel" value="cancel" />
+                                        </form>
+
                                 </div>
-
-                                <!-- Priority input-->
-                                <div class="form-group">
-                                  <label class="col-md-3 control-label" for="body-todo-detail-priority">Priority</label>
-                                  <div class="col-md-9">
-                                    <select id="body-todo-detail-priority" class="form-control">
-                                        <option value="high" >High</option>
-                                        <option value="medium" >Medium</option>
-                                        <option value="low" >Low</option>
-                                        <option value="severe" >Severe</option>
-                                     </select>
-                                  </div>
-                                </div>
-
-                                <!-- Description Input -->
-                                <div class="form-group">
-                                  <label class="col-md-3 control-label" for="body-todo-detail-description">Description</label>
-                                  <div class="col-md-9">
-                                    <textarea class="form-control" id="body-todo-detail-description" name="body-todo-detail-description" placeholder="Please enter your message here..." rows="5"></textarea>
-                                  </div>
-                                </div>
-
-                                <!-- Notes Input -->
-                                <div class="form-group">
-                                  <label class="col-md-3 control-label" for="body-todo-detail-notes">Notes</label>
-                                  <div class="col-md-9">
-                                    <textarea class="form-control" id="body-todo-detail-notes" name="body-todo-detail-notes" placeholder="Any Notes related to Todo." rows="5"></textarea>
-                                  </div>
-                                </div>
-
-
-                                <!-- Tags input-->
-                                <div class="form-group">
-                                  <label class="col-md-3 control-label" for="body-todo-detail-tags">Tags</label>
-                                  <div class="col-md-9">
-                                    <input id="body-todo-detail-tags" name="body-todo-detail-tags" type="text" placeholder="Tags" class="form-control">
-                                  </div>
-                                </div>
-
-                                <!-- Projects input-->
-                                <div class="form-group">
-                                  <label class="col-md-3 control-label" for="body-todo-detail-project">Project</label>
-                                  <div class="col-md-9">
-                                    <input id="body-todo-detail-project" name="body-todo-detail-project" type="text" placeholder="Project related to Todo" class="form-control">
-                                  </div>
-                                </div>
-
-
-                                <!-- Email input-->
-                                <div class="form-group">
-                                  <label class="col-md-3 control-label" for="body-todo-detail-email">E-mail</label>
-                                  <div class="col-md-9">
-                                    <input id="body-todo-detail-email" name="body-todo-detail-email" type="text" placeholder="Related Email" class="form-control">
-                                  </div>
-                                </div>
-
-                                <!-- Phone Number input-->
-                                <div class="form-group">
-                                  <label class="col-md-3 control-label" for="body-todo-detail-phone">Phone Number</label>
-                                  <div class="col-md-9">
-                                    <input id="body-todo-detail-phone" name="body-todo-detail-phone" type="text" placeholder="Phone Number" class="form-control">
-                                  </div>
-                                </div>
-
-                                <!-- Address input-->
-                                <div class="form-group">
-                                  <label class="col-md-3 control-label" for="body-todo-detail-address">Address</label>
-                                  <div class="col-md-9">
-                                    <textarea id="body-todo-detail-address" name="body-todo-detail-address" type="text" placeholder="Address" class="form-control"rows="5"></textarea>
-                                  </div>
-                                </div>
-
-
-
-
-
-                                <!-- Form actions -->
-                                <div class="form-group">
-                                  <div class="col-md-12 text-center">
-                                    <button id="detailTodoUpdate" type="button" class="btn btn-primary">update</button>
-                                    <button id="detailTodoCancel" type="button" class="btn btn-primary">cancel</button>
-                                  </div>
-                                </div>
-                              </fieldset>
-                              </form>
                             </div>
 
-                        </div>
+                            <h4 class="sub-header" id="header-todo-detail"> View / Edit Todo</h4>
+                            <div class="row placeholders" id="div-todo-detail" >
+                                <div>
+                                    <!--<a href="{%url 'todo:index' %}">Todo-Home</a>-->
+                                    <a href="#" id="show-search-results" style="display: none; ">Search Results</a>
+                                </div>
+                                <div id="detail-todo-id" style="display: none; " ></div>
+                                <div id="detail-todo-name" style="display: none; " ></div>
+                                <div id="detail-update-success" class="alert alert-success" role="alert" style="display: none;">
 
-                        <h4 class="sub-header" id="header-todo-delete"> Delete Todo</h4>
-                        <div class="row placeholders" id="div-todo-delete" >
-                              <div id="delete_todo_div" >
-                                Are you sure you want to delete <span id="deleteTodoName"></span> ?
-                                <span id="deleteTodoId" style="display:none;"></span>
-                                <input type="button" id="deleteTodoSubmit" name="delete" value="delete" />
-                                <input type="button" id="deleteTodoCancel" name="cancel" value="cancel" />
+                                </div>
+                                <div class="well-sm">
+                                  <form class="form-horizontal" action="" method="post">
+                                  <fieldset>
+                                    <!--<legend class="" id="header-todo-detail-name">View / Edit Todo</legend>-->
 
-                            </div>
-                        </div>
-
-                        <h4 class="sub-header" id="header-todo-completed"> Completed Todo's</h4>
-                        <div class="row placeholders" id="div-todo-completed" >
-
-                        </div>
-
-                        <h4 class="sub-header" id="header-todo-report" > Report on Todo's</h4>
-                        <div class="row placeholders" id="todo-report-div" >
-
-                        </div>
-
-                        <h4 class="sub-header" id="header-todo-project" > Project Todo's</h4>
-                        <div class="row placeholders" id="div-todo-project" >
-
-                        </div>
-
-                        <h4 class="sub-header" id="header-todo-search"> Search Results</h4>
-                        <div class="row placeholders" id="div-todo-search" >
-
-                            <ol id="search-results">
-                                <!--<li>
-                                    <div class="rh">
-                                            <h3 class="h"></h3>
+                                    <!-- Name input-->
+                                    <div class="form-group">
+                                      <label class="col-md-3 control-label" for="body-todo-detail-name">Name</label>
+                                      <div class="col-md-9">
+                                        <input id="body-todo-detail-name" name="body-todo-detail-name" type="text" placeholder="Todo name" class="form-control">
+                                      </div>
                                     </div>
-                                </li>
-                                <li>
-                                    <div class="rc">
-                                            <h3 class="c"></h3>
+
+                                    <!-- Priority input-->
+                                    <div class="form-group">
+                                      <label class="col-md-3 control-label" for="body-todo-detail-priority">Priority</label>
+                                      <div class="col-md-9">
+                                        <select id="body-todo-detail-priority" class="form-control">
+                                            <option value="high" >High</option>
+                                            <option value="medium" >Medium</option>
+                                            <option value="low" >Low</option>
+                                            <option value="severe" >Severe</option>
+                                         </select>
+                                      </div>
                                     </div>
-                                </li>-->
-                            </ol>
 
-                        </div>
+                                    <!-- Description Input -->
+                                    <div class="form-group">
+                                      <label class="col-md-3 control-label" for="body-todo-detail-description">Description</label>
+                                      <div class="col-md-9">
+                                        <textarea class="form-control" id="body-todo-detail-description" name="body-todo-detail-description" placeholder="Please enter your message here..." rows="5"></textarea>
+                                      </div>
+                                    </div>
 
-                        <h2 class="sub-header" id="header-todo-tags" > Todo Tags</h2>
-                        <div class="row placeholders" id="div-todo-tags" >
+                                    <!-- Notes Input -->
+                                    <div class="form-group">
+                                      <label class="col-md-3 control-label" for="body-todo-detail-notes">Notes</label>
+                                      <div class="col-md-9">
+                                        <textarea class="form-control" id="body-todo-detail-notes" name="body-todo-detail-notes" placeholder="Any Notes related to Todo." rows="5"></textarea>
+                                      </div>
+                                    </div>
 
-                        </div>
+
+                                    <!-- Tags input-->
+                                    <div class="form-group">
+                                      <label class="col-md-3 control-label" for="body-todo-detail-tags">Tags</label>
+                                      <div class="col-md-9">
+                                        <input id="body-todo-detail-tags" name="body-todo-detail-tags" type="text" placeholder="Tags" class="form-control">
+                                      </div>
+                                    </div>
+
+                                    <!-- Projects input-->
+                                    <div class="form-group">
+                                      <label class="col-md-3 control-label" for="body-todo-detail-project">Project</label>
+                                      <div class="col-md-9">
+                                        <input id="body-todo-detail-project" name="body-todo-detail-project" type="text" placeholder="Project related to Todo" class="form-control">
+                                      </div>
+                                    </div>
 
 
-                    </div>
+                                    <!-- Email input-->
+                                    <div class="form-group">
+                                      <label class="col-md-3 control-label" for="body-todo-detail-email">E-mail</label>
+                                      <div class="col-md-9">
+                                        <input id="body-todo-detail-email" name="body-todo-detail-email" type="text" placeholder="Related Email" class="form-control">
+                                      </div>
+                                    </div>
 
-                    <div class="tab-pane" id="tab-completed-todo">
+                                    <!-- Phone Number input-->
+                                    <div class="form-group">
+                                      <label class="col-md-3 control-label" for="body-todo-detail-phone">Phone Number</label>
+                                      <div class="col-md-9">
+                                        <input id="body-todo-detail-phone" name="body-todo-detail-phone" type="text" placeholder="Phone Number" class="form-control">
+                                      </div>
+                                    </div>
 
-                        <div class="row placeholders" id="div-ctodo-list">
-                            <form method="POST" id="quickedit-ctodo-form">
-                                {% csrf_token %}
-                                <table class="table table-striped table-hover table-todo-list" id="table-ctodo-list">
-                                </table>
-                            </form>
-                        </div>
+                                    <!-- Address input-->
+                                    <div class="form-group">
+                                      <label class="col-md-3 control-label" for="body-todo-detail-address">Address</label>
+                                      <div class="col-md-9">
+                                        <textarea id="body-todo-detail-address" name="body-todo-detail-address" type="text" placeholder="Address" class="form-control"rows="5"></textarea>
+                                      </div>
+                                    </div>
 
-                        <h4 class="sub-header" id="header-ctodo-delete"> Delete Todo</h4>
-                        <div class="row placeholders" id="div-ctodo-delete" >
-                              <div id="delete_ctodo_div" >
-                                Are you sure you want to delete <span id="deletecTodoName"></span> ?
-                                <span id="deletectodoid" style="display:none;"></span>
-                                <input type="button" id="deletecTodoSubmit" name="delete" value="delete" />
-                                <input type="button" id="deletecTodoCancel" name="cancel" value="cancel" />
+
+
+
+
+                                    <!-- Form actions -->
+                                    <div class="form-group">
+                                      <div class="col-md-12 text-center">
+                                        <button id="detailTodoUpdate" type="button" class="btn btn-primary">update</button>
+                                        <button id="detailTodoCancel" type="button" class="btn btn-primary">cancel</button>
+                                      </div>
+                                    </div>
+                                  </fieldset>
+                                  </form>
+                                </div>
 
                             </div>
+
+                            <h4 class="sub-header" id="header-todo-delete"> Delete Todo</h4>
+                            <div class="row placeholders" id="div-todo-delete" >
+                                  <div id="delete_todo_div" >
+                                    Are you sure you want to delete <span id="deleteTodoName"></span> ?
+                                    <span id="deleteTodoId" style="display:none;"></span>
+                                    <input type="button" id="deleteTodoSubmit" name="delete" value="delete" />
+                                    <input type="button" id="deleteTodoCancel" name="cancel" value="cancel" />
+
+                                </div>
+                            </div>
+
+                            <h4 class="sub-header" id="header-todo-completed"> Completed Todo's</h4>
+                            <div class="row placeholders" id="div-todo-completed" >
+
+                            </div>
+
+                            <!--<h4 class="sub-header" id="header-todo-report" ></h4>-->
+                            <div class="row placeholders" id="div-todo-report" >
+
+                                <div class="form-group" id="div-report-group" >
+                                    <div id="startDateLabel" > Start : </div>
+                                    <div class='input-group date' id='div-startdate'>
+                                        <input type='text' class="form-control" name="div-startdate" id="input-div-startdate" />
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                    <div id="endDateLabel" > End : </div>
+                                    <div class='input-group date' id='div-enddate'>
+                                        <input type='text' class="form-control" name="div-enddate" id="input-div-enddate" />
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                    <div class="" id='getReport'>
+                                        <input type='button' class="btn btn-primary btn-md" name="getReport" value="Report" />
+                                    </div>
+
+                                </div>
+
+                                <div id="reportByPriority" class="panel-body" style=""></div>
+                                <div id="results">
+
+                                </div>
+
+
+                            </div>
+
+                            <h4 class="sub-header" id="header-todo-project" > Project Todo's</h4>
+                            <div class="row placeholders" id="div-todo-project" >
+
+                            </div>
+
+                            <h4 class="sub-header" id="header-todo-search"> Search Results</h4>
+                            <div class="row placeholders" id="div-todo-search" >
+
+                                <ol id="search-results">
+                                    <!--<li>
+                                        <div class="rh">
+                                                <h3 class="h"></h3>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="rc">
+                                                <h3 class="c"></h3>
+                                        </div>
+                                    </li>-->
+                                </ol>
+
+                            </div>
+
+                            <h2 class="sub-header" id="header-todo-tags" > Todo Tags</h2>
+                            <div class="row placeholders" id="div-todo-tags" >
+
+                            </div>
+
+
                         </div>
 
-                    </div>
+                        <div class="tab-pane" id="tab-completed-todo">
 
-                    <div class="tab-pane" id="tab-deleted-todo">
-                        <p>Deleted Todo</p>
+                            <div class="row placeholders" id="div-ctodo-list">
+                                <form method="POST" id="quickedit-ctodo-form">
+                                    {% csrf_token %}
+                                    <table class="table table-striped table-hover table-todo-list" id="table-ctodo-list">
+                                    </table>
+                                </form>
+                            </div>
+
+                            <div class="row placeholders" id="div-ctodo-report" >
+
+                                <div class="form-group" id="div-creport-group" >
+                                    <div id="cstartDateLabel" > Start : </div>
+                                    <div class='input-group date' id='div-cstartdate'>
+                                        <input type='text' class="form-control" name="div-startdate" id="input-div-cstartdate" />
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                    <div id="cendDateLabel" > End : </div>
+                                    <div class='input-group date' id='div-cenddate'>
+                                        <input type='text' class="form-control" name="div-enddate" id="input-div-cenddate" />
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                    <div class="" id='cgetReport'>
+                                        <input type='button' class="btn btn-primary btn-md" name="getReport" value="Report" />
+                                    </div>
+
+                                </div>
+
+                                <div id="creportByPriority" class="panel-body" style=""></div>
+                                <div id="cresults">
+
+                                </div>
+
+
+                            </div>
+
+
+                            <h4 class="sub-header" id="header-ctodo-delete"> Delete Todo</h4>
+                            <div class="row placeholders" id="div-ctodo-delete" >
+                                  <div id="delete_ctodo_div" >
+                                    Are you sure you want to delete <span id="deletecTodoName"></span> ?
+                                    <span id="deletectodoid" style="display:none;"></span>
+                                    <input type="button" id="deletecTodoSubmit" name="delete" value="delete" />
+                                    <input type="button" id="deletecTodoCancel" name="cancel" value="cancel" />
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="tab-pane" id="tab-deleted-todo">
+                            <p>Deleted Todo</p>
+                        </div>
                     </div>
                 </div>
+
+
+
+
+
+
+
+
+
             </div>
-
-
-
-
-
-
-
-
-
         </div>
     </div>
-</div>
 
-<!-- Loading Footer , Javascript / Jquery files -->
+    <!-- Loading Footer , Javascript / Jquery files -->
 
-{% if user.is_authenticated %}
-    {% include "todo/footer.html" with isAuthenticated="True"%}
-{% else %}
-    {% include "todo/footer.html" %}
-{% endif %}
+    {% if user.is_authenticated %}
+        {% include "todo/footer.html" with isAuthenticated="True"%}
+    {% else %}
+        {% include "todo/footer.html" %}
+    {% endif %}
 
+    <!-- Loading Javascript specific to reports html -->
+    <script type="text/javascript" src="{% static 'todo/js/highcharts.js' %}"></script>
+    <script type="text/javascript" src="{% static 'todo/js/exporting.js' %}"></script>
+    <script type="text/javascript" src="{% static 'todo/js/reports.js' %}"></script>
 
 </body>
 </html>

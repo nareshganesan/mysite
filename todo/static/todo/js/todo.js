@@ -146,14 +146,26 @@ $( "#addTodoSubmit" ).click(function() {
     var todoname = $("#id_name").val()
     var tododescription = $("#id_description").val()
     var todopriority = $("#id_priority").val()
+    var todonotes = $("#id_notes").val()
+    var todotags = $("#id_tags").val()
+    var todoproject = $("#id_project").val()
+    var todoemail = $("#id_email").val()
+    var todophonenumber = $("#id_phone_number").val()
+    var todoaddress = $("#id_address").val()
     $.ajax({
-        url : "quickadd_todo/", // the endpoint
+        url : "add_todo/", // the endpoint
         type : "POST", // http method
         // data sent with the post request
         data : {
         'todoname' : todoname ,
         'todopriority' : todopriority,
-        'tododescription' : tododescription
+        'tododescription' : tododescription,
+        'todonotes' : todonotes ,
+        'todotags' : todotags,
+        'todoproject' : todoproject,
+        'todoemail' : todoemail ,
+        'todophonenumber' : todophonenumber,
+        'todoaddress' : todoaddress
         },
 
         // handle a successful response
@@ -173,14 +185,16 @@ $( "#addTodoSubmit" ).click(function() {
 
 /* Quick delete start. */
 
-function showDeleteTodoDiv(todoname, todoid, todotype) {
+function showDeleteTodoDiv( todoid, todotype) {
 
 
     if(todotype == 'todo') {
+        var todoname = $("#todoname"+todoid).val();
         $("#deleteTodoName").html(todoname);
         $("#deleteTodoId").html(todoid);
         showTodoFeature(FEATURELIST.DELETEFEATURE);
     } else if (todotype == 'completedtodo') {
+        var todoname = $("#ctodoname"+todoid).html();
         $("#deletecTodoName").html(todoname);
         $("#deletectodoid").html(todoid);
         showCompletedTodoFeature(FEATURELIST.DELETEFEATURE);
@@ -192,17 +206,14 @@ function showDeleteTodoDiv(todoname, todoid, todotype) {
 
 
 
-function showDetailTodoDiv(todoname, todoid, showsearchdivlink) {
+function showDetailTodoDiv( todoid, showsearchdivlink) {
 
-    $("#detail-todo-id").html(todoid);
-    $("#detail-todo-name").html(todoname);
     showTodoFeature(FEATURELIST.DETAILFEATURE);
     if(showsearchdivlink == 'True') {
         $("#show-search-results").css('display', 'inline-block');
     }
 
     var todo_mark_as_completed_url = "quickdetail_todo/";
-    console.log(todo_mark_as_completed_url);
     $.ajax({
         url : todo_mark_as_completed_url, // the endpoint
         type : "POST", // http method
@@ -216,6 +227,12 @@ function showDetailTodoDiv(todoname, todoid, showsearchdivlink) {
             $("#body-todo-detail-name").val(json.todoname)
             $("#body-todo-detail-priority option[value="+json.todopriority+"]").attr('selected','selected');
             $("#body-todo-detail-description").val(json.tododescription)
+            $("#body-todo-detail-notes").val(json.todonotes)
+            $("#body-todo-detail-tags").val(json.todotags)
+            $("#body-todo-detail-project").val(json.todoproject)
+            $("#body-todo-detail-email").val(json.todoemail)
+            $("#body-todo-detail-phone").val(json.todophone_number)
+            $("#body-todo-detail-address").val(json.todoaddress)
         },
 
         // handle a non-successful response
@@ -303,7 +320,6 @@ $( "#deleteTodoSubmit" ).click(function() {
 
             // handle a non-successful response
             error : function(xhr,errmsg,err) {
-                console.log("Detail Update failed"); // another sanity check
                 $('#error-results').html("Detail Update failed");
             }
         });
@@ -347,6 +363,8 @@ $('#search-box').keyup(function(e){
     if(e.keyCode == 13)
     {
 
+        showTodoFeature(FEATURELIST.SEARCHFEATURE);
+        todoSearch(searchQuery);
 //      alert('Entered!!! ' + searchQuery);
     } else {
 
@@ -360,6 +378,7 @@ $('#search-button').click(function(e){
 });
 
 $('#show-search-results').click(function(e){
+    var searchQuery = $('#search-box').val();
     showTodoFeature(FEATURELIST.SEARCHFEATURE);
     todoSearch(searchQuery);
 });
@@ -377,15 +396,14 @@ function todoSearch(Query) {
         // handle a successful response
         success : function(json) {
             var resCount = json.length;
+            $( "#search-results" ).empty();
             for (var i =0; i < resCount; i ++ ) {
                 resultelement = "<li><div class='rh'><h5 class='h'> ";
                 anchor =   "<a href='#' onclick='showDetailTodoDiv(";
-                anchorparam = '"' + json[i].name + '" , "'+ json[i].id + '")'+"'>";
-                test = '"' + json[i].name + '" , "'+ json[i].id + '",'
+                anchorparam = '"' + json[i].id + '",';
                 showSearchBackLink = '"True"' + ')'+"'>";
                 anchortext = json[i].name + "</a> </h5> </div>";
-                console.log(resultelement+anchor+test+showSearchBackLink+anchortext)
-                resultheader = resultelement+anchor+test+showSearchBackLink+anchortext
+                resultheader = resultelement+anchor+anchorparam+showSearchBackLink+anchortext;
                 resultcontent = '<div class="rc"><h6 class="c">' + json[i].description + '</h6> </div> </li>'
                 $( "#search-results" ).append( resultheader );
                 $( "#search-results" ).append( resultcontent );
@@ -444,7 +462,7 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
       var selectedTab = $(e.target).attr("href");
       if ((selectedTab == FEATURETABS.TODO)) {
         showTodoFeature(FEATURELIST.LISTFEATURE);
-      }else if ((selectedTab == FEATURETABS.COMPLTEDTODO)){
+      }else if ((selectedTab == FEATURETABS.COMPLETEDTODO)){
         showCompletedTodoFeature(FEATURELIST.LISTFEATURE);
         ctodolist();
       } else {
@@ -472,10 +490,10 @@ function ctodolist() {
                 $('#table-ctodo-list').append(header);
                      for (var i =0; i < resCount; i ++ ) {
                         var ctodonameinput = "<input readonly type=\"text\" class=\"ctodoname\" id=\"ctodoname"+json[i].id +"\" value=\""+ json[i].name +"\" />";
-                        var ctodoname = "<td>" + json[i].name + "</td>";
+                        var ctodoname = "<td id=\"ctodoname"+json[i].id +"\" >" + json[i].name + "</td>";
                         var ctodopriority = "<td>" + json[i].priority + "</td>";
                         var ctodoview = "<td> view </td>";
-                        var ctododeletelink = "<a href=\"#\"  onclick=\"showDeleteTodoDiv(\'"+ json[i].name +"\', \'"+ json[i].id + "\', \'completedtodo\')\" > delete </a>";
+                        var ctododeletelink = "<a href=\"#\"  onclick=\"showDeleteTodoDiv(\'"+ json[i].id + "\', \'completedtodo\')\" > delete </a>";
                         var ctododelete = "<td> " + ctododeletelink + " </td>";
                         var ctodo = "<tr>" + ctodoname + ctodopriority + ctodoview + ctododelete + "</tr>";
                         $('#table-ctodo-list').append(ctodo);
@@ -494,3 +512,22 @@ function ctodolist() {
 
 
   /* Completed Todo functions end */
+
+  /* Report Todo feature start */
+
+  function showReportTodo() {
+    var tabid = $("#ul-tab-todo-types").find('.active a').attr('href');
+
+    if(FEATURETABS.TODO == tabid) {
+        showTodoFeature(FEATURELIST.REPORTFEATURE);
+        $(window).resize();
+    } else if (FEATURETABS.COMPLETEDTODO == tabid) {
+        showCompletedTodoFeature(FEATURELIST.REPORTFEATURE);
+        $(window).resize();
+    }else {
+
+    }
+
+  }
+
+  /* Report Todo feature end */

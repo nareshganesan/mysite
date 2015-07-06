@@ -18,6 +18,8 @@
     <!-- Custom styles for this template -->
     <!--<link rel="stylesheet" type="text/css" href="{% static 'todo/css/dashboard.css' %}" />-->
     <link rel="stylesheet" type="text/css" href="{% static 'todo/css/todo.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'todo/css/datepicker.min.css' %}" rel="stylesheet" />
+
 
      <!-- Javascript Constants -->
     <script type="text/javascript" src="{% static 'todo/js/todo-constants.js' %}"></script>
@@ -38,12 +40,52 @@
             {% else %}
                 {% include "todo/sidebar.html" %}
             {% endif %}
+
             <div class="col-sm-9 col-md-10 custom-main">
-                <div id="reportByPriority" class="panel-body" style="margin-top: 50px;width:100%;height:314px;"></div>
-            </div>
-            <div id="results">
+
+                <div class="input-group" id="search-box-container" style="display: inline-table; width: 80%; margin-top: 30px; margin-bottom: 10px;">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" id="search-button" type="button">Go!</button>
+                  </span>
+                  <input type="text" id="search-box" class="form-control" placeholder="Search for...">
+                </div>
+                <!-- /search-box-group -->
+                <div style="display: inline; width: 20%;" >
+                    <a href="#" id="link-show-add"  >
+                        <img id="img-add-todo" src="{% static 'todo/images/plus_sign.png' %}" title="Add Todo"/>
+                    </a>
+                </div>
+
+
+                <div class="form-group">
+                    <div id="startDateLabel" > Start : </div>
+                    <div class='input-group date' id='div-startdate'>
+                        <input type='text' class="form-control" name="div-startdate" id="input-div-startdate" />
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                    <div id="endDateLabel" > End : </div>
+                    <div class='input-group date' id='div-enddate'>
+                        <input type='text' class="form-control" name="div-enddate" id="input-div-enddate" />
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                    <div class="" id='getReport'>
+                        <input type='button' class="btn btn-primary btn-md" name="getReport" value="Report" />
+                    </div>
+
+                </div>
+
+                <div id="reportByPriority" class="panel-body" style=""></div>
+                <div id="results">
+
+                </div>
+
 
             </div>
+
+
+
         </div>
     </div>
 

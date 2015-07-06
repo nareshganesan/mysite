@@ -6,6 +6,7 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.core import serializers
+from datetime import datetime, time
 
 from django.db.models import Count
 
@@ -188,6 +189,50 @@ def quickadd_todo(request):
         )
 
 @login_required
+def add_todo(request):
+    'add an individual todo.'
+    if request.method == 'POST':
+        todoname = request.POST.get('todoname')
+        todopriority = request.POST.get('todopriority')
+        tododescription = request.POST.get('tododescription')
+        todouser = request.user.id
+        todonotes = request.POST.get('todonotes')
+        todotags = request.POST.get('todotags')
+        todoproject = request.POST.get('todoproject')
+        todoemail = request.POST.get('todoemail')
+        todophonenumber = request.POST.get('todophonenumber')
+        todoaddress = request.POST.get('todoaddress')
+        response_data = dict()
+
+        t = Todo(name=todoname, priority=todopriority, user_id=todouser, description=tododescription,
+                 notes=todonotes, tags=todotags, project=todoproject, email=todoemail,
+                 phone_number=todophonenumber, address=todoaddress)
+        t.save()
+
+        response_data['result'] = 'Update Todo successful!'
+        response_data['todoid'] = t.pk
+        response_data['todoname'] = t.name
+        response_data['todopriority'] = t.priority
+        response_data['tododescription'] = t.description
+        response_data['todonotes'] = t.notes
+        response_data['todotags'] = t.tags
+        response_data['todoproject'] = t.project
+        response_data['todoemail'] = t.email
+        response_data['todophonenumber'] = t.phone_number
+        response_data['todoaddress'] = t.address
+
+        return HttpResponse(
+            json.dumps(response_data),
+            content_type="application/json"
+        )
+    else:
+        return HttpResponse(
+            json.dumps({"No Data": "Are you kidding me !! :)"}),
+            content_type="application/json"
+        )
+
+
+@login_required
 def mark_as_completed(request):
     'Mark a todo as Completed.'
     if request.method == 'POST':
@@ -259,6 +304,35 @@ def todo_reports(request):
             json.dumps(data),
             content_type="application/json"
         )
+    if request.method == 'POST':
+        startDate = request.POST.get('startDate')
+        endDate = request.POST.get('endDate')
+        if startDate and endDate:
+            startDate = datetime.strptime(startDate, '%Y-%m-%d').date()
+            endDate = datetime.strptime(endDate, '%Y-%m-%d').date()
+            report = Todo.objects.filter(created_date__range=(
+                 datetime.combine(startDate, time.min),
+                 datetime.combine(endDate, time.max))).values('priority').annotate(Count('id'))
+            data = {
+                'priority': [],
+                'values': []
+            }
+            for priorityType in report:
+                priority = priorityType['priority']
+                prioritycount = priorityType['id__count']
+                data['priority'].append(priority)
+                data['values'].append(prioritycount)
+
+            return HttpResponse(
+                json.dumps(data),
+                content_type="application/json"
+            )
+        else:
+            return HttpResponse(
+                json.dumps({"No Report Data": "Are you kidding me !! :)"}),
+                content_type="application/json"
+            )
+
     else:
         return HttpResponse(
             json.dumps({"No Report Data": "Are you kidding me !! :)"}),

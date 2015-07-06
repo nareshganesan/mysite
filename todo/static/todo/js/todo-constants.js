@@ -52,7 +52,7 @@ var todo_features_div = {
 
 var FEATURETABS = {
     TODO: "#tab-todo",
-    COMPLTEDTODO: "#tab-completed-todo",
+    COMPLETEDTODO: "#tab-completed-todo",
     DELETEDTODO: "#tab-deleted-todo"
 }
 
