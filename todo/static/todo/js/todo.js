@@ -224,15 +224,17 @@ function showDetailTodoDiv( todoid, showsearchdivlink) {
 
         // handle a successful response
         success : function(json) {
-            $("#body-todo-detail-name").val(json.todoname)
+            $("#detail-todo-id").html(todoid);
+            console.log($("#detail-todo-id").html());
+            $("#body-todo-detail-name").val(json.todoname);
             $("#body-todo-detail-priority option[value="+json.todopriority+"]").attr('selected','selected');
-            $("#body-todo-detail-description").val(json.tododescription)
-            $("#body-todo-detail-notes").val(json.todonotes)
-            $("#body-todo-detail-tags").val(json.todotags)
-            $("#body-todo-detail-project").val(json.todoproject)
-            $("#body-todo-detail-email").val(json.todoemail)
-            $("#body-todo-detail-phone").val(json.todophone_number)
-            $("#body-todo-detail-address").val(json.todoaddress)
+            $("#body-todo-detail-description").val(json.tododescription);
+            $("#body-todo-detail-notes").val(json.todonotes);
+            $("#body-todo-detail-tags").val(json.todotags);
+            $("#body-todo-detail-project").val(json.todoproject);
+            $("#body-todo-detail-email").val(json.todoemail);
+            $("#body-todo-detail-phone").val(json.todophone_number);
+            $("#body-todo-detail-address").val(json.todoaddress);
         },
 
         // handle a non-successful response
@@ -283,8 +285,8 @@ $( "#deleteTodoSubmit" ).click(function() {
         var todoemail = $("#body-todo-detail-email").val()
         var todophone = $("#body-todo-detail-phone").val()
         var todoaddress = $("#body-todo-detail-address").val()
-
         var edit_detail_url = "edit_todo/";
+        console.log(edit_detail_url);
         $.ajax({
             url : edit_detail_url, // the endpoint
             type : "POST", // http method
@@ -440,6 +442,7 @@ $(document).ready(function() {
 
     $('#detailTodoCancel').click( function() {
         showTodoFeature(FEATURELIST.LISTFEATURE);
+        location.reload();
     });
 
     $('#deleteTodoCancel').click( function() {

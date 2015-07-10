@@ -50,6 +50,7 @@ def edit_todo(request):
                  priority=todopriority, notes=todonotes, tags=todotags,
                  project=todoproject, email=todoemail, phone_number=todophone,
                  address=todoaddress, user_id=todouser)
+        print updatedtodo
         updatedtodo.save()
 
         response_data = dict()

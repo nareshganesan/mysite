@@ -78,15 +78,24 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'mysite',
+    #     'USER': 'travis',
+    #     'PASSWORD': '',
+    #     'HOST': '127.0.0.1',
+    #     'PORT': '3306',
+    #     # 'STORAGE_ENGINE': 'INNODB'
+    #     }
+
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'mysite',
         'USER': 'travis',
         'PASSWORD': '',
         'HOST': '127.0.0.1',
-        'PORT': '3306',
-        # 'STORAGE_ENGINE': 'INNODB'
-        }
+        'PORT': '5432',
+    }
 }
 
 # Django - DB Migration Tool called South
