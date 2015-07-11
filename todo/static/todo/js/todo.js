@@ -270,6 +270,31 @@ $( "#deleteTodoSubmit" ).click(function() {
     });
 });
 
+$( "#deletecTodoSubmit" ).click(function() {
+    var todoid = $("#deletectodoid").html()
+    var todoname = $("#deletecTodoName").html()
+
+   $.ajax({
+        url : "quickdelete_todo/", // the endpoint
+        type : "POST", // http method
+        // data sent with the post request
+        data : {
+        'todoid' : todoid ,
+        'todoname' : todoname
+        },
+
+        // handle a successful response
+        success : function(json) {
+            location.reload();
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            $('#error-results').html("delete failed");
+        }
+    });
+});
+
 /* Quick delete end. */
 
 /* Quick Detail update start */
