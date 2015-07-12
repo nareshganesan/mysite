@@ -11,15 +11,19 @@ $(document).ready(function() {
         subtitle: {text: 'Last Week'},
         xAxis: {title: {text: null}, labels: {rotation: 0}},
         yAxis: {title: {text: null}},
-        series: [{}],
+        series: [{}, {}, {}],
     };
 
     var chartDataUrl = "todo_reports/";
      $.getJSON(chartDataUrl,
         function(data) {
             reportByPriority.xAxis.categories = data['priority'];
-            reportByPriority.series[0].name = 'Todo\'s Total Report';
-            reportByPriority.series[0].data = data['values'];
+            reportByPriority.series[0].name = 'Total Todo\'s';
+            reportByPriority.series[0].data = data['values']['todo'];
+            reportByPriority.series[1].name = 'Completed Todo\'s';
+            reportByPriority.series[1].data = data['values']['completedtodo'];
+            reportByPriority.series[2].name = 'Deleted Todo\'s';
+            reportByPriority.series[2].data = data['values']['deletedtodo'];
             var chart = new Highcharts.Chart(reportByPriority);
     });
 
@@ -48,8 +52,12 @@ $(document).ready(function() {
                 reportByPriority.legend.x =  '20' ;
                 reportByPriority.legend.y =  '20' ;
                 reportByPriority.xAxis.categories = data['priority'];
-                reportByPriority.series[0].name = 'Todo\'s Report';
-                reportByPriority.series[0].data = data['values'];
+                reportByPriority.series[0].name = 'Total Todo\'s';
+                reportByPriority.series[0].data = data['values']['todo'];
+                reportByPriority.series[1].name = 'Completed Todo\'s';
+                reportByPriority.series[1].data = data['values']['completedtodo'];
+                reportByPriority.series[2].name = 'Deleted Todo\'s';
+                reportByPriority.series[2].data = data['values']['deletedtodo'];
                 var chart = new Highcharts.Chart(reportByPriority);
             },
 
@@ -92,8 +100,9 @@ $(document).ready(function() {
     $('#cgetReport').click(function() {
     var applicationcontext = window.location.pathname;
     var chartDataUrl = "todo_reports/";
-    var startDate = $("#input-div-cstartdate").val()
-    var endDate = $("#input-div-cenddate").val()
+    var startDate = $("#input-div-cstartdate").val();
+    var endDate = $("#input-div-cenddate").val();
+    var todoType = "completed";
         $.ajax({
             url : chartDataUrl, // the endpoint
             type : "POST", // http method
@@ -101,7 +110,8 @@ $(document).ready(function() {
 //            dataType: 'jsonp',
             data : {
             'startDate' : startDate ,
-            'endDate' : endDate
+            'endDate' : endDate,
+            'todoType' : todoType
             },
             // handle a successful response
             success : function(data) {

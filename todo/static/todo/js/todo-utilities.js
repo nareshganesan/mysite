@@ -47,3 +47,19 @@ $(function () {
 });
 
 /* Date time picker ends  */
+
+/* Side Bar functions start */
+
+$(".nav-sidebar li").click(function () {
+    var activeSideBar = $(this);
+    $('.nav-sidebar li').each(function(index) {
+        var sideBar = $(this);
+        if(activeSideBar.text() == sideBar.text()) {
+            activeSideBar.addClass('active');
+        } else {
+            sideBar.removeClass('active');
+        }
+    });
+});
+
+/* Side Bar functions end */

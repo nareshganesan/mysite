@@ -122,3 +122,56 @@ function showCompletedTodoFeature(ctodoFeature) {
 
 
 /* Completed Todo common features end */
+
+
+
+
+
+
+/* Deleted Todo common features start */
+
+/* Deleted Todo Feature Header element constants */
+var dtodo_features_header = {
+    ADDFEATURE: "header-dtodo-add",
+    DETAILFEATURE: "header-dtodo-detail",
+    DELETEFEATURE: "header-dtodo-delete",
+    LISTFEATURE: "header-dtodo-list",
+    SEARCHFEATURE: "header-dtodo-search",
+    COMPLETEDFEATURE: "header-dtodo-completed",
+    REPORTFEATURE: "header-dtodo-report",
+    PROJECTFEATURE: "header-dtodo-project"
+};
+/* Deleted Todo Feature Body element constants */
+var dtodo_features_div = {
+    ADDFEATURE: "div-dtodo-add",
+    DETAILFEATURE: "div-dtodo-detail",
+    DELETEFEATURE: "div-dtodo-delete",
+    LISTFEATURE: "div-dtodo-list",
+    SEARCHFEATURE: "div-dtodo-search",
+    COMPLETEDFEATURE: "div-dtodo-completed",
+    REPORTFEATURE: "div-dtodo-report",
+    PROJECTFEATURE: "div-dtodo-project"
+};
+
+function showDeletedTodoFeature(dtodoFeature) {
+    for (var feature in FEATURELIST) {
+
+        if(typeof(dtodoFeature) == "undefined" || dtodoFeature == null ){
+            return;
+        } else {
+            if(FEATURELIST[feature] == dtodoFeature){
+                showTodoElementsById(dtodo_features_header[feature]);
+                showTodoElementsById(dtodo_features_div[feature]);
+            } else {
+                hideTodoElementsById(dtodo_features_header[feature]);
+                hideTodoElementsById(dtodo_features_div[feature]);
+            }
+        }
+    }
+}
+
+
+
+
+
+/* Deleted Todo common features end */

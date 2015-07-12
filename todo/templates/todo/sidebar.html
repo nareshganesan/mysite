@@ -4,12 +4,12 @@
         <li><a href="#" onclick="showReportTodo()" id="scrollTo">Reports</a></li>
         <li><a href="#">Projects</a></li>
         <li><a href="#">Tags</a></li>
-        {%if isAuthenticated == "True" %}
-            <li><a href="{% url 'logout' %}">Logout</a></li>
-        {%else%}
-            <li><a href="{% url 'login' %}">login</a></li>
-            <li><a href="{% url 'register'  %}">Register</a></li>
-        {% endif %}
+        <!--{%if isAuthenticated == "True" %}-->
+            <!--<li><a href="{% url 'logout' %}">Logout</a></li>-->
+        <!--{%else%}-->
+            <!--<li><a href="{% url 'login' %}">login</a></li>-->
+            <!--<li><a href="{% url 'register'  %}">Register</a></li>-->
+        <!--{% endif %}-->
         <li><a href="#">About</a></li>
         <li><a href="#" id="scrollTop">Back to Top</a></li>
     </ul>

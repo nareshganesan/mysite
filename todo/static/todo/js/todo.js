@@ -495,6 +495,8 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         ctodolist();
       } else {
          // Operation todo when other tabs load.
+         showDeletedTodoFeature(FEATURELIST.LISTFEATURE);
+         dtodolist();
       }
   });
 
@@ -532,7 +534,7 @@ function ctodolist() {
 
         // handle a non-successful response
         error : function(xhr,errmsg,err) {
-            $('#error-results').html("Search failed");
+            $('#error-results').html("No Completed Tasks");
         }
     });
 
@@ -541,20 +543,56 @@ function ctodolist() {
 
   /* Completed Todo functions end */
 
+  /* Deleted Todo functions start */
+
+function dtodolist() {
+    var dtodolist_url = "deleted_todo_list/";
+    $.ajax({
+        url : dtodolist_url, // the endpoint
+        type : "POST", // http method
+        // data sent with the post request
+        data : {
+        },
+
+        // handle a successful response
+        success : function(json) {
+            $('#table-dtodo-list').empty();
+            var resCount = json.length;
+            if(resCount > 0){
+                var header = "<tr><td> Name </td><td>Priority</td><td>Todo page</td></tr>";
+                $('#table-dtodo-list').append(header);
+                     for (var i =0; i < resCount; i ++ ) {
+                        var ctodonameinput = "<input readonly type=\"text\" class=\"ctodoname\" id=\"ctodoname"+json[i].id +"\" value=\""+ json[i].name +"\" />";
+                        var ctodoname = "<td id=\"ctodoname"+json[i].id +"\" >" + json[i].name + "</td>";
+                        var ctodopriority = "<td>" + json[i].priority + "</td>";
+                        var ctodoview = "<td> view </td>";
+//                        var ctododeletelink = "<a href=\"#\"  onclick=\"showDeleteTodoDiv(\'"+ json[i].id + "\', \'completedtodo\')\" > delete </a>";
+//                        var ctododelete = "<td> " + ctododeletelink + " </td>";
+                        var ctodo = "<tr>" + ctodoname + ctodopriority + ctodoview + "</tr>";
+                        $('#table-dtodo-list').append(ctodo);
+
+                    }
+            }
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            $('#error-results').html("No Deleted Tasks");
+        }
+    });
+
+}
+
+
+  /* Deleted Todo functions end */
+
   /* Report Todo feature start */
 
   function showReportTodo() {
     var tabid = $("#ul-tab-todo-types").find('.active a').attr('href');
-
-    if(FEATURETABS.TODO == tabid) {
-        showTodoFeature(FEATURELIST.REPORTFEATURE);
-        $(window).resize();
-    } else if (FEATURETABS.COMPLETEDTODO == tabid) {
-        showCompletedTodoFeature(FEATURELIST.REPORTFEATURE);
-        $(window).resize();
-    }else {
-
-    }
+    $("#tabs-todo-types").css('display', 'none');
+    showTodoFeature(FEATURELIST.REPORTFEATURE);
+    $(window).resize();
 
   }
 

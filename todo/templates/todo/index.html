@@ -326,34 +326,7 @@
                             </div>
 
                             <!--<h4 class="sub-header" id="header-todo-report" ></h4>-->
-                            <div class="row placeholders" id="div-todo-report" >
 
-                                <div class="form-group" id="div-report-group" >
-                                    <div id="startDateLabel" > Start : </div>
-                                    <div class='input-group date' id='div-startdate'>
-                                        <input type='text' class="form-control" name="div-startdate" id="input-div-startdate" />
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
-                                        </span>
-                                    </div>
-                                    <div id="endDateLabel" > End : </div>
-                                    <div class='input-group date' id='div-enddate'>
-                                        <input type='text' class="form-control" name="div-enddate" id="input-div-enddate" />
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
-                                        </span>
-                                    </div>
-                                    <div class="" id='getReport'>
-                                        <input type='button' class="btn btn-primary btn-md" name="getReport" value="Report" />
-                                    </div>
-
-                                </div>
-
-                                <div id="reportByPriority" class="panel-body" style=""></div>
-                                <div id="results">
-
-                                </div>
-
-
-                            </div>
 
                             <h4 class="sub-header" id="header-todo-project" > Project Todo's</h4>
                             <div class="row placeholders" id="div-todo-project" >
@@ -440,17 +413,47 @@
                         </div>
 
                         <div class="tab-pane" id="tab-deleted-todo">
-                            <p>Deleted Todo</p>
+
+                            <div class="row placeholders" id="div-dtodo-list">
+                                <form method="POST" id="quickedit-dtodo-form">
+                                    {% csrf_token %}
+                                    <table class="table table-striped table-hover table-todo-list" id="table-dtodo-list">
+                                    </table>
+                                </form>
+                            </div>
+
                         </div>
                     </div>
                 </div>
 
 
+                <div class="row placeholders" id="div-todo-report" >
 
+                    <div class="form-group" id="div-report-group" >
+                        <div id="startDateLabel" > Start : </div>
+                        <div class='input-group date' id='div-startdate'>
+                            <input type='text' class="form-control" name="div-startdate" id="input-div-startdate" />
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                        <div id="endDateLabel" > End : </div>
+                        <div class='input-group date' id='div-enddate'>
+                            <input type='text' class="form-control" name="div-enddate" id="input-div-enddate" />
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                        <div class="" id='getReport'>
+                            <input type='button' class="btn btn-primary btn-md" name="getReport" value="Report" />
+                        </div>
 
+                    </div>
 
+                    <div id="reportByPriority" class="panel-body" style=""></div>
+                    <div id="results">
 
+                    </div>
 
+                </div>
 
 
             </div>
