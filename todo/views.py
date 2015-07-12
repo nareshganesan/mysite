@@ -326,10 +326,10 @@ def todo_reports(request):
             }
         }
 
-        todoreport = Todo.objects.values('priority').annotate(Count('id'))
-        completedreport =Todo.objects.filter(iscompleted=True).filter(isdeleted=False).\
+        todoreport = Todo.objects.filter(user=request.user.id).values('priority').annotate(Count('id'))
+        completedreport =Todo.objects.filter(user=request.user.id).filter(iscompleted=True).filter(isdeleted=False).\
             values('priority').annotate(Count('id'))
-        deletedreport =Todo.objects.filter(isdeleted=True).\
+        deletedreport =Todo.objects.filter(user=request.user.id).filter(isdeleted=True).\
             values('priority').annotate(Count('id'))
 
         for priority in prioritylist:
@@ -376,13 +376,13 @@ def todo_reports(request):
                 }
             }
 
-            todoreport = Todo.objects.filter(created_date__range=(
+            todoreport = Todo.objects.filter(user=request.user.id).filter(created_date__range=(
                      datetime.combine(startDate, time.min),
                      datetime.combine(endDate, time.max))).values('priority').annotate(Count('id'))
-            completedreport =Todo.objects.filter(iscompleted=True).filter(isdeleted=False).\
+            completedreport =Todo.objects.filter(user=request.user.id).filter(iscompleted=True).filter(isdeleted=False).\
                  filter(created_date__range=(datetime.combine(startDate, time.min), datetime.combine(endDate, time.min)))\
                  .values('priority').annotate(Count('id'))
-            deletedreport =Todo.objects.filter(isdeleted=True).\
+            deletedreport =Todo.objects.filter(user=request.user.id).filter(isdeleted=True).\
                  filter(created_date__range=(datetime.combine(startDate, time.min), datetime.combine(endDate, time.min)))\
                  .values('priority').annotate(Count('id'))
 
@@ -403,10 +403,6 @@ def todo_reports(request):
                 priority = priorityType['priority']
                 prioritycount = priorityType['id__count']
                 data['values']['deletedtodo'][prioritylist[priority]] = prioritycount
-
-            print "Todo Report : " + str(todoreport)
-            print "Completed Todo Report : " + str(completedreport)
-            print "Deleted Todo Report : " + str(deletedreport)
 
             return HttpResponse(
                 json.dumps(data),
@@ -431,7 +427,7 @@ def todo_search(request):
 
         searchquery = request.POST.get('searchQuery')
         if searchquery is not None:
-            searchresults = Todo.objects.filter(
+            searchresults = Todo.objects.filter(user=request.user.id).filter(
                 Q( name__icontains = searchquery ) |
                 Q( description__icontains = searchquery ) |
                 Q( notes__icontains = searchquery ) |
