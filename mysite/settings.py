@@ -83,7 +83,7 @@ DATABASES = {
         'NAME': 'mysite',
         'USER': 'travis',
         'PASSWORD': '',
-        'HOST': '127.0.0.1',
+        'HOST': '0.0.0.0',
         'PORT': '3306',
         # 'STORAGE_ENGINE': 'INNODB'
         }
