@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, render_to_response, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.http import Http404
@@ -13,12 +14,13 @@ from django.db.models import Count
 from todo.forms import TodoForm
 
 import json
+import re
 
 from .models import Todo
 
 # Create your views here.
 
-@login_required
+@login_required(login_url='/login/')
 def todolist(request):
     'list view of the todo app.'
     latest_todo_list = Todo.objects.filter(user=request.user.id).filter(iscompleted=False).filter(isdeleted=False).order_by('-created_date')[:25]
@@ -474,3 +476,32 @@ def home(request):
 
 def todo_tab_test(request):
     return render(request, 'todo/tabstest.html')
+
+def login_request(request):
+    next_page = request.META.get('HTTP_REFERER')
+    # print "before : " + str(next_page)
+    if not next_page:
+        next_page = '/'
+    else:
+        next_page = re.sub('^https?:\/\/', '', next_page).split('/')
+        if next_page[0] != request.META['HTTP_HOST']:
+            next_page = '/'
+        else:
+            next_page =  u'/' + u'/'.join(next_page[1:])
+            if next_page == '/login/':
+                next_page = '/'
+
+    logout(request)
+    username = password = ''
+
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                print "Print : "+ str(next_page)+" " + str(username)
+                return HttpResponseRedirect('/todo/')
+    return render_to_response('todo/signin.html', context_instance=RequestContext(request))

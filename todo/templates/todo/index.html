@@ -40,20 +40,23 @@
                 {% include "todo/sidebar.html" %}
             {% endif %}
             <div class="col-sm-9 col-md-10 custom-main">
-                <!--<h2 class="sub-header" id="header-todo-list">Todo's</h2>-->
-                <!-- /search-box-group -->
-                <div class="input-group" id="search-box-container" style="display: inline-table; width: 80%; margin-top: 30px; margin-bottom: 10px;">
-                  <span class="input-group-btn">
-                    <button class="btn btn-default" id="search-button" type="button">Go!</button>
-                  </span>
-                  <input type="text" id="search-box" class="form-control" placeholder="Search for...">
+                <div id="div-search-and-add-container">
+                    <!-- /search-box-group -->
+                    <div class="input-group" id="search-box-container" style="display: inline-table; width: 80%; margin-top: 30px; margin-bottom: 10px;">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default" id="search-button" type="button">Go!</button>
+                      </span>
+                      <input type="text" id="search-box" class="form-control" placeholder="Search for...">
+                    </div>
+                    <!-- /search-box-group -->
+                    <div id="div-add-todo" style="display: inline-table; width: 10%;" >
+                        <a href="#" id="link-show-add"  >
+                            <img id="img-add-todo" src="{% static 'todo/images/plus_sign.png' %}" title="Add Todo"/>
+                        </a>
+                    </div>
+
                 </div>
-                <!-- /search-box-group -->
-                <div style="display: inline; width: 20%;" >
-                    <a href="#" id="link-show-add"  >
-                        <img id="img-add-todo" src="{% static 'todo/images/plus_sign.png' %}" title="Add Todo"/>
-                    </a>
-                </div>
+
 
 
                 <div class="tabbable" id="tabs-todo-types">
@@ -130,186 +133,119 @@
 
                             </div>
 
-                            <h4 class="sub-header" id="header-todo-add">Add Todo</h4>
-                            <div class="row placeholders" id="div-todo-add">
+                            <!--<h4 class="sub-header" id="header-todo-add" style="display:none;" >Add Todo</h4>-->
+                            <div class="row placeholders" id="div-todo-add" style="display:none;">
                                 <div id="" >
 
                                     <!--<a href="{%url 'todo:index' %}">Todo-Home</a> <br/> <br/>-->
 
-                                    <form id="todo_form" method="post" action="{% url 'todo:quickadd_todo' %}">
-                                             {% csrf_token %}
-                                                <div style="display:inline-block;"> Please enter the Todo name. </div>
-                                                <div style="display:inline-block;"> <input id="id_name" maxlength="200" name="name" type="text" /> </div>
-                                            <br>
 
 
-                                                <div style="display:inline-block;">Optional Todo description..</div>
-                                                <div style="display:inline-block;"><input id="id_description" maxlength="400" name="description" type="text" /></div>
-                                            <br>
 
+                                    <div class="well-sm">
+                                        <form class="form-horizontal" id="todo_form" action="" method="post">
+                                            {% csrf_token %}
+                                            <fieldset>
+                                                <!--<legend class="" id="header-todo-detail-name">View / Edit Todo</legend>-->
 
-                                                <div style="display:inline-block;">Please enter the Todo priority.</div>
-                                                <div style="display:inline-block;">
-                                                    <select id="id_priority" style="display: ;">
-                                                                <option value="high" >High</option>
-                                                                <option value="medium" >Medium</option>
-                                                                <option value="low" >Low</option>
-                                                             <option value="severe" >Severe</option>
-                                                         </select>
+                                                <!-- Name input-->
+                                                <div class="form-group">
+                                                  <label class="col-md-3 control-label" for="id_name">Name</label>
+                                                  <div class="col-md-9">
+                                                      <input id="id_name" maxlength="200" name="id_name" type="text" placeholder="Todo name" class="form-control">
+                                                  </div>
                                                 </div>
-                                            <br>
+
+                                                <!-- Priority input-->
+                                                <div class="form-group">
+                                                  <label class="col-md-3 control-label" for="id_priority">Priority</label>
+                                                  <div class="col-md-9">
+                                                      <select id="id_priority" class="form-control">
+                                                            <option value="high" >High</option>
+                                                            <option value="medium" >Medium</option>
+                                                            <option value="low" >Low</option>
+                                                         <option value="severe" >Severe</option>
+                                                     </select>
+                                                  </div>
+                                                </div>
+
+                                                <!-- Description Input -->
+                                                <div class="form-group">
+                                                  <label class="col-md-3 control-label" for="id_description">Description</label>
+                                                  <div class="col-md-9">
+                                                      <textarea class="form-control" maxlength="400" id="id_description" name="id_description" placeholder="Please enter your message here..." rows="5"></textarea>
+                                                  </div>
+                                                </div>
+
+                                                <!-- Notes Input -->
+                                                <div class="form-group">
+                                                  <label class="col-md-3 control-label" for="id_notes">Notes</label>
+                                                  <div class="col-md-9">
+                                                      <textarea class="form-control" id="id_notes" maxlength="300" name="id_notes" placeholder="Any Notes related to Todo." rows="5"></textarea>
+                                                  </div>
+                                                </div>
 
 
-                                                <div style="display:inline-block;">Optional Todo notes.</div>
-                                                <div style="display:inline-block;"><input id="id_notes" maxlength="300" name="notes" type="text" /></div>
-                                            <br>
+                                                <!-- Tags input-->
+                                                <div class="form-group">
+                                                  <label class="col-md-3 control-label" for="id_tags">Tags</label>
+                                                  <div class="col-md-9">
+                                                      <input id="id_tags" name="id_tags" maxlength="100" type="text" placeholder="Tags" class="form-control">
+                                                  </div>
+                                                </div>
+
+                                                <!-- Projects input-->
+                                                <div class="form-group">
+                                                  <label class="col-md-3 control-label" for="id_project">Project</label>
+                                                  <div class="col-md-9">
+                                                      <input id="id_project" maxlength="200" name="id_project" type="text" placeholder="Project related to Todo" class="form-control">
+                                                  </div>
+                                                </div>
 
 
-                                                <div style="display:inline-block;">Optional Todo tags.</div>
-                                                <div style="display:inline-block;"><input id="id_tags" maxlength="100" name="tags" type="text" /></div>
-                                            <br>
+                                                <!-- Email input-->
+                                                <div class="form-group">
+                                                  <label class="col-md-3 control-label" for="id_email">E-mail</label>
+                                                  <div class="col-md-9">
+                                                      <input id="id_email" name="id_email" type="text" placeholder="Related Email" class="form-control">
+                                                  </div>
+                                                </div>
+
+                                                <!-- Phone Number input-->
+                                                <div class="form-group">
+                                                  <label class="col-md-3 control-label" for="id_phone_number">Phone Number</label>
+                                                  <div class="col-md-9">
+                                                      <input id="id_phone_number" name="id_phone_number" type="text" placeholder="Phone Number" class="form-control">
+                                                  </div>
+                                                </div>
+
+                                                <!-- Address input-->
+                                                <div class="form-group">
+                                                  <label class="col-md-3 control-label" for="id_address">Address</label>
+                                                  <div class="col-md-9">
+                                                      <textarea id="id_address" name="id_address" maxlength="200"  type="text" placeholder="Address" class="form-control"rows="5"></textarea>
+                                                  </div>
+                                                </div>
 
 
-                                                <div style="display:inline-block;">Optional Todo project.</div>
-                                                <div style="display:inline-block;"><input id="id_project" maxlength="200" name="project" type="text" /></div>
-                                            <br>
 
 
-                                                <div style="display:inline-block;">Optional Todo email.</div>
-                                                <div style="display:inline-block;"><input id="id_email" maxlength="100" name="email" type="text" /></div>
-                                            <br>
 
-
-                                                <div style="display:inline-block;">Optional Todo phone number.</div>
-                                                <div style="display:inline-block;"><input id="id_phone_number" maxlength="12" name="phone_number" type="text" /></div>
-                                            <br>
-
-
-                                                <div style="display:inline-block;">Optional Todo address.</div>
-                                                <div style="display:inline-block;"><input id="id_address" maxlength="200" name="address" type="text" /></div>
-                                            <br>
-
-
-                                            <input type="submit" id="addTodoSubmit" class="btn btn-primary" name="submit" value="Add Todo" />
-                                        <input type="button" id="addTodoCancel" class="btn btn-primary" name="cancel" value="cancel" />
+                                                <!-- Form actions -->
+                                                <div class="form-group">
+                                                  <div class="col-md-12 text-center">
+                                                    <button id="addTodoSubmit" type="button" class="btn btn-primary">Add Todo</button>
+                                                    <button id="addTodoCancel" type="button" class="btn btn-primary">cancel</button>
+                                                  </div>
+                                                </div>
+                                            </fieldset>
                                         </form>
+                                    </div>
 
                                 </div>
                             </div>
 
-                            <h4 class="sub-header" id="header-todo-detail"> View / Edit Todo</h4>
-                            <div class="row placeholders" id="div-todo-detail" >
-                                <div>
-                                    <!--<a href="{%url 'todo:index' %}">Todo-Home</a>-->
-                                    <a href="#" id="show-search-results" style="display: none; ">Search Results</a>
-                                </div>
-                                <div id="detail-todo-id" style="display: none; " ></div>
-                                <div id="detail-todo-name" style="display: none; " ></div>
-                                <div id="detail-update-success" class="alert alert-success" role="alert" style="display: none;">
-
-                                </div>
-                                <div class="well-sm">
-                                  <form class="form-horizontal" action="" method="post">
-                                  <fieldset>
-                                    <!--<legend class="" id="header-todo-detail-name">View / Edit Todo</legend>-->
-
-                                    <!-- Name input-->
-                                    <div class="form-group">
-                                      <label class="col-md-3 control-label" for="body-todo-detail-name">Name</label>
-                                      <div class="col-md-9">
-                                        <input id="body-todo-detail-name" name="body-todo-detail-name" type="text" placeholder="Todo name" class="form-control">
-                                      </div>
-                                    </div>
-
-                                    <!-- Priority input-->
-                                    <div class="form-group">
-                                      <label class="col-md-3 control-label" for="body-todo-detail-priority">Priority</label>
-                                      <div class="col-md-9">
-                                        <select id="body-todo-detail-priority" class="form-control">
-                                            <option value="high" >High</option>
-                                            <option value="medium" >Medium</option>
-                                            <option value="low" >Low</option>
-                                            <option value="severe" >Severe</option>
-                                         </select>
-                                      </div>
-                                    </div>
-
-                                    <!-- Description Input -->
-                                    <div class="form-group">
-                                      <label class="col-md-3 control-label" for="body-todo-detail-description">Description</label>
-                                      <div class="col-md-9">
-                                        <textarea class="form-control" id="body-todo-detail-description" name="body-todo-detail-description" placeholder="Please enter your message here..." rows="5"></textarea>
-                                      </div>
-                                    </div>
-
-                                    <!-- Notes Input -->
-                                    <div class="form-group">
-                                      <label class="col-md-3 control-label" for="body-todo-detail-notes">Notes</label>
-                                      <div class="col-md-9">
-                                        <textarea class="form-control" id="body-todo-detail-notes" name="body-todo-detail-notes" placeholder="Any Notes related to Todo." rows="5"></textarea>
-                                      </div>
-                                    </div>
-
-
-                                    <!-- Tags input-->
-                                    <div class="form-group">
-                                      <label class="col-md-3 control-label" for="body-todo-detail-tags">Tags</label>
-                                      <div class="col-md-9">
-                                        <input id="body-todo-detail-tags" name="body-todo-detail-tags" type="text" placeholder="Tags" class="form-control">
-                                      </div>
-                                    </div>
-
-                                    <!-- Projects input-->
-                                    <div class="form-group">
-                                      <label class="col-md-3 control-label" for="body-todo-detail-project">Project</label>
-                                      <div class="col-md-9">
-                                        <input id="body-todo-detail-project" name="body-todo-detail-project" type="text" placeholder="Project related to Todo" class="form-control">
-                                      </div>
-                                    </div>
-
-
-                                    <!-- Email input-->
-                                    <div class="form-group">
-                                      <label class="col-md-3 control-label" for="body-todo-detail-email">E-mail</label>
-                                      <div class="col-md-9">
-                                        <input id="body-todo-detail-email" name="body-todo-detail-email" type="text" placeholder="Related Email" class="form-control">
-                                      </div>
-                                    </div>
-
-                                    <!-- Phone Number input-->
-                                    <div class="form-group">
-                                      <label class="col-md-3 control-label" for="body-todo-detail-phone">Phone Number</label>
-                                      <div class="col-md-9">
-                                        <input id="body-todo-detail-phone" name="body-todo-detail-phone" type="text" placeholder="Phone Number" class="form-control">
-                                      </div>
-                                    </div>
-
-                                    <!-- Address input-->
-                                    <div class="form-group">
-                                      <label class="col-md-3 control-label" for="body-todo-detail-address">Address</label>
-                                      <div class="col-md-9">
-                                        <textarea id="body-todo-detail-address" name="body-todo-detail-address" type="text" placeholder="Address" class="form-control"rows="5"></textarea>
-                                      </div>
-                                    </div>
-
-
-
-
-
-                                    <!-- Form actions -->
-                                    <div class="form-group">
-                                      <div class="col-md-12 text-center">
-                                        <button id="detailTodoUpdate" type="button" class="btn btn-primary">update</button>
-                                        <button id="detailTodoCancel" type="button" class="btn btn-primary">cancel</button>
-                                      </div>
-                                    </div>
-                                  </fieldset>
-                                  </form>
-                                </div>
-
-                            </div>
-
-                            <h4 class="sub-header" id="header-todo-delete"> Delete Todo</h4>
+                            <!--<h4 class="sub-header" id="header-todo-delete"> Delete Todo</h4>-->
                             <div class="row placeholders" id="div-todo-delete" >
                                   <div id="delete_todo_div" >
                                     Are you sure you want to delete <span id="deleteTodoName"></span> ?
@@ -320,7 +256,7 @@
                                 </div>
                             </div>
 
-                            <h4 class="sub-header" id="header-todo-completed"> Completed Todo's</h4>
+                            <!--<h4 class="sub-header" id="header-todo-completed"> Completed Todo's</h4>-->
                             <div class="row placeholders" id="div-todo-completed" >
 
                             </div>
@@ -328,30 +264,12 @@
                             <!--<h4 class="sub-header" id="header-todo-report" ></h4>-->
 
 
-                            <h4 class="sub-header" id="header-todo-project" > Project Todo's</h4>
+                            <!--<h4 class="sub-header" id="header-todo-project" > Project Todo's</h4>-->
                             <div class="row placeholders" id="div-todo-project" >
 
                             </div>
 
-                            <h4 class="sub-header" id="header-todo-search"> Search Results</h4>
-                            <div class="row placeholders" id="div-todo-search" >
-
-                                <ol id="search-results">
-                                    <!--<li>
-                                        <div class="rh">
-                                                <h3 class="h"></h3>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="rc">
-                                                <h3 class="c"></h3>
-                                        </div>
-                                    </li>-->
-                                </ol>
-
-                            </div>
-
-                            <h2 class="sub-header" id="header-todo-tags" > Todo Tags</h2>
+                            <!--<h2 class="sub-header" id="header-todo-tags" > Todo Tags</h2>-->
                             <div class="row placeholders" id="div-todo-tags" >
 
                             </div>
@@ -424,6 +342,136 @@
 
                         </div>
                     </div>
+                </div>
+
+                <!--<h4 class="sub-header" id="header-todo-search"> Search Results</h4>-->
+                <div class="row placeholders" id="div-todo-search" >
+
+                    <ol id="search-results">
+                        <!--<li>
+                            <div class="rh">
+                                    <h3 class="h"></h3>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="rc">
+                                    <h3 class="c"></h3>
+                            </div>
+                        </li>-->
+                    </ol>
+
+                </div>
+
+                <!--<h4 class="sub-header" id="header-todo-detail" style="display:none;"> View / Edit Todo</h4>-->
+                <div class="row placeholders" id="div-todo-detail" >
+                    <div>
+                        <!--<a href="{%url 'todo:index' %}">Todo-Home</a>-->
+                        <a href="#" id="show-search-results" style="display: none; ">Search Results</a>
+                    </div>
+                    <div id="detail-todo-id" style="display: none; " ></div>
+                    <div id="detail-todo-name" style="display: none; " ></div>
+                    <div id="detail-update-success" class="alert alert-success" role="alert" style="display: none;">
+
+                    </div>
+                    <div class="well-sm">
+                      <form class="form-horizontal" action="" method="post">
+                      <fieldset>
+                        <!--<legend class="" id="header-todo-detail-name">View / Edit Todo</legend>-->
+
+                        <!-- Name input-->
+                        <div class="form-group">
+                          <label class="col-md-3 control-label" for="body-todo-detail-name">Name</label>
+                          <div class="col-md-9">
+                            <input id="body-todo-detail-name" name="body-todo-detail-name" type="text" placeholder="Todo name" class="form-control">
+                          </div>
+                        </div>
+
+                        <!-- Priority input-->
+                        <div class="form-group">
+                          <label class="col-md-3 control-label" for="body-todo-detail-priority">Priority</label>
+                          <div class="col-md-9">
+                            <select id="body-todo-detail-priority" class="form-control">
+                                <option value="high" >High</option>
+                                <option value="medium" >Medium</option>
+                                <option value="low" >Low</option>
+                                <option value="severe" >Severe</option>
+                             </select>
+                          </div>
+                        </div>
+
+                        <!-- Description Input -->
+                        <div class="form-group">
+                          <label class="col-md-3 control-label" for="body-todo-detail-description">Description</label>
+                          <div class="col-md-9">
+                            <textarea class="form-control" id="body-todo-detail-description" name="body-todo-detail-description" placeholder="Please enter your message here..." rows="5"></textarea>
+                          </div>
+                        </div>
+
+                        <!-- Notes Input -->
+                        <div class="form-group">
+                          <label class="col-md-3 control-label" for="body-todo-detail-notes">Notes</label>
+                          <div class="col-md-9">
+                            <textarea class="form-control" id="body-todo-detail-notes" name="body-todo-detail-notes" placeholder="Any Notes related to Todo." rows="5"></textarea>
+                          </div>
+                        </div>
+
+
+                        <!-- Tags input-->
+                        <div class="form-group">
+                          <label class="col-md-3 control-label" for="body-todo-detail-tags">Tags</label>
+                          <div class="col-md-9">
+                            <input id="body-todo-detail-tags" name="body-todo-detail-tags" type="text" placeholder="Tags" class="form-control">
+                          </div>
+                        </div>
+
+                        <!-- Projects input-->
+                        <div class="form-group">
+                          <label class="col-md-3 control-label" for="body-todo-detail-project">Project</label>
+                          <div class="col-md-9">
+                            <input id="body-todo-detail-project" name="body-todo-detail-project" type="text" placeholder="Project related to Todo" class="form-control">
+                          </div>
+                        </div>
+
+
+                        <!-- Email input-->
+                        <div class="form-group">
+                          <label class="col-md-3 control-label" for="body-todo-detail-email">E-mail</label>
+                          <div class="col-md-9">
+                            <input id="body-todo-detail-email" name="body-todo-detail-email" type="text" placeholder="Related Email" class="form-control">
+                          </div>
+                        </div>
+
+                        <!-- Phone Number input-->
+                        <div class="form-group">
+                          <label class="col-md-3 control-label" for="body-todo-detail-phone">Phone Number</label>
+                          <div class="col-md-9">
+                            <input id="body-todo-detail-phone" name="body-todo-detail-phone" type="text" placeholder="Phone Number" class="form-control">
+                          </div>
+                        </div>
+
+                        <!-- Address input-->
+                        <div class="form-group">
+                          <label class="col-md-3 control-label" for="body-todo-detail-address">Address</label>
+                          <div class="col-md-9">
+                            <textarea id="body-todo-detail-address" name="body-todo-detail-address" type="text" placeholder="Address" class="form-control"rows="5"></textarea>
+                          </div>
+                        </div>
+
+
+
+
+
+                        <!-- Form actions -->
+                        <div class="form-group">
+                          <div class="col-md-12 text-center">
+                            <button id="detailTodoUpdate" type="button" class="btn btn-primary">update</button>
+                            <button id="detailTodoCancel" type="button" class="btn btn-primary">cancel</button>
+                          </div>
+                        </div>
+                      </fieldset>
+                      </form>
+                    </div>
+
                 </div>
 
 

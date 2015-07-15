@@ -25,8 +25,11 @@
             </ul>
             {%else%}
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{% url 'login' %}">login</a></li>
-                   <li> <a href="/accounts/register" >Register</a></li>
+                    <li>
+                        <!--<a href="{% url 'login' %}">login</a>-->
+                        <a href="{% url 'login_request' %}"> Login  </a>
+                    </li>
+                   <!--<li> <a href="/accounts/register" >Register</a></li>-->
                 </ul>
             {% endif %}
         </div><!--/.nav-collapse -->

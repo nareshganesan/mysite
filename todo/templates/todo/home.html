@@ -48,13 +48,15 @@
             {% if user.is_authenticated %}
                 <h4><a href="{% url 'polls:index' %}"> Polls </a> </h4>
             {% else %}
-                <h4><a href="{% url 'login' %}"> Polls </a> </h4>
+                <!--<h4><a href="{% url 'login' %}"> Polls </a> </h4>-->
+                <h4><a href="{% url 'login_request' %}"> Polls </a></h4>
             {% endif %}
             <p>Django app to create new  polls, user based polls. </p>
             {% if user.is_authenticated %}
                 <h4><a href="{% url 'todo:index' %}"> Todo </a></h4>
             {% else %}
-                <h4><a href="{% url 'login' %}"> Todo </a></h4>
+                <!--<h4><a href="{% url 'login' %}"> Todo </a></h4>-->
+                <h4><a href="{% url 'login_request' %}"> Todo </a></h4>
             {% endif %}
 
             <p>Django app to add, edit, delete, mark as completed Todo's. I will be adding more features as I keep developing.
@@ -64,6 +66,8 @@
                 Create sub-task's to drill down complex tasks.<br/>
 
             </p>
+            <!--<h4><a href="{% url 'login_request' %}"> login Test </a></h4>-->
+
 
         </div>
 

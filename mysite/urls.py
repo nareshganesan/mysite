@@ -33,4 +33,6 @@ urlpatterns = [
     url(r'^polls/', include('polls.urls', namespace="polls")),
     # Todo app created on my own for learning purpose.
     url(r'^todo/', include('todo.urls', namespace="todo")),
+    # Custom login attempt for Todo app.
+    url(r'^login/', 'todo.views.login_request', name='login_request'),
 ]

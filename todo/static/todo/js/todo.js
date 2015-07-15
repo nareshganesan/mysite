@@ -208,6 +208,7 @@ function showDeleteTodoDiv( todoid, todotype) {
 
 function showDetailTodoDiv( todoid, showsearchdivlink) {
 
+//    showTodoElementsById("tabs-todo-types");
     showTodoFeature(FEATURELIST.DETAILFEATURE);
     if(showsearchdivlink == 'True') {
         $("#show-search-results").css('display', 'inline-block');
@@ -227,7 +228,7 @@ function showDetailTodoDiv( todoid, showsearchdivlink) {
             $("#detail-todo-id").html(todoid);
             console.log($("#detail-todo-id").html());
             $("#body-todo-detail-name").val(json.todoname);
-            $("#body-todo-detail-priority option[value="+json.todopriority+"]").attr('selected','selected');
+            $("#body-todo-detail-priority option[value="+json.todopriority+"]").prop('selected',true);
             $("#body-todo-detail-description").val(json.tododescription);
             $("#body-todo-detail-notes").val(json.todonotes);
             $("#body-todo-detail-tags").val(json.todotags);
@@ -400,13 +401,19 @@ $('#search-box').keyup(function(e){
 
 $('#search-button').click(function(e){
     var searchQuery = $('#search-box').val();
-    showTodoFeature(FEATURELIST.SEARCHFEATURE);
+    showTodoElementsById("div-todo-search");
+    hideTodoElementsById("div-todo-report");
+    hideTodoElementsById("tabs-todo-types");
+    hideTodoElementsById("div-todo-detail");
     todoSearch(searchQuery);
 });
 
 $('#show-search-results').click(function(e){
     var searchQuery = $('#search-box').val();
-    showTodoFeature(FEATURELIST.SEARCHFEATURE);
+    showTodoElementsById("div-todo-search");
+    hideTodoElementsById("div-todo-report");
+    hideTodoElementsById("tabs-todo-types");
+    hideTodoElementsById("div-todo-detail");
     todoSearch(searchQuery);
 });
 

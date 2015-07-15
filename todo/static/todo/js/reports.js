@@ -8,7 +8,12 @@ $(document).ready(function() {
         credits: {enabled: false},
         legend: {enabled: false},
         title: {text: 'Todo Report'},
-        subtitle: {text: 'Last Week'},
+        subtitle: {text: 'Total Todo\'s created'},
+        tooltip:{
+                formatter:function(){
+                    return 'Priority: ' + this.key + '<br/>' + this.series.name+': '+ this.y;
+                }
+         },
         xAxis: {title: {text: null}, labels: {rotation: 0}},
         yAxis: {title: {text: null}},
         series: [{}, {}, {}],

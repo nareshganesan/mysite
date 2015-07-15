@@ -63,3 +63,21 @@ $(".nav-sidebar li").click(function () {
 });
 
 /* Side Bar functions end */
+
+
+/* Browser Specific styling start */
+$(document).ready(function() {
+    var ua = navigator.userAgent.toLowerCase();
+    if (ua.indexOf('safari') != -1) {
+        if (ua.indexOf('chrome') > -1) {
+          // Chrome
+        } else {
+          // Safari
+          $("#div-add-todo").css("margin-top", "30px");
+        }
+    }
+
+});
+
+
+/* Browser Specific styling end */
