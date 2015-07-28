@@ -70,179 +70,54 @@
                         <div class="tab-pane active" id="tab-todo">
 
                             <div class="row placeholders" id="div-todo-list">
-                                <!--<p>-->
-                                    <!--<span><a href="#" id="link-show-add"  >Add Todo</a> </span>-->
-                                <!--</p>-->
+
                                 {% if latest_todo_list %}
                                     <form method="POST" id="quickedit-todo-form">
                                         {% csrf_token %}
-                                        <table class="table table-striped table-hover table-todo-list">
-                                            <tr>
-                                                <td> Name </td>
-                                                <td>Priority</td>
-                                                <td>Quick Edit</td>
-                                                <td>Todo page</td>
-                                                <td>Todo Completed</td>
-                                                <td>Delete Todo </td>
-                                                <!--<td>Created Date </td>-->
-                                            </tr>
-                                            {% for todo in latest_todo_list %}
+                                        <table class="table table-hover table-todo-list-1">
+                                            <tbody>
+                                                {% for todo in latest_todo_list %}
+                                                    <tr class="drag-todo-item">
+                                                        <td class="status" style="width: 10%; ">
+                                                            <div class="square" name="todocompleted" id="todocompleted{{ todo.id }}"
+                                                                 value="{{ todo.iscompleted }}"
+                                                                 onclick="markasCompleted('{{ todo.name|safe }}', '{{ todo.id }}')" >
+                                                            </div>
 
-                                                <tr>
-                                                    <td>
-                                                        <input type="text" name="todoname" id="todoname{{ todo.id }}" value="{{ todo.name }}" readonly>
-                                                    </td>
-                                                    <td>
-                                                        <input type="text" name="todopriority" id="todopriority{{ todo.id }}" value="{{ todo.priority }}" readonly>
-                                                         <select id="priority_dropdown{{ todo.id }}" style="display: none;">
-                                                                <option value="high" >High</option>
-                                                                <option value="medium" >Medium</option>
-                                                                <option value="low" >Low</option>
-                                                                <option value="severe" >Severe</option>
-                                                         </select>
-                                                    </td>
-                                                    <td>
-                                                            <input type="button" id="quickedit{{todo.id}}" name="quickedit{{todo.id}}" value="edit" class="tiny button btn-primary">
-                                                            <input type="submit" id="quicksave{{todo.id}}" name="quicksave{{todo.id}}" value="update" class="tiny button" style="display:none;">
-                                                    </td>
-                                                    <td>
-                                                        <a href="#" onclick="showDetailTodoDiv('{{ todo.id }}', 'False')" >view </a>
-                                                    </td>
-                                                    <td>
-                                                        <div>
-
-                                                            <input type="checkbox" name="todocompleted" id="todocompleted{{ todo.id }}" value="{{ todo.iscompleted }}" onclick="markasCompleted('{{ todo.name|safe }}', '{{ todo.id }}')" >
-                                                        </div>
-                                                    </td>
-                                                     <td>
-                                                         <a href="#"  onclick="showDeleteTodoDiv( '{{ todo.id }}', 'todo')">delete</a>
-                                                    </td>
-                                                    <!--<td>
-                                                        <input type="text" name="createddate" id="createddate{{ todo.id }}" value="{{ todo.created_date|date:'D d M Y' }}{{ todo.created_date|time:'H:i' }}" readonly>
-                                                    </td>-->
-
-                                                </tr>
-
-                                            {% endfor %}
+                                                        </td>
+                                                        <td class="name-todo" style="width: 90%;">
+                                                            <input type="hidden" class="todo-id" name="todo-id" value="{{ todo.id }}" />
+                                                            <div class="list-todo-name" >{{ todo.name }}</div>
+                                                            <input type="text" name="todoname"
+                                                                   id="todoname{{ todo.id }}" value="{{ todo.name }}"
+                                                                   readonly style="display: none;">
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
                                         </table>
-
                                     </form>
+
+                                    <div class="pagination">
+                                        <span class="step-links">
+                                            {% if latest_todo_list.has_previous %}
+                                                <a href="?page={{ latest_todo_list.previous_page_number }}">previous</a>
+                                            {% endif %}
+
+                                            <span class="current">
+                                                Page {{ latest_todo_list.number }} of {{ latest_todo_list.paginator.num_pages }}.
+                                            </span>
+
+                                            {% if latest_todo_list.has_next %}
+                                                <a href="?page={{ latest_todo_list.next_page_number }}">next</a>
+                                            {% endif %}
+                                        </span>
+                                    </div>
+
                                 {% else %}
                                     <p> Yay!!! No todo's. </p>
                                 {% endif %}
 
-                            </div>
-
-                            <!--<h4 class="sub-header" id="header-todo-add" style="display:none;" >Add Todo</h4>-->
-                            <div class="row placeholders" id="div-todo-add" style="display:none;">
-                                <div id="" >
-
-                                    <!--<a href="{%url 'todo:index' %}">Todo-Home</a> <br/> <br/>-->
-
-
-
-
-                                    <div class="well-sm">
-                                        <form class="form-horizontal" id="todo_form" action="" method="post">
-                                            {% csrf_token %}
-                                            <fieldset>
-                                                <!--<legend class="" id="header-todo-detail-name">View / Edit Todo</legend>-->
-
-                                                <!-- Name input-->
-                                                <div class="form-group">
-                                                  <label class="col-md-3 control-label" for="id_name">Name</label>
-                                                  <div class="col-md-9">
-                                                      <input id="id_name" maxlength="200" name="id_name" type="text" placeholder="Todo name" class="form-control">
-                                                  </div>
-                                                </div>
-
-                                                <!-- Priority input-->
-                                                <div class="form-group">
-                                                  <label class="col-md-3 control-label" for="id_priority">Priority</label>
-                                                  <div class="col-md-9">
-                                                      <select id="id_priority" class="form-control">
-                                                            <option value="high" >High</option>
-                                                            <option value="medium" >Medium</option>
-                                                            <option value="low" >Low</option>
-                                                         <option value="severe" >Severe</option>
-                                                     </select>
-                                                  </div>
-                                                </div>
-
-                                                <!-- Description Input -->
-                                                <div class="form-group">
-                                                  <label class="col-md-3 control-label" for="id_description">Description</label>
-                                                  <div class="col-md-9">
-                                                      <textarea class="form-control" maxlength="400" id="id_description" name="id_description" placeholder="Please enter your message here..." rows="5"></textarea>
-                                                  </div>
-                                                </div>
-
-                                                <!-- Notes Input -->
-                                                <div class="form-group">
-                                                  <label class="col-md-3 control-label" for="id_notes">Notes</label>
-                                                  <div class="col-md-9">
-                                                      <textarea class="form-control" id="id_notes" maxlength="300" name="id_notes" placeholder="Any Notes related to Todo." rows="5"></textarea>
-                                                  </div>
-                                                </div>
-
-
-                                                <!-- Tags input-->
-                                                <div class="form-group">
-                                                  <label class="col-md-3 control-label" for="id_tags">Tags</label>
-                                                  <div class="col-md-9">
-                                                      <input id="id_tags" name="id_tags" maxlength="100" type="text" placeholder="Tags" class="form-control">
-                                                  </div>
-                                                </div>
-
-                                                <!-- Projects input-->
-                                                <div class="form-group">
-                                                  <label class="col-md-3 control-label" for="id_project">Project</label>
-                                                  <div class="col-md-9">
-                                                      <input id="id_project" maxlength="200" name="id_project" type="text" placeholder="Project related to Todo" class="form-control">
-                                                  </div>
-                                                </div>
-
-
-                                                <!-- Email input-->
-                                                <div class="form-group">
-                                                  <label class="col-md-3 control-label" for="id_email">E-mail</label>
-                                                  <div class="col-md-9">
-                                                      <input id="id_email" name="id_email" type="text" placeholder="Related Email" class="form-control">
-                                                  </div>
-                                                </div>
-
-                                                <!-- Phone Number input-->
-                                                <div class="form-group">
-                                                  <label class="col-md-3 control-label" for="id_phone_number">Phone Number</label>
-                                                  <div class="col-md-9">
-                                                      <input id="id_phone_number" name="id_phone_number" type="text" placeholder="Phone Number" class="form-control">
-                                                  </div>
-                                                </div>
-
-                                                <!-- Address input-->
-                                                <div class="form-group">
-                                                  <label class="col-md-3 control-label" for="id_address">Address</label>
-                                                  <div class="col-md-9">
-                                                      <textarea id="id_address" name="id_address" maxlength="200"  type="text" placeholder="Address" class="form-control"rows="5"></textarea>
-                                                  </div>
-                                                </div>
-
-
-
-
-
-                                                <!-- Form actions -->
-                                                <div class="form-group">
-                                                  <div class="col-md-12 text-center">
-                                                    <button id="addTodoSubmit" type="button" class="btn btn-primary">Add Todo</button>
-                                                    <button id="addTodoCancel" type="button" class="btn btn-primary">cancel</button>
-                                                  </div>
-                                                </div>
-                                            </fieldset>
-                                        </form>
-                                    </div>
-
-                                </div>
                             </div>
 
                             <!--<h4 class="sub-header" id="header-todo-delete"> Delete Todo</h4>-->
@@ -260,8 +135,6 @@
                             <div class="row placeholders" id="div-todo-completed" >
 
                             </div>
-
-                            <!--<h4 class="sub-header" id="header-todo-report" ></h4>-->
 
 
                             <!--<h4 class="sub-header" id="header-todo-project" > Project Todo's</h4>-->
@@ -341,6 +214,118 @@
                             </div>
 
                         </div>
+                    </div>
+                </div>
+
+                <!--<h4 class="sub-header" id="header-todo-add" style="display:none;" >Add Todo</h4>-->
+                <div class="row placeholders" id="div-todo-add" style="display:none;">
+                    <div id="" >
+
+                        <!--<a href="{%url 'todo:index' %}">Todo-Home</a> <br/> <br/>-->
+
+
+
+
+                        <div class="well-sm">
+                            <form class="form-horizontal" id="todo_form" action="" method="post">
+                                {% csrf_token %}
+                                <fieldset>
+                                    <!--<legend class="" id="header-todo-detail-name">View / Edit Todo</legend>-->
+
+                                    <!-- Name input-->
+                                    <div class="form-group">
+                                      <label class="col-md-3 control-label" for="id_name">Name</label>
+                                      <div class="col-md-9">
+                                          <input id="id_name" maxlength="200" name="id_name" type="text" placeholder="Todo name" class="form-control">
+                                      </div>
+                                    </div>
+
+                                    <!-- Priority input-->
+                                    <div class="form-group">
+                                      <label class="col-md-3 control-label" for="id_priority">Priority</label>
+                                      <div class="col-md-9">
+                                          <select id="id_priority" class="form-control">
+                                                <option value="high" >High</option>
+                                                <option value="medium" >Medium</option>
+                                                <option value="low" >Low</option>
+                                             <option value="severe" >Severe</option>
+                                         </select>
+                                      </div>
+                                    </div>
+
+                                    <!-- Description Input -->
+                                    <div class="form-group">
+                                      <label class="col-md-3 control-label" for="id_description">Description</label>
+                                      <div class="col-md-9">
+                                          <textarea class="form-control" maxlength="400" id="id_description" name="id_description" placeholder="Please enter your message here..." rows="5"></textarea>
+                                      </div>
+                                    </div>
+
+                                    <!-- Notes Input -->
+                                    <div class="form-group">
+                                      <label class="col-md-3 control-label" for="id_notes">Notes</label>
+                                      <div class="col-md-9">
+                                          <textarea class="form-control" id="id_notes" maxlength="300" name="id_notes" placeholder="Any Notes related to Todo." rows="5"></textarea>
+                                      </div>
+                                    </div>
+
+
+                                    <!-- Tags input-->
+                                    <div class="form-group">
+                                      <label class="col-md-3 control-label" for="id_tags">Tags</label>
+                                      <div class="col-md-9">
+                                          <input id="id_tags" name="id_tags" maxlength="100" type="text" placeholder="Tags" class="form-control">
+                                      </div>
+                                    </div>
+
+                                    <!-- Projects input-->
+                                    <div class="form-group">
+                                      <label class="col-md-3 control-label" for="id_project">Project</label>
+                                      <div class="col-md-9">
+                                          <input id="id_project" maxlength="200" name="id_project" type="text" placeholder="Project related to Todo" class="form-control">
+                                      </div>
+                                    </div>
+
+
+                                    <!-- Email input-->
+                                    <div class="form-group">
+                                      <label class="col-md-3 control-label" for="id_email">E-mail</label>
+                                      <div class="col-md-9">
+                                          <input id="id_email" name="id_email" type="text" placeholder="Related Email" class="form-control">
+                                      </div>
+                                    </div>
+
+                                    <!-- Phone Number input-->
+                                    <div class="form-group">
+                                      <label class="col-md-3 control-label" for="id_phone_number">Phone Number</label>
+                                      <div class="col-md-9">
+                                          <input id="id_phone_number" name="id_phone_number" type="text" placeholder="Phone Number" class="form-control">
+                                      </div>
+                                    </div>
+
+                                    <!-- Address input-->
+                                    <div class="form-group">
+                                      <label class="col-md-3 control-label" for="id_address">Address</label>
+                                      <div class="col-md-9">
+                                          <textarea id="id_address" name="id_address" maxlength="200"  type="text" placeholder="Address" class="form-control"rows="5"></textarea>
+                                      </div>
+                                    </div>
+
+
+
+
+
+                                    <!-- Form actions -->
+                                    <div class="form-group">
+                                      <div class="col-md-12 text-center">
+                                        <button id="addTodoSubmit" type="button" class="btn btn-primary">Add Todo</button>
+                                        <button id="addTodoCancel" type="button" class="btn btn-primary">cancel</button>
+                                      </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+
                     </div>
                 </div>
 

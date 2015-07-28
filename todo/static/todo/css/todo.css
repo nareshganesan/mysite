@@ -350,3 +350,41 @@ body {
 
 
 /* Todo Reports styling end */
+
+
+/* Todo Homepage rewrite */
+
+.square {
+    width : 15px;
+    height : 15px;
+    border-radius : 3px;
+    background: red;
+    text-align: center;
+    margin: auto;
+}
+
+.table-todo-list-1 {
+    margin-left: 20px;
+}
+
+.table-todo-list-1 td.status {
+    /*width : 10% !important;*/
+    vertical-align: middle !important;
+}
+
+.table-todo-list-1 .name-todo {
+    /*width : 60% !important*/
+}
+
+.table-todo-list-1 .priority-todo{
+    /*width : 30% !important*/
+}
+
+.list-todo-name {
+    display : inline;
+    text-align : left;
+}
+
+.name-todo .glyphicon-list {
+    margin-left: 10px;
+}

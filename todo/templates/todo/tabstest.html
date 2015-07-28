@@ -23,6 +23,26 @@
     <!-- Javscript constants -->
     <script type="text/javascript" src="{% static 'todo/js/todo-constants.js' %}"></script>
 
+    <script type="text/javascript">
+         <!--
+            function ReadCookie()
+            {
+               var allcookies = document.cookie;
+               document.write ("All Cookies : " + allcookies );
+
+               // Get all the cookies pairs in an array
+               cookiearray = allcookies.split(';');
+
+               // Now take key value pair out of this array
+               for(var i=0; i<cookiearray.length; i++){
+                  name = cookiearray[i].split('=')[0];
+                  value = cookiearray[i].split('=')[1];
+                  document.write ("Key is : " + name + " and Value is : " + value);
+               }
+            }
+         //-->
+    </script>
+
 
 </head>
 <body >
@@ -63,7 +83,7 @@
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="tab-todo">
-                        <p>Todo</p>
+                        <!--<p>Todo</p>-->
                     </div>
                     <div class="tab-pane" id="tab-completed-todo">
                         <p>Completed Todo</p>
@@ -76,21 +96,185 @@
             </div>
 
 
-            <div class="form-group">
-                <div style="float: left; width: 50px;" > Start : </div>
-                <div class='input-group date' id='startDate'>
-                    <input type='text' class="form-control" name="startDate" />
-                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
-                <div style="float: left;width: 50px; margin-left: 10px;" > End : </div>
-                <div class='input-group date' id='endDate'>
-                    <input type='text' class="form-control" name="org_endDate" />
-                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
-            </div>
+            <!--<div class="form-group">-->
+                <!--<div style="float: left; width: 50px;" > Start : </div>-->
+                <!--<div class='input-group date' id='startDate'>-->
+                    <!--<input type='text' class="form-control" name="startDate" />-->
+                    <!--<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>-->
+                    <!--</span>-->
+                <!--</div>-->
+                <!--<div style="float: left;width: 50px; margin-left: 10px;" > End : </div>-->
+                <!--<div class='input-group date' id='endDate'>-->
+                    <!--<input type='text' class="form-control" name="org_endDate" />-->
+                    <!--<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>-->
+                    <!--</span>-->
+                <!--</div>-->
+            <!--</div>-->
 
+            <!--<form name="myform" action="">-->
+                <!--<p> click the following button and see the result:</p>-->
+                <!--<input type="button" value="Get Cookie" onclick="ReadCookie()"/>-->
+            <!--</form>-->
+
+            {% if latest_todo_list %}
+                <form method="POST" id="quickedit-todo-form">
+                    {% csrf_token %}
+                    <table class="table table-hover table-todo-list-1">
+                        <tbody>
+                            {% for todo in latest_todo_list %}
+                                <tr class="drag-todo-item">
+                                    <td class="status" style="width: 10%; ">
+                                        <div class="square" name="todocompleted" id="todocompleted{{ todo.id }}"
+                                             value="{{ todo.iscompleted }}"
+                                             onclick="markasCompleted('{{ todo.name|safe }}', '{{ todo.id }}')" >
+                                        </div>
+
+                                    </td>
+                                    <td class="name-todo" style="width: 90%;">
+                                        <input type="hidden" class="todo-id" name="todo-id" value="{{ todo.id }}" />
+                                        <div class="list-todo-name" >{{ todo.name }}</div>
+                                        <input type="text" name="todoname"
+                                               id="todoname{{ todo.id }}" value="{{ todo.name }}"
+                                               readonly style="display: none;">
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+
+                <div class="pagination">
+                    <span class="step-links">
+                        {% if latest_todo_list.has_previous %}
+                            <a href="?page={{ latest_todo_list.previous_page_number }}">previous</a>
+                        {% endif %}
+
+                        <span class="current">
+                            Page {{ latest_todo_list.number }} of {{ latest_todo_list.paginator.num_pages }}.
+                        </span>
+
+                        {% if latest_todo_list.has_next %}
+                            <a href="?page={{ latest_todo_list.next_page_number }}">next</a>
+                        {% endif %}
+                    </span>
+                </div>
+
+            {% else %}
+                <p> Yay!!! No todo's. </p>
+            {% endif %}
+
+
+            <!--<h4 class="sub-header" id="header-todo-detail" style="display:none;"> View / Edit Todo</h4>-->
+            <div class="row placeholders" id="div-todo-detail" >
+                <div>
+                    <!--<a href="{%url 'todo:index' %}">Todo-Home</a>-->
+                    <a href="#" id="show-search-results" style="display: none; ">Search Results</a>
+                </div>
+                <div id="detail-todo-id" style="display: none; " ></div>
+                <div id="detail-todo-name" style="display: none; " ></div>
+                <div id="detail-update-success" class="alert alert-success" role="alert" style="display: none;">
+
+                </div>
+                <div class="well-sm">
+                  <form class="form-horizontal" action="" method="post">
+                  <fieldset>
+                    <!--<legend class="" id="header-todo-detail-name">View / Edit Todo</legend>-->
+
+                    <!-- Name input-->
+                    <div class="form-group">
+                      <label class="col-md-3 control-label" for="body-todo-detail-name">Name</label>
+                      <div class="col-md-9">
+                        <input id="body-todo-detail-name" name="body-todo-detail-name" type="text" placeholder="Todo name" class="form-control">
+                      </div>
+                    </div>
+
+                    <!-- Priority input-->
+                    <div class="form-group">
+                      <label class="col-md-3 control-label" for="body-todo-detail-priority">Priority</label>
+                      <div class="col-md-9">
+                        <select id="body-todo-detail-priority" class="form-control">
+                            <option value="high" >High</option>
+                            <option value="medium" >Medium</option>
+                            <option value="low" >Low</option>
+                            <option value="severe" >Severe</option>
+                         </select>
+                      </div>
+                    </div>
+
+                    <!-- Description Input -->
+                    <div class="form-group">
+                      <label class="col-md-3 control-label" for="body-todo-detail-description">Description</label>
+                      <div class="col-md-9">
+                        <textarea class="form-control" id="body-todo-detail-description" name="body-todo-detail-description" placeholder="Please enter your message here..." rows="5"></textarea>
+                      </div>
+                    </div>
+
+                    <!-- Notes Input -->
+                    <div class="form-group">
+                      <label class="col-md-3 control-label" for="body-todo-detail-notes">Notes</label>
+                      <div class="col-md-9">
+                        <textarea class="form-control" id="body-todo-detail-notes" name="body-todo-detail-notes" placeholder="Any Notes related to Todo." rows="5"></textarea>
+                      </div>
+                    </div>
+
+
+                    <!-- Tags input-->
+                    <div class="form-group">
+                      <label class="col-md-3 control-label" for="body-todo-detail-tags">Tags</label>
+                      <div class="col-md-9">
+                        <input id="body-todo-detail-tags" name="body-todo-detail-tags" type="text" placeholder="Tags" class="form-control">
+                      </div>
+                    </div>
+
+                    <!-- Projects input-->
+                    <div class="form-group">
+                      <label class="col-md-3 control-label" for="body-todo-detail-project">Project</label>
+                      <div class="col-md-9">
+                        <input id="body-todo-detail-project" name="body-todo-detail-project" type="text" placeholder="Project related to Todo" class="form-control">
+                      </div>
+                    </div>
+
+
+                    <!-- Email input-->
+                    <div class="form-group">
+                      <label class="col-md-3 control-label" for="body-todo-detail-email">E-mail</label>
+                      <div class="col-md-9">
+                        <input id="body-todo-detail-email" name="body-todo-detail-email" type="text" placeholder="Related Email" class="form-control">
+                      </div>
+                    </div>
+
+                    <!-- Phone Number input-->
+                    <div class="form-group">
+                      <label class="col-md-3 control-label" for="body-todo-detail-phone">Phone Number</label>
+                      <div class="col-md-9">
+                        <input id="body-todo-detail-phone" name="body-todo-detail-phone" type="text" placeholder="Phone Number" class="form-control">
+                      </div>
+                    </div>
+
+                    <!-- Address input-->
+                    <div class="form-group">
+                      <label class="col-md-3 control-label" for="body-todo-detail-address">Address</label>
+                      <div class="col-md-9">
+                        <textarea id="body-todo-detail-address" name="body-todo-detail-address" type="text" placeholder="Address" class="form-control"rows="5"></textarea>
+                      </div>
+                    </div>
+
+
+
+
+
+                    <!-- Form actions -->
+                    <div class="form-group">
+                      <div class="col-md-12 text-center">
+                        <button id="detailTodoUpdate" type="button" class="btn btn-primary">update</button>
+                        <button id="detailTodoCancel" type="button" class="btn btn-primary">cancel</button>
+                      </div>
+                    </div>
+                  </fieldset>
+                  </form>
+                </div>
+
+            </div>
 
         </div>
     </div>
@@ -103,6 +287,86 @@
 {% else %}
     {% include "todo/footer.html" %}
 {% endif %}
+
+
+<script type="text/javascript">
+    var updateIndex = function(e, ui) {
+        $('td.index', ui.item.parent()).each(function (i) {
+            $(this).html(i + 1);
+        });
+    };
+    var fixWidthHelper = function (e, ui) {
+        ui.children().each(function() {
+            $(this).width($(this).width());
+        });
+        return ui;
+    }
+    $(".table-todo-list-1 tbody").sortable({
+        cursor: 'move',
+        helper: fixWidthHelper,
+        stop: updateIndex
+    }).disableSelection();
+
+    $( ".table-todo-list-1 tr" ).hover(
+      function() {
+        var todo_name = $( this ).find( ".name-todo" ).text();
+        $( this ).find( ".name-todo" ).append(
+            $( "<span></span>" ).addClass("glyphicon glyphicon-list")
+        );
+        $( this ).find( ".name-todo" ).append(
+            $( "<span>...</span>" ).addClass("end-span")
+        );
+        $( this ).find( ".name-todo" ).find( "span.end-span" ).css({
+            'display': 'inline',
+            'float': 'right'
+        });
+        $( this ).find( ".status" ).find(".square").before($( "<span></span>" ))
+        $( this ).find( ".status" ).find("span").addClass("glyphicon glyphicon-resize-vertical")
+        $( this ).find( ".status" ).find("span").css({
+            'float' : 'left',
+            'margin-left' : '-10px'
+        });
+        $( "span.glyphicon-list" ).hover(
+            function() {
+                $( this ).css({
+                    'cursor': 'pointer'
+                });
+            }
+        );
+        $( "span.glyphicon-list" ).on('click',
+            function(event) {
+                var todonameContainer = $(event.target).parent();
+                var todoid = todonameContainer.find( ".todo-id" ).val();
+                console.log(todoid);
+                showDetailTodoDiv(todoid, 'False');
+            }
+        );
+      }, function() {
+
+        $( this ).find( ".name-todo" ).find( "span:last" ).remove();
+        $( this ).find( ".name-todo" ).find( "span:last" ).remove();
+        $( this ).find( ".status" ).find("span").remove();
+      }
+    );
+
+    $( ".list-todo-name" ).click(
+    function() {
+
+    });
+
+    $( "div.square" ).hover(
+        function() {
+            $( this ).css({
+                'cursor': 'pointer'
+            });
+        }
+    );
+
+
+
+
+
+</script>
 
 </body>
 </html>

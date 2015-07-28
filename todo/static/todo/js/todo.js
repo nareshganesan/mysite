@@ -593,14 +593,80 @@ function dtodolist() {
 
   /* Deleted Todo functions end */
 
-  /* Report Todo feature start */
 
-  function showReportTodo() {
-    var tabid = $("#ul-tab-todo-types").find('.active a').attr('href');
-    $("#tabs-todo-types").css('display', 'none');
-    showTodoFeature(FEATURELIST.REPORTFEATURE);
-    $(window).resize();
+/* New Todo list Feature start   */
 
-  }
+var updateIndex = function(e, ui) {
+        $('td.index', ui.item.parent()).each(function (i) {
+            $(this).html(i + 1);
+        });
+    };
+    var fixWidthHelper = function (e, ui) {
+        ui.children().each(function() {
+            $(this).width($(this).width());
+        });
+        return ui;
+    }
+    $(".table-todo-list-1 tbody").sortable({
+        cursor: 'move',
+        helper: fixWidthHelper,
+        stop: updateIndex
+    }).disableSelection();
 
-  /* Report Todo feature end */
+    $( ".table-todo-list-1 tr" ).hover(
+      function() {
+        var todo_name = $( this ).find( ".name-todo" ).text();
+        $( this ).find( ".name-todo" ).append(
+            $( "<span></span>" ).addClass("glyphicon glyphicon-list")
+        );
+        $( this ).find( ".name-todo" ).append(
+            $( "<span>...</span>" ).addClass("end-span")
+        );
+        $( this ).find( ".name-todo" ).find( "span.end-span" ).css({
+            'display': 'inline',
+            'float': 'right'
+        });
+        $( this ).find( ".status" ).find(".square").before($( "<span></span>" ))
+        $( this ).find( ".status" ).find("span").addClass("glyphicon glyphicon-resize-vertical")
+        $( this ).find( ".status" ).find("span").css({
+            'float' : 'left',
+            'margin-left' : '-10px'
+        });
+        $( "span.glyphicon-list" ).hover(
+            function() {
+                $( this ).css({
+                    'cursor': 'pointer'
+                });
+            }
+        );
+        $( "span.glyphicon-list" ).on('click',
+            function(event) {
+                var todonameContainer = $(event.target).parent();
+                var todoid = todonameContainer.find( ".todo-id" ).val();
+                console.log(todoid);
+                showDetailTodoDiv(todoid, 'False');
+            }
+        );
+      }, function() {
+
+        $( this ).find( ".name-todo" ).find( "span:last" ).remove();
+        $( this ).find( ".name-todo" ).find( "span:last" ).remove();
+        $( this ).find( ".status" ).find("span").remove();
+      }
+    );
+
+    $( ".list-todo-name" ).click(
+    function() {
+
+    });
+
+    $( "div.square" ).hover(
+        function() {
+            $( this ).css({
+                'cursor': 'pointer'
+            });
+        }
+    );
+
+
+/* New Todo list Feature end   */

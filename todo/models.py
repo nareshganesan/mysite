@@ -36,6 +36,11 @@ class Todo(models.Model):
     def __str__(self):
 		return unicode(self.name + " priority : "+self.priority)
 
+class Tags(models.Model):
+    defaultTag = 'todo'
+    name = models.CharField(max_length=100, blank=False, default= defaultTag)
+    weightage = models.FloatField(blank=True)
+    user = models.ForeignKey(User, default=1)
 
 class CompletedTodo(models.Model):
     HIGH = 'high'
