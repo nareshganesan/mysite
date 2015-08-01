@@ -361,6 +361,11 @@ body {
     background: red;
     text-align: center;
     margin: auto;
+    border: 1px solid lightgrey;
+}
+
+.square:hover {
+    border: 1px solid black;
 }
 
 .table-todo-list-1 {
@@ -387,4 +392,84 @@ body {
 
 .name-todo .glyphicon-list {
     margin-left: 10px;
+}
+
+.reminder-date {
+    display : inline-block;
+    float : right;
+    margin-right : 20px;
+    font-size : small;
+}
+
+input[name^='todoname'], input[name^='todoname']:before, input[name^='todoname']:after  {
+    width: 100%;
+    padding: 8px;
+    margin: 0px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: 1px solid #CCC;
+}
+
+input[name^='todonameedit'], input[name^='todonameedit']:before, input[name^='todonameedit']:after, input[name^='todonameedit']:hover {
+    width: 80%;
+    padding: 2px;
+    margin: 0px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: 1px solid #CCC;
+}
+
+input[name^='tododateedit'], input[name^='tododateedit']:before, input[name^='tododateedit']:after, input[name^='tododateedit']:hover {
+    width: 20%;
+    padding: 2px;
+    margin: 0px 0px 0px -5px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: 1px solid #CCC;
+    text-align: center;
+}
+
+input[name^='todonamesave'], input[name^='todonamesave']:before, input[name^='todonamesave']:after {
+    width: 16%;
+    padding: 2px;
+    margin: 0px 0px 0px 0px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: 1px solid #CCC;
+}
+
+input[name^='todonamecancel'], input[name^='todonamecancel']:before, input[name^='todonamecancel']:after {
+    width: 16%;
+    padding: 2px;
+    margin: 0px 0px 0px 3px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: 1px solid #CCC;
+}
+
+.todoeditbuttons {
+    margin-top: 5px;
+    margin-left: 0px;
+    margin-bottom: 0px;
+}
+
+.severe {
+    background: red;
+}
+
+.high {
+    background: #E56717;
+}
+
+.medium {
+    background: yellow;
+}
+
+.low {
+    background: lightgrey;
 }

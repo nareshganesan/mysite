@@ -79,9 +79,12 @@
                                                 {% for todo in latest_todo_list %}
                                                     <tr class="drag-todo-item">
                                                         <td class="status" style="width: 10%; ">
-                                                            <div class="square" name="todocompleted" id="todocompleted{{ todo.id }}"
+                                                            <span class="glyphicon glyphicon-resize-vertical" style="display: none;"></span>
+                                                            <div class="square shadow {{todo.priority}}" name="todocompleted" id="todocompleted{{ todo.id }}"
                                                                  value="{{ todo.iscompleted }}"
-                                                                 onclick="markasCompleted('{{ todo.name|safe }}', '{{ todo.id }}')" >
+                                                                 onclick="markasCompleted('{{ todo.name|safe }}', '{{ todo.id }}')"
+                                                                 title="{{todo.priority}}"   >
+                                                                <input type="hidden" class="todo-priority" name="todo-priority" value="{{ todo.priority }}" />
                                                             </div>
 
                                                         </td>
@@ -90,7 +93,27 @@
                                                             <div class="list-todo-name" >{{ todo.name }}</div>
                                                             <input type="text" name="todoname"
                                                                    id="todoname{{ todo.id }}" value="{{ todo.name }}"
-                                                                   readonly style="display: none;">
+                                                                   style="display: none;">
+                                                            <span class="glyphicon glyphicon-list" style="display: none;"></span>
+                                                            <span class="reminder-date" title="">
+                                                                {% if todo.created_date %}
+                                                                    {{ todo.created_date.date|date:"M d" }}
+                                                                {% endif %}
+                                                            </span>
+                                                            <input type="hidden" class="todo-date" name="todo-date"
+                                                                   value="{{ todo.created_date.date|date:'d-m-Y' }}" />
+                                                            <span class="end-span" style="display: none;">...</span>
+                                                            <!--<div class="list-todo-save" style="display: none;" >{{ todo.name }}</div>-->
+                                                        </td>
+                                                        <td class="list-todo-edit" colspan="2" style="display: none;">
+                                                            <div class="div-todo-list-edit" >
+                                                                <input class = "todonameedit" type="text" name="todonameedit" />
+                                                                <input class = "tododateedit" type="text" name="tododateedit" />
+                                                            </div>
+                                                            <p class="todoeditbuttons"  >
+                                                                <input type="button" name="todonamesave" value="Save" />
+                                                                <input type="button" name="todonamecancel" value="Cancel"/>
+                                                            </p>
                                                         </td>
                                                     </tr>
                                                 {% endfor %}

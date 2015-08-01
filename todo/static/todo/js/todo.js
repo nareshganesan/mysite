@@ -226,7 +226,6 @@ function showDetailTodoDiv( todoid, showsearchdivlink) {
         // handle a successful response
         success : function(json) {
             $("#detail-todo-id").html(todoid);
-            console.log($("#detail-todo-id").html());
             $("#body-todo-detail-name").val(json.todoname);
             $("#body-todo-detail-priority option[value="+json.todopriority+"]").prop('selected',true);
             $("#body-todo-detail-description").val(json.tododescription);
@@ -312,7 +311,6 @@ $( "#deletecTodoSubmit" ).click(function() {
         var todophone = $("#body-todo-detail-phone").val()
         var todoaddress = $("#body-todo-detail-address").val()
         var edit_detail_url = "edit_todo/";
-        console.log(edit_detail_url);
         $.ajax({
             url : edit_detail_url, // the endpoint
             type : "POST", // http method
@@ -485,6 +483,25 @@ $(document).ready(function() {
         showCompletedTodoFeature(FEATURELIST.LISTFEATURE);
     });
 
+    $(".drag-todo-item").each(function() {
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1;
+        var yyyy = today.getFullYear();
+
+        var reminder_date_string = $(this).find(".todo-date").val().trim();
+
+        var reminder_year = reminder_date_string.split("-")[2];
+        var reminder_month = reminder_date_string.split("-")[1] - 1;
+        var reminder_day = reminder_date_string.split("-")[0];
+
+        var reminder_date = new Date(reminder_year, reminder_month, reminder_day);
+        var days_left = (today - reminder_date);
+        days_left = Math.floor(days_left/1000/60/60/24);
+        $(this).find(".reminder-date").attr('title', "Days left "+ days_left);
+    });
+
+
 });
 
 /* Tabs UI script */
@@ -601,72 +618,158 @@ var updateIndex = function(e, ui) {
             $(this).html(i + 1);
         });
     };
-    var fixWidthHelper = function (e, ui) {
-        ui.children().each(function() {
-            $(this).width($(this).width());
-        });
-        return ui;
-    }
-    $(".table-todo-list-1 tbody").sortable({
-        cursor: 'move',
-        helper: fixWidthHelper,
-        stop: updateIndex
-    }).disableSelection();
-
-    $( ".table-todo-list-1 tr" ).hover(
-      function() {
-        var todo_name = $( this ).find( ".name-todo" ).text();
-        $( this ).find( ".name-todo" ).append(
-            $( "<span></span>" ).addClass("glyphicon glyphicon-list")
-        );
-        $( this ).find( ".name-todo" ).append(
-            $( "<span>...</span>" ).addClass("end-span")
-        );
-        $( this ).find( ".name-todo" ).find( "span.end-span" ).css({
-            'display': 'inline',
-            'float': 'right'
-        });
-        $( this ).find( ".status" ).find(".square").before($( "<span></span>" ))
-        $( this ).find( ".status" ).find("span").addClass("glyphicon glyphicon-resize-vertical")
-        $( this ).find( ".status" ).find("span").css({
-            'float' : 'left',
-            'margin-left' : '-10px'
-        });
-        $( "span.glyphicon-list" ).hover(
-            function() {
-                $( this ).css({
-                    'cursor': 'pointer'
-                });
-            }
-        );
-        $( "span.glyphicon-list" ).on('click',
-            function(event) {
-                var todonameContainer = $(event.target).parent();
-                var todoid = todonameContainer.find( ".todo-id" ).val();
-                console.log(todoid);
-                showDetailTodoDiv(todoid, 'False');
-            }
-        );
-      }, function() {
-
-        $( this ).find( ".name-todo" ).find( "span:last" ).remove();
-        $( this ).find( ".name-todo" ).find( "span:last" ).remove();
-        $( this ).find( ".status" ).find("span").remove();
-      }
-    );
-
-    $( ".list-todo-name" ).click(
-    function() {
-
+var fixWidthHelper = function (e, ui) {
+    ui.children().each(function() {
+        $(this).width($(this).width());
     });
+    return ui;
+}
+$(".table-todo-list-1 tbody").sortable({
+    cursor: 'move',
+    helper: fixWidthHelper,
+    stop: updateIndex
+}).disableSelection();
 
-    $( "div.square" ).hover(
+$( ".drag-todo-item" ).hover(
+  function() {
+    var todo_name = $( this ).find( ".name-todo" ).text();
+    $( this ).find(".glyphicon-list").css('display', 'inline');
+    $( this ).find( ".end-span" ).css({
+        'display': 'inline-block',
+        'float': 'right',
+        'margin-right': '-50px'
+    });
+    $( this ).find(".glyphicon-resize-vertical").css({
+        'display': 'inline',
+        'float' : 'left',
+        'margin-left' : '-10px'
+    });
+    $( "span.glyphicon-list" ).hover(
         function() {
             $( this ).css({
                 'cursor': 'pointer'
             });
         }
     );
+    $( this ).find(".glyphicon-list").on('click',
+        function(event) {
+            event.stopPropagation();  // prevent overlapping element events from firing.
+            var todonameContainer = $(event.target).parent();
+            var todoid = todonameContainer.find( ".todo-id" ).val();
+            showDetailTodoDiv(todoid, 'False');
+        }
+    );
+  }, function() {
+    $( this ).find(".glyphicon-list").css('display', 'none');
+    $( this ).find(".end-span").css('display', 'none');
+    $( this ).find(".glyphicon-resize-vertical").css('display', 'none');
+  }
+);
+
+$( ".name-todo" ).click(
+    function() {
+        var parent_tr = $(this).parent();
+        var todo_name_element = $(this).find(".list-todo-name");
+        var todo_name_before_edit = todo_name_element.html();
+        var todo_name_edit = parent_tr.find(".todonameedit");
+        var temp_todo_name = "";
+        parent_tr.children().hide();
+        parent_tr.find(".list-todo-edit").css({
+            'display' : ''
+        });
+        parent_tr.find(".div-todo-list-edit").css({
+            'text-align' : 'left',
+            'position': 'relative',
+            'border-collapse': 'separate',
+            'width' : '100%'
+
+        });
+        todo_name_edit.val(todo_name_element.html());
+        temp_todo_name = todo_name_element.html();
+        todo_name_edit.keydown(
+            function() {
+                temp_todo_name = $(this).val();
+            }
+        );
+        todo_name_edit.keyup(
+            function() {
+                temp_todo_name = $(this).val();
+            }
+        );
+        todo_name_edit.on('paste cut',
+            function() {
+                var _this = this;
+                setTimeout( function() {
+                    var paste_text = $(_this).val();
+                    temp_todo_name = paste_text;
+                }, 1);
+            }
+        );
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; //January is 0!
+        var yyyy = today.getFullYear();
+
+        if(dd<10) { dd='0'+dd }
+        if(mm<10) { mm='0'+mm }
+
+        today = yyyy+'-'+mm+'-'+dd;
+
+        var reminder_date_string = parent_tr.find(".todo-date").val().trim();
+
+        var reminder_year = reminder_date_string.split("-")[2];
+        var reminder_month = reminder_date_string.split("-")[1] - 1;
+        var reminder_day = reminder_date_string.split("-")[0];
+
+        var reminder_date = new Date(reminder_year, reminder_month, reminder_day);
+        $('.tododateedit').datetimepicker({
+           defaultDate: reminder_date,
+           format: 'YYYY-MM-DD',
+           pickTime: false
+        });
+
+        $("input[name^='todonamesave']").on('click',
+            function(event) {
+                event.preventDefault();
+                var parent_tr = $(event.target).parent().parent().parent();
+                var name = parent_tr.find(".todonameedit").val();
+                parent_tr.find(".list-todo-edit").css('display', 'none');
+                parent_tr.find(".status").css('display', '');
+                parent_tr.find(".status").find("glyphicon-resize-vertical").css('display', 'none');
+                parent_tr.find(".name-todo").css('display', '');
+                parent_tr.find(".list-todo-edit").css('display', 'none');
+                todo_name_element.html(temp_todo_name);
+                var todo_id = parent_tr.find(".todo-id").val();
+                var todo_name = temp_todo_name;
+                var todo_priority = parent_tr.find(".todo-priority").val();
+
+                quickedit_todo(todo_id,todo_name, todo_priority);
+            }
+        );
+
+        $("input[name^='todonamecancel']").on('click',
+            function(event) {
+                event.preventDefault();
+                var parent_tr = $(event.target).parent().parent().parent();
+                todo_name_element.html(todo_name_before_edit);
+                parent_tr.find(".list-todo-edit").css('display', 'none');
+                parent_tr.find(".status").css('display', '');
+                parent_tr.find(".status").find("glyphicon-resize-vertical").css('display', 'none');
+                parent_tr.find(".name-todo").css('display', '');
+                parent_tr.find(".list-todo-edit").css('display', 'none');
+            }
+        );
+
+    }
+);
+
+$( "div.square" ).hover(
+    function() {
+        $( this ).css({
+            'cursor': 'pointer'
+        });
+    }
+);
 
 
 /* New Todo list Feature end   */
