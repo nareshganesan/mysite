@@ -20,13 +20,13 @@ urlpatterns = [
     # Home page for the site.
     url(r'^$', 'todo.views.home', name='home'),
     # registration page for the site.
-    url(r'^accounts/register', 'views.register', name='register'),
+    url(r'^register', 'views.register', name='register'),
     # registration page for the site.
     url(r'^accounts/profile', 'todo.views.home', name='profile'),
     # login page for the site.
     url(r'^accounts/login', 'django.contrib.auth.views.login', name='login'),
     # logout page for the site. # {'next_page': '/accounts/login/?next=/'}
-    url(r'^accounts/logout', 'django.contrib.auth.views.logout', {'next_page': '/'}, name='logout'),
+    url(r'^logout', 'django.contrib.auth.views.logout', {'next_page': '/'}, name='logout'),
     # admin module provided by django.
     url(r'^admin/', include(admin.site.urls)),
     # Polls app created from the django book tutorial.
@@ -35,4 +35,5 @@ urlpatterns = [
     url(r'^todo/', include('todo.urls', namespace="todo")),
     # Custom login attempt for Todo app.
     url(r'^login/', 'todo.views.login_request', name='login_request'),
+
 ]

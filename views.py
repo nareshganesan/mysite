@@ -5,15 +5,16 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from todo.forms import RegistrationForm
 
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = RegistrationForm(request.POST)
         if form.is_valid():
-            new_user = form.save()
+            form.save()
             return HttpResponseRedirect("/")
     else:
-        form = UserCreationForm()
+        form = RegistrationForm()
     return render(request, "registration/register.html", {
         'form': form,
     })

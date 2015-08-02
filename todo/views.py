@@ -9,10 +9,11 @@ from django.db.models import Q
 from django.core import serializers
 from datetime import datetime, time
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+from django.template.context_processors import csrf
 from django.db.models import Count
 
-from todo.forms import TodoForm
+from todo.forms import RegistrationForm, TodoForm
+
 
 import json
 import re
@@ -509,22 +510,10 @@ def todo_tab_test(request):
     return render(request, 'todo/tabstest.html', context)
 
 def login_request(request):
-    next_page = request.META.get('HTTP_REFERER')
-    # print "before : " + str(next_page)
-    if not next_page:
-        next_page = '/'
-    else:
-        next_page = re.sub('^https?:\/\/', '', next_page).split('/')
-        if next_page[0] != request.META['HTTP_HOST']:
-            next_page = '/'
-        else:
-            next_page =  u'/' + u'/'.join(next_page[1:])
-            if next_page == '/login/':
-                next_page = '/'
-
+    absolute_referer = request.META.get('HTTP_REFERER')
+    next_page = getnext_page(request)
     logout(request)
     username = password = ''
-
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -533,6 +522,39 @@ def login_request(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                # print "Print : "+ str(next_page)+" " + str(username)
                 return HttpResponseRedirect(next_page)
     return render_to_response('todo/signin.html', context_instance=RequestContext(request))
+
+def getnext_page(request):
+    absolute_referer = request.META.get('HTTP_REFERER')
+    next_page = "/"
+    if not absolute_referer:
+        next_page = '/'
+    else:
+        request_path_split = re.sub('^https?:\/\/', '', absolute_referer).split('/')
+        request_host = request_path_split[0]
+        if request_host != request.META['HTTP_HOST']:
+            next_page = '/'
+        else:
+            if len(request_path_split) >= 2:
+                request_path =  u'/' + u'/'.join(request_path_split[1:])
+
+                if '?' in request_path:
+                    query_string = ""
+                    if len(request_path.split('?')) >= 2:
+                        query_string = request_path.split('?')[1]
+                    else:
+                        next_page = '/'
+                    if query_string:
+                        if '&' in query_string:
+                            request_parameters = query_string.split('&')
+                            for parameter in request_parameters:
+                                if parameter.startswith('next='):
+                                    next_page = parameter.split('=')[1]
+                        else:
+                            request_parameter = query_string
+                            if 'next=' in request_parameter:
+                                next_page = request_parameter.split('=')[1]
+            else:
+                next_page = '/'
+    return next_page

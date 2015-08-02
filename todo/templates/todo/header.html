@@ -13,7 +13,13 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="{% url 'todo:index' %}">Todo</a></li>
+                {% if user.is_authenticated %}
+                    <li class="active"><a href="{% url 'todo:index' %}">Todo</a></li>
+                {% else %}
+                    <!--<h4><a href="{% url 'login' %}"> Todo </a></h4>-->
+                    <li class="active"><a href="{% url 'todo:index' %}">Todo</a></li>
+                {% endif %}
+
 
                 <li><a href="#about">About</a></li>
                 <li><a href="#contact">Contact</a></li>
@@ -29,7 +35,7 @@
                         <!--<a href="{% url 'login' %}">login</a>-->
                         <a href="{% url 'login_request' %}"> Login  </a>
                     </li>
-                   <!--<li> <a href="/accounts/register" >Register</a></li>-->
+                   <li> <a href="{% url 'register' %}" >Register</a></li>
                 </ul>
             {% endif %}
         </div><!--/.nav-collapse -->

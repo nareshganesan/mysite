@@ -123,7 +123,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-LOGIN_URL = '/accounts/login'
+LOGIN_URL = '/login/' # django login - '/accounts/login/'
 
 LOGOUT_URL = '/accounts/logout/'
 
