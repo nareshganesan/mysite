@@ -38,14 +38,14 @@ var todo_features_header = {
 };
 /* Todo Feature Body element constants */
 var todo_features_div = {
-    ADDFEATURE: "div-todo-add",
-    DETAILFEATURE: "div-todo-detail",
-    DELETEFEATURE: "div-todo-delete",
-    LISTFEATURE: "div-todo-list",
+    ADDFEATURE: "div-feature-add",
+    DETAILFEATURE: "div-feature-detail",
+    DELETEFEATURE: "div-feature-delete",
+    LISTFEATURE: "div-feature-list",
     SEARCHFEATURE: "div-todo-search",
-    COMPLETEDFEATURE: "div-todo-completed",
-    REPORTFEATURE: "div-todo-report",
-    PROJECTFEATURE: "div-todo-project"
+    COMPLETEDFEATURE: "div-feature-completed",
+    REPORTFEATURE: "div-feature-report",
+    PROJECTFEATURE: "div-feature-project"
 
 
 };

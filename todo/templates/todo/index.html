@@ -32,7 +32,7 @@
         {% include "todo/header.html" %}
     {% endif %}
 
-    <div class="container">
+<div class="container">
         <div class="row">
             {% if user.is_authenticated %}
                 {% include "todo/sidebar.html" with isAuthenticated="True"%}
@@ -40,16 +40,16 @@
                 {% include "todo/sidebar.html" %}
             {% endif %}
             <div class="col-sm-9 col-md-10 custom-main">
-                <div id="div-search-and-add-container">
+                <div id="div-search-add-container">
                     <!-- /search-box-group -->
-                    <div class="input-group" id="search-box-container" style="display: inline-table; width: 80%; margin-top: 30px; margin-bottom: 10px;">
+                    <div class="input-group" id="div-search-box-container" style="display: inline-table; width: 80%; margin-top: 30px; margin-bottom: 10px;">
                       <span class="input-group-btn">
                         <button class="btn btn-default" id="search-button" type="button">Go!</button>
                       </span>
-                      <input type="text" id="search-box" class="form-control" placeholder="Search for...">
+                      <input type="text" id="input-search-box" class="form-control" placeholder="Search for...">
                     </div>
                     <!-- /search-box-group -->
-                    <div id="div-add-todo" style="display: inline-table; width: 10%;" >
+                    <div id="div-add-sign-container" style="display: inline-table; width: 10%;" >
                         <a href="#" id="link-show-add"  >
                             <img id="img-add-todo" src="{% static 'todo/images/plus_sign.png' %}" title="Add Todo"/>
                         </a>
@@ -57,24 +57,25 @@
 
                 </div>
 
-
+                <div id="error-results"></div>
 
                 <div class="tabbable" id="tabs-todo-types">
+
                     <ul id="ul-tab-todo-types" class="nav nav-tabs">
                         <li class="active"><a href="#tab-todo" data-target="#tab-todo" data-toggle="tab">Todo</a></li>
                         <li><a  href="#tab-completed-todo" data-target="#tab-completed-todo" data-toggle="tab">Completed Todo</a></li>
                         <li><a  href="#tab-deleted-todo" data-target="#tab-deleted-todo" data-toggle="tab">Deleted Todo</a></li>
                     </ul>
                     <div class="tab-content">
-                        <div id="error-results"></div>
+
                         <div class="tab-pane active" id="tab-todo">
 
-                            <div class="row placeholders" id="div-todo-list">
+                            <div class="row placeholders" id="div-feature-list">
 
                                 {% if latest_todo_list %}
                                     <form method="POST" id="quickedit-todo-form">
                                         {% csrf_token %}
-                                        <table class="table table-hover table-todo-list-1">
+                                        <table class="table table-todo-list-1">
                                             <tbody>
                                                 {% for todo in latest_todo_list %}
                                                     <tr class="drag-todo-item">
@@ -97,12 +98,12 @@
                                                             <span class="glyphicon glyphicon-list" style="display: none;"></span>
                                                             <span class="reminder-date" title="">
                                                                 {% if todo.created_date %}
-                                                                    {{ todo.created_date.date|date:"M d" }}
+                                                                    {{ todo.reminder_date.date|date:"M d" }}
                                                                 {% endif %}
                                                             </span>
                                                             <input type="hidden" class="todo-date" name="todo-date"
-                                                                   value="{{ todo.created_date.date|date:'d-m-Y' }}" />
-                                                            <span class="end-span" style="display: none;">...</span>
+                                                                   value="{{ todo.reminder_date.date|date:'d-m-Y' }}" />
+                                                            <!--<span class="end-span" style="display: none;">...</span>-->
                                                             <!--<div class="list-todo-save" style="display: none;" >{{ todo.name }}</div>-->
                                                         </td>
                                                         <td class="list-todo-edit" colspan="2" style="display: none;">
@@ -113,10 +114,46 @@
                                                             <p class="todoeditbuttons"  >
                                                                 <input type="button" name="todonamesave" value="Save" />
                                                                 <input type="button" name="todonamecancel" value="Cancel"/>
+                                                                <div class="div-todo-priority">
+                                                                    <span class="glyphicon glyphicon-flag priority-flag-severe" title="severe"></span>
+                                                                    <span class="glyphicon glyphicon-flag priority-flag-high" title="high"></span>
+                                                                    <span class="glyphicon glyphicon-flag priority-flag-medium" title="medium"></span>
+                                                                    <span class="glyphicon glyphicon-flag priority-flag-low" title="low"></span>
+                                                                </div>
+
                                                             </p>
                                                         </td>
                                                     </tr>
                                                 {% endfor %}
+                                                <tr class="tr-todo-list-new" >
+                                                    <td class="list-todo-new" colspan="2" style="display: none;">
+                                                        <div class="div-todo-list-new" >
+                                                            <input class = "todonamenew" type="text" name="todonameedit" value=""/>
+                                                            <input class = "tododatenew" type="text" name="tododateedit" />
+                                                            <input type="hidden" class="todo-priority" name="todo-priority" value="high" />
+                                                        </div>
+                                                        <div class="todoaddnewbuttons"  >
+                                                            <input type="button" name="todonamenewsave" value="Add Todo" />
+                                                            <input type="button" name="todonamenewcancel" value="Cancel"/>
+                                                            <div class="div-todo-new-priority">
+                                                                <span class="glyphicon glyphicon-flag priority-flag-severe" title="severe"></span>
+                                                                <span class="glyphicon glyphicon-flag priority-flag-high" title="high"></span>
+                                                                <span class="glyphicon glyphicon-flag priority-flag-medium" title="medium"></span>
+                                                                <span class="glyphicon glyphicon-flag priority-flag-low" title="low"></span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr class="tr-todo-list-add" >
+                                                    <td id="td-todo-list-add" colspan="2" >
+                                                        <div class="div-todo-list-edit" style="text-align: left">
+                                                            <a href="#" id="a-todo-list-add" onclick="">
+                                                                <img id="img-todo-list-add-todo" src="{% static 'todo/images/Plus-sign.png' %}" title="Add Todo"/>
+                                                                Add Todo
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </form>
@@ -143,34 +180,6 @@
 
                             </div>
 
-                            <!--<h4 class="sub-header" id="header-todo-delete"> Delete Todo</h4>-->
-                            <div class="row placeholders" id="div-todo-delete" >
-                                  <div id="delete_todo_div" >
-                                    Are you sure you want to delete <span id="deleteTodoName"></span> ?
-                                    <span id="deleteTodoId" style="display:none;"></span>
-                                    <input type="button" id="deleteTodoSubmit" name="delete" value="delete" />
-                                    <input type="button" id="deleteTodoCancel" name="cancel" value="cancel" />
-
-                                </div>
-                            </div>
-
-                            <!--<h4 class="sub-header" id="header-todo-completed"> Completed Todo's</h4>-->
-                            <div class="row placeholders" id="div-todo-completed" >
-
-                            </div>
-
-
-                            <!--<h4 class="sub-header" id="header-todo-project" > Project Todo's</h4>-->
-                            <div class="row placeholders" id="div-todo-project" >
-
-                            </div>
-
-                            <!--<h2 class="sub-header" id="header-todo-tags" > Todo Tags</h2>-->
-                            <div class="row placeholders" id="div-todo-tags" >
-
-                            </div>
-
-
                         </div>
 
                         <div class="tab-pane" id="tab-completed-todo">
@@ -181,47 +190,6 @@
                                     <table class="table table-striped table-hover table-todo-list" id="table-ctodo-list">
                                     </table>
                                 </form>
-                            </div>
-
-                            <div class="row placeholders" id="div-ctodo-report" >
-
-                                <div class="form-group" id="div-creport-group" >
-                                    <div id="cstartDateLabel" > Start : </div>
-                                    <div class='input-group date' id='div-cstartdate'>
-                                        <input type='text' class="form-control" name="div-startdate" id="input-div-cstartdate" />
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
-                                        </span>
-                                    </div>
-                                    <div id="cendDateLabel" > End : </div>
-                                    <div class='input-group date' id='div-cenddate'>
-                                        <input type='text' class="form-control" name="div-enddate" id="input-div-cenddate" />
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
-                                        </span>
-                                    </div>
-                                    <div class="" id='cgetReport'>
-                                        <input type='button' class="btn btn-primary btn-md" name="getReport" value="Report" />
-                                    </div>
-
-                                </div>
-
-                                <div id="creportByPriority" class="panel-body" style=""></div>
-                                <div id="cresults">
-
-                                </div>
-
-
-                            </div>
-
-
-                            <h4 class="sub-header" id="header-ctodo-delete"> Delete Todo</h4>
-                            <div class="row placeholders" id="div-ctodo-delete" >
-                                  <div id="delete_ctodo_div" >
-                                    Are you sure you want to delete <span id="deletecTodoName"></span> ?
-                                    <span id="deletectodoid" style="display:none;"></span>
-                                    <input type="button" id="deletecTodoSubmit" name="delete" value="delete" />
-                                    <input type="button" id="deletecTodoCancel" name="cancel" value="cancel" />
-
-                                </div>
                             </div>
 
                         </div>
@@ -237,20 +205,14 @@
                             </div>
 
                         </div>
+
                     </div>
+
                 </div>
 
-                <!--<h4 class="sub-header" id="header-todo-add" style="display:none;" >Add Todo</h4>-->
-                <div class="row placeholders" id="div-todo-add" style="display:none;">
-                    <div id="" >
-
-                        <!--<a href="{%url 'todo:index' %}">Todo-Home</a> <br/> <br/>-->
-
-
-
-
+                <div class="row placeholders" id="div-feature-add" style="display:none;">
                         <div class="well-sm">
-                            <form class="form-horizontal" id="todo_form" action="" method="post">
+                            <form class="form-horizontal" id="form-add-todo" action="" method="post">
                                 {% csrf_token %}
                                 <fieldset>
                                     <!--<legend class="" id="header-todo-detail-name">View / Edit Todo</legend>-->
@@ -348,30 +310,19 @@
                                 </fieldset>
                             </form>
                         </div>
-
-                    </div>
                 </div>
 
                 <!--<h4 class="sub-header" id="header-todo-search"> Search Results</h4>-->
-                <div class="row placeholders" id="div-todo-search" >
+                <div class="row placeholders" id="div-search-results-container" >
 
                     <ol id="search-results">
-                        <!--<li>
-                            <div class="rh">
-                                    <h3 class="h"></h3>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="rc">
-                                    <h3 class="c"></h3>
-                            </div>
-                        </li>-->
+
                     </ol>
 
                 </div>
 
                 <!--<h4 class="sub-header" id="header-todo-detail" style="display:none;"> View / Edit Todo</h4>-->
-                <div class="row placeholders" id="div-todo-detail" >
+                <div class="row placeholders" id="div-feature-detail" style="display: none;">
                     <div>
                         <!--<a href="{%url 'todo:index' %}">Todo-Home</a>-->
                         <a href="#" id="show-search-results" style="display: none; ">Search Results</a>
@@ -483,7 +434,7 @@
                 </div>
 
 
-                <div class="row placeholders" id="div-todo-report" >
+                <div class="row placeholders" id="div-feature-report" >
 
                     <div class="form-group" id="div-report-group" >
                         <div id="startDateLabel" > Start : </div>
@@ -511,10 +462,37 @@
 
                 </div>
 
+                <!--<h4 class="sub-header" id="header-todo-delete"> Delete Todo</h4>-->
+                <div class="row placeholders" id="div-feature-delete" >
+                      <div id="delete_todo_div" >
+                        Are you sure you want to delete <span id="deleteTodoName"></span> ?
+                        <span id="deleteTodoId" style="display:none;"></span>
+                        <input type="button" id="deleteTodoSubmit" name="delete" value="delete" />
+                        <input type="button" id="deleteTodoCancel" name="cancel" value="cancel" />
+
+                    </div>
+                </div>
+
+                <!--<h4 class="sub-header" id="header-todo-completed"> Completed Todo's</h4>-->
+                <div class="row placeholders" id="div-feature-completed" >
+
+                </div>
+
+
+                <!--<h4 class="sub-header" id="header-todo-project" > Project Todo's</h4>-->
+                <div class="row placeholders" id="div-feature-project" >
+
+                </div>
+
+                <!--<h2 class="sub-header" id="header-todo-tags" > Todo Tags</h2>-->
+                <div class="row placeholders" id="div-feature-tags" >
+
+                </div>
 
             </div>
         </div>
     </div>
+
 
     <!-- Loading Footer , Javascript / Jquery files -->
 

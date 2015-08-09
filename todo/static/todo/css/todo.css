@@ -283,7 +283,7 @@ body {
   box-shadow: 0 0 8px rgba(0,255,0, 0.6);
 }
 
-#div-todo-add {
+#div-feature-add {
     margin-top: 10px;
 }
 
@@ -440,6 +440,7 @@ input[name^='todonamesave'], input[name^='todonamesave']:before, input[name^='to
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     border: 1px solid #CCC;
+    font-size: smaller;
 }
 
 input[name^='todonamecancel'], input[name^='todonamecancel']:before, input[name^='todonamecancel']:after {
@@ -450,12 +451,49 @@ input[name^='todonamecancel'], input[name^='todonamecancel']:before, input[name^
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     border: 1px solid #CCC;
+    font-size: smaller;
+}
+
+input[name^='todonamenewsave'], input[name^='todonamenewsave']:before, input[name^='todonamenewsave']:after {
+    width: 16%;
+    padding: 2px;
+    margin: 0px 0px 0px 0px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: 1px solid #CCC;
+    font-size: smaller;
+}
+
+input[name^='todonamenewcancel'], input[name^='todonamenewcancel']:before, input[name^='todonamenewcancel']:after {
+    width: 16%;
+    padding: 2px;
+    margin: 0px 0px 0px 3px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: 1px solid #CCC;
+    font-size: smaller;
+}
+
+.div-todo-priority {
+    margin-top: 5px;
+    margin-left: 0px;
+    margin-bottom: 0px;
+    float: right;
+    display: inline-block;
 }
 
 .todoeditbuttons {
     margin-top: 5px;
     margin-left: 0px;
     margin-bottom: 0px;
+    text-align: left;
+    display: inline;
+}
+
+.div-todo-list-edit {
+    margin-bottom: 5px;
 }
 
 .severe {
@@ -463,13 +501,79 @@ input[name^='todonamecancel'], input[name^='todonamecancel']:before, input[name^
 }
 
 .high {
-    background: #E56717;
+    background: #f0ad4e;
+
 }
 
 .medium {
     background: yellow;
+
 }
 
 .low {
-    background: lightgrey;
+    background: #5bc0de;
+
+}
+
+#img-todo-list-add-todo {
+    width: 15px;
+    height: 15px;
+    margin-bottom: 3px;
+}
+
+#a-todo-list-add, #a-todo-list-add:hover {
+    text-decoration: none;
+}
+
+.todoaddnewbuttons {
+    margin-top: 5px;
+    margin-left: 0px;
+    margin-bottom: 0px;
+    text-align: left;
+}
+
+.div-todo-new-priority {
+    display: inline;
+    float: right;
+    margin-top: 5px;
+}
+
+.div-todo-new-priority > span, .div-todo-priority > span {
+    padding-right: 7px;
+}
+
+.priority-flag-severe {
+    color: red;
+    transform:scale(1.3,1.3);
+    -ms-transform:scale(1.3,1.3); /* IE 9 */
+    -moz-transform:scale(1.3,1.3); /* Firefox */
+    -webkit-transform:scale(1.3,1.3); /* Safari and Chrome */
+    -o-transform:scale(1.3,1.3); /* Opera */
+}
+
+.priority-flag-high {
+    color: #f0ad4e;
+    transform:scale(1.3,1.3);
+    -ms-transform:scale(1.3,1.3); /* IE 9 */
+    -moz-transform:scale(1.3,1.3); /* Firefox */
+    -webkit-transform:scale(1.3,1.3); /* Safari and Chrome */
+    -o-transform:scale(1.3,1.3); /* Opera */
+}
+
+.priority-flag-medium {
+    color: yellow;
+    transform:scale(1.3,1.3);
+    -ms-transform:scale(1.3,1.3); /* IE 9 */
+    -moz-transform:scale(1.3,1.3); /* Firefox */
+    -webkit-transform:scale(1.3,1.3); /* Safari and Chrome */
+    -o-transform:scale(1.3,1.3); /* Opera */
+}
+
+.priority-flag-low {
+    color: #5bc0de;
+    transform:scale(1.3,1.3);
+    -ms-transform:scale(1.3,1.3); /* IE 9 */
+    -moz-transform:scale(1.3,1.3); /* Firefox */
+    -webkit-transform:scale(1.3,1.3); /* Safari and Chrome */
+    -o-transform:scale(1.3,1.3); /* Opera */
 }

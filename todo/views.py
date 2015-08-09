@@ -26,9 +26,8 @@ from .models import Todo
 def todolist(request):
     'list view of the todo app.'
     todo_list = Todo.objects.filter(user=request.user.id).filter(iscompleted=False).filter(isdeleted=False).order_by('-created_date')
-    paginator = Paginator(todo_list, 10)
+    paginator = Paginator(todo_list, 15)
     prioritylist = Todo.PRIORITY_LIST
-
     page = request.GET.get('page')
     try:
         latest_todo_list = paginator.page(page)
@@ -38,7 +37,6 @@ def todolist(request):
     except EmptyPage:
         # If page is out of range (e.g. 9999), deliver last page of results.
         latest_todo_list = paginator.page(paginator.num_pages)
-
     context = {
         'latest_todo_list': latest_todo_list,
         'prioritylist': prioritylist,
@@ -156,16 +154,25 @@ def quickedit_todo(request):
         todoid = request.POST.get('todoid')
         todoname = request.POST.get('todoname')
         todopriority = request.POST.get('todopriority')
+        todoreminderdate = request.POST.get('todoreminderdate')
         todouser = request.user.id
+        print str(todoreminderdate)
         response_data = dict()
-
-        t = Todo(id=todoid, name=todoname, priority=todopriority, user_id=todouser)
+        if todoreminderdate:
+            todoreminderdate = datetime.strptime(todoreminderdate, '%Y-%m-%d').date()
+            todoreminderdate = datetime.combine(todoreminderdate, time.min)
+            t = Todo(id=todoid, name=todoname, priority=todopriority,
+                 user_id=todouser, reminder_date=todoreminderdate)
+        else:
+            t = Todo(id=todoid, name=todoname, priority=todopriority,
+                 user_id=todouser)
         t.save()
 
         response_data['result'] = 'Update Todo successful!'
         response_data['todoid'] = t.pk
         response_data['todoname'] = t.name
         response_data['todopriority'] = t.priority
+        response_data['todoreminderdate'] = str(t .reminder_date.strftime("%d-%m-%Y"))
 
         return HttpResponse(
             json.dumps(response_data),
@@ -176,6 +183,7 @@ def quickedit_todo(request):
             json.dumps({"No Data": "Are you kidding me !! :)"}),
             content_type="application/json"
         )
+
 
 @login_required
 def quickadd_todo(request):
@@ -183,17 +191,26 @@ def quickadd_todo(request):
     if request.method == 'POST':
         todoname = request.POST.get('todoname')
         todopriority = request.POST.get('todopriority')
-        tododescription = request.POST.get('tododescription')
+        todo_reminder_date = request.POST.get('todoreminder_date')
         todouser = request.user.id
         response_data = dict()
-
-        t = Todo(name=todoname, priority=todopriority, user_id=todouser, description=tododescription)
-        t.save()
-
-        response_data['result'] = 'Update Todo successful!'
-        response_data['todoid'] = t.pk
-        response_data['todoname'] = t.name
-        response_data['todopriority'] = t.priority
+        if todo_reminder_date:
+            todo_reminder_date = datetime.strptime(todo_reminder_date, '%Y-%m-%d').date()
+            todo_reminder_date = datetime.combine(todo_reminder_date, time.min)
+            t = Todo(name=todoname, priority=todopriority, user_id=todouser, reminder_date=todo_reminder_date)
+            t.save()
+            response_data['result'] = 'Update Todo successful!'
+            response_data['todoid'] = t.pk
+            response_data['todoname'] = t.name
+            response_data['todopriority'] = t.priority
+            response_data['todoreminderdate'] = str(t .reminder_date.strftime("%d-%m-%Y"))
+        else:
+            t = Todo(name=todoname, priority=todopriority, user_id=todouser)
+            t.save()
+            response_data['result'] = 'Update Todo successful!'
+            response_data['todoid'] = t.pk
+            response_data['todoname'] = t.name
+            response_data['todopriority'] = t.priority
 
         return HttpResponse(
             json.dumps(response_data),
@@ -204,6 +221,7 @@ def quickadd_todo(request):
             json.dumps({"No Data": "Are you kidding me !! :)"}),
             content_type="application/json"
         )
+
 
 @login_required
 def add_todo(request):
@@ -440,9 +458,11 @@ def todo_reports(request):
 def todo_search(request):
     'Search Todo on any dimension available in the app.'
     if request.method == 'POST':
-
         searchquery = request.POST.get('searchQuery')
-        if searchquery is not None:
+        response_data = dict()
+        response_datarootkey = "searchresults"
+        response_data[response_datarootkey] = []
+        if searchquery:
             searchresults = Todo.objects.filter(user=request.user.id).filter(
                 Q( name__icontains = searchquery ) |
                 Q( description__icontains = searchquery ) |
@@ -454,12 +474,7 @@ def todo_search(request):
                 Q( address__icontains = searchquery )
 
             ).order_by('priority')
-
             # data = serializers.serialize('json', searchresults, fields=('name','description'))
-
-            response_data = dict()
-            response_datarootkey = "searchresults"
-            response_data[response_datarootkey] = []
             resultscount = 0
             for result in searchresults:
                 response_data[response_datarootkey].append({
@@ -472,10 +487,29 @@ def todo_search(request):
                 json.dumps(response_data[response_datarootkey]),
                 content_type="application/json"
             )
-
+        else:
+            response_data[response_datarootkey].append({
+                'id': 'nodata',
+                'name': 'No Results',
+                'description': 'Use a better search term!!!',
+                'priority': 'Whatever!!!'
+            })
+            return HttpResponse(
+                json.dumps(response_data[response_datarootkey]),
+                content_type="application/json"
+            )
     else:
+        response_data = dict()
+        response_datarootkey = "searchresults"
+        response_data[response_datarootkey] = []
+        response_data[response_datarootkey].append({
+            'id': 'nodata',
+            'name': 'No Results',
+            'description': 'Use a better search term!!!',
+            'priority': 'Whatever!!!'
+        })
         return HttpResponse(
-            json.dumps({"No Data": "Use a better search term!!!"}),
+            json.dumps(response_data[response_datarootkey]),
             content_type="application/json"
         )
 
@@ -510,7 +544,6 @@ def todo_tab_test(request):
     return render(request, 'todo/tabstest.html', context)
 
 def login_request(request):
-    absolute_referer = request.META.get('HTTP_REFERER')
     next_page = getnext_page(request)
     logout(request)
     username = password = ''
@@ -526,35 +559,48 @@ def login_request(request):
     return render_to_response('todo/signin.html', context_instance=RequestContext(request))
 
 def getnext_page(request):
-    absolute_referer = request.META.get('HTTP_REFERER')
-    next_page = "/"
-    if not absolute_referer:
+    next = "next"
+    next_page = get_request_parameter(request, parameter_name = next)
+    if not next_page:
         next_page = '/'
+    return next_page
+
+def get_request_parameter(request, parameter_name):
+    request_parameter = ""
+    request_parameters = get_request_parameters(request)
+    print "request_parameters = " + str(request_parameters)
+    if request_parameters:
+        for parameter in request_parameters:
+            if parameter_name in parameter:
+                request_parameter = parameter.split('=')[1]
+    return request_parameter
+
+def get_request_parameters(request):
+    absolute_referer = request.META.get('HTTP_REFERER')
+    request_parameters = ""
+    if not absolute_referer:
+        request_parameters = ""
     else:
         request_path_split = re.sub('^https?:\/\/', '', absolute_referer).split('/')
         request_host = request_path_split[0]
         if request_host != request.META['HTTP_HOST']:
-            next_page = '/'
+            request_parameters = ""
         else:
             if len(request_path_split) >= 2:
                 request_path =  u'/' + u'/'.join(request_path_split[1:])
-
                 if '?' in request_path:
                     query_string = ""
-                    if len(request_path.split('?')) >= 2:
-                        query_string = request_path.split('?')[1]
-                    else:
-                        next_page = '/'
+                    query_string = request_path.split('?')[1]
                     if query_string:
                         if '&' in query_string:
                             request_parameters = query_string.split('&')
-                            for parameter in request_parameters:
-                                if parameter.startswith('next='):
-                                    next_page = parameter.split('=')[1]
                         else:
-                            request_parameter = query_string
-                            if 'next=' in request_parameter:
-                                next_page = request_parameter.split('=')[1]
+                            request_parameters = list()
+                            request_parameters.append(query_string)
+                else:
+                    request_parameters = ""
             else:
-                next_page = '/'
-    return next_page
+                request_parameters = ""
+    if not request_parameters:
+        request_parameters = list()
+    return request_parameters

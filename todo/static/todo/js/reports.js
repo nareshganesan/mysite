@@ -37,6 +37,7 @@ $(document).ready(function() {
     var chartDataUrl = "todo_reports/";
     var startDate = $("#input-div-startdate").val()
     var endDate = $("#input-div-enddate").val()
+    console.log(endDate);
         $.ajax({
             url : chartDataUrl, // the endpoint
             type : "POST", // http method

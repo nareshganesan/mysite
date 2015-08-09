@@ -73,7 +73,7 @@ $(document).ready(function() {
           // Chrome
         } else {
           // Safari
-          $("#div-add-todo").css("margin-top", "30px");
+          $("#div-add-sign-container").css("margin-top", "30px");
         }
     }
 

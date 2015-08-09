@@ -105,7 +105,7 @@ $('#quickedit-todo-form').on('submit', function(event){
 });
 
 // AJAX for Todo Quick edit
-function quickedit_todo(todoId,todoName, todoPriority) {
+function quickedit_todo(todoId,todoName, todoPriority, todoreminder_date) {
      $.ajax({
         url : "quickedit_todo/", // the endpoint
         type : "POST", // http method
@@ -113,7 +113,8 @@ function quickedit_todo(todoId,todoName, todoPriority) {
         data : {
         'todoid' : todoId,
         'todoname' : todoName ,
-        'todopriority' : todoPriority
+        'todopriority' : todoPriority,
+        'todoreminderdate' : todoreminder_date
         },
         // handle a successful response
         success : function(json) {
@@ -136,9 +137,10 @@ function quickedit_todo(todoId,todoName, todoPriority) {
 
 $('#link-show-add').click( function() {
     showTodoFeature(FEATURELIST.ADDFEATURE);
+    $("#tabs-todo-types").css("display", "none");
 });
 
-$('#todo_form').on('submit', function(event){
+$('#form-add-todo').on('submit', function(event){
     event.preventDefault();
 });
 
@@ -181,6 +183,8 @@ $( "#addTodoSubmit" ).click(function() {
     });
 });
 
+
+
 /* Quick add end. */
 
 /* Quick delete start. */
@@ -210,6 +214,7 @@ function showDetailTodoDiv( todoid, showsearchdivlink) {
 
 //    showTodoElementsById("tabs-todo-types");
     showTodoFeature(FEATURELIST.DETAILFEATURE);
+    hideTodoElementsById("div-search-results-container");
     if(showsearchdivlink == 'True') {
         $("#show-search-results").css('display', 'inline-block');
     }
@@ -384,34 +389,55 @@ function markasCompleted(todoname, todoid) {
 
 /* Todo Search Feature  start */
 
-$('#search-box').keyup(function(e){
+$('#input-search-box').keyup(function(e){
     var searchQuery = $(this).val();
-    if(e.keyCode == 13)
-    {
-
-        showTodoFeature(FEATURELIST.SEARCHFEATURE);
+    if((e.keyCode == 13) || (e.which == 13)){
+        if(searchQuery.length >=3) {
+            showTodoElementsById("div-search-results-container");
+            hideTodoElementsById("div-feature-report");
+            hideTodoElementsById("tabs-todo-types");
+            hideTodoElementsById("div-feature-detail");
         todoSearch(searchQuery);
-//      alert('Entered!!! ' + searchQuery);
+        }
     } else {
-
+        if(searchQuery.length >=3) {
+            showTodoElementsById("div-search-results-container");
+            hideTodoElementsById("div-feature-report");
+            hideTodoElementsById("tabs-todo-types");
+            hideTodoElementsById("div-feature-detail");
+        todoSearch(searchQuery);
+        }
+    }
+});
+$('#search-button').click(function(e){
+    var searchQuery = $(this).val();
+    if(searchQuery.length >=3) {
+        showTodoElementsById("div-search-results-container");
+        hideTodoElementsById("div-feature-report");
+        hideTodoElementsById("tabs-todo-types");
+        hideTodoElementsById("div-feature-detail");
+        todoSearch(searchQuery);
     }
 });
 
-$('#search-button').click(function(e){
-    var searchQuery = $('#search-box').val();
-    showTodoElementsById("div-todo-search");
-    hideTodoElementsById("div-todo-report");
-    hideTodoElementsById("tabs-todo-types");
-    hideTodoElementsById("div-todo-detail");
-    todoSearch(searchQuery);
+$('#input-search-box').click(function(e){
+    var searchQuery = $('#input-search-box').val();
+    if(searchQuery.length >= 3) {
+        showTodoElementsById("div-search-results-container");
+        hideTodoElementsById("div-feature-report");
+        hideTodoElementsById("tabs-todo-types");
+        hideTodoElementsById("div-feature-detail");
+        todoSearch(searchQuery);
+    }
+
 });
 
 $('#show-search-results').click(function(e){
-    var searchQuery = $('#search-box').val();
-    showTodoElementsById("div-todo-search");
-    hideTodoElementsById("div-todo-report");
+    var searchQuery = $('#input-search-box').val();
+    showTodoElementsById("div-search-results-container");
+    hideTodoElementsById("div-feature-report");
     hideTodoElementsById("tabs-todo-types");
-    hideTodoElementsById("div-todo-detail");
+    hideTodoElementsById("div-feature-detail");
     todoSearch(searchQuery);
 });
 
@@ -429,19 +455,27 @@ function todoSearch(Query) {
         success : function(json) {
             var resCount = json.length;
             $( "#search-results" ).empty();
-            for (var i =0; i < resCount; i ++ ) {
+            if(json[0].id == "nodata") {
                 resultelement = "<li><div class='rh'><h5 class='h'> ";
-                anchor =   "<a href='#' onclick='showDetailTodoDiv(";
-                anchorparam = '"' + json[i].id + '",';
-                showSearchBackLink = '"True"' + ')'+"'>";
-                anchortext = json[i].name + "</a> </h5> </div>";
-                resultheader = resultelement+anchor+anchorparam+showSearchBackLink+anchortext;
-                resultcontent = '<div class="rc"><h6 class="c">' + json[i].description + '</h6> </div> </li>'
+                anchor =   "<a href='#' >";
+                anchortext = json[0].name + "</a> </h5> </div>";
+                resultheader = resultelement+anchor+anchortext;
+                resultcontent = '<div class="rc"><h6 class="c">' + json[0].description + '</h6> </div> </li>'
                 $( "#search-results" ).append( resultheader );
                 $( "#search-results" ).append( resultcontent );
+            } else {
+                for (var i =0; i < resCount; i ++ ) {
+                    resultelement = "<li><div class='rh'><h5 class='h'> ";
+                    anchor =   "<a href='#' onclick='showDetailTodoDiv(";
+                    anchorparam = '"' + json[i].id + '",';
+                    showSearchBackLink = '"True"' + ')'+"'>";
+                    anchortext = json[i].name + "</a> </h5> </div>";
+                    resultheader = resultelement+anchor+anchorparam+showSearchBackLink+anchortext;
+                    resultcontent = '<div class="rc"><h6 class="c">' + json[i].description + '</h6> </div> </li>'
+                    $( "#search-results" ).append( resultheader );
+                    $( "#search-results" ).append( resultcontent );
+                }
             }
-
-
         },
 
         // handle a non-successful response
@@ -468,6 +502,7 @@ $(document).ready(function() {
 
     $('#addTodoCancel').click( function() {
         showTodoFeature(FEATURELIST.LISTFEATURE);
+        $("#tabs-todo-types").css("display","");
     });
 
     $('#detailTodoCancel').click( function() {
@@ -496,7 +531,7 @@ $(document).ready(function() {
         var reminder_day = reminder_date_string.split("-")[0];
 
         var reminder_date = new Date(reminder_year, reminder_month, reminder_day);
-        var days_left = (today - reminder_date);
+        var days_left = (reminder_date - today);
         days_left = Math.floor(days_left/1000/60/60/24);
         $(this).find(".reminder-date").attr('title', "Days left "+ days_left);
     });
@@ -630,7 +665,7 @@ $(".table-todo-list-1 tbody").sortable({
     stop: updateIndex
 }).disableSelection();
 
-$( ".drag-todo-item" ).hover(
+$( document ).on("mouseover", ".drag-todo-item",
   function() {
     var todo_name = $( this ).find( ".name-todo" ).text();
     $( this ).find(".glyphicon-list").css('display', 'inline');
@@ -659,14 +694,16 @@ $( ".drag-todo-item" ).hover(
             showDetailTodoDiv(todoid, 'False');
         }
     );
-  }, function() {
-    $( this ).find(".glyphicon-list").css('display', 'none');
-    $( this ).find(".end-span").css('display', 'none');
-    $( this ).find(".glyphicon-resize-vertical").css('display', 'none');
   }
 );
 
-$( ".name-todo" ).click(
+$(document).on("mouseleave", ".drag-todo-item", function(event) {
+    $( this ).find(".glyphicon-list").css('display', 'none');
+    $( this ).find(".end-span").css('display', 'none');
+    $( this ).find(".glyphicon-resize-vertical").css('display', 'none');
+});
+
+$( document ).on( "click" , ".name-todo" ,
     function() {
         var parent_tr = $(this).parent();
         var todo_name_element = $(this).find(".list-todo-name");
@@ -715,51 +752,402 @@ $( ".name-todo" ).click(
 
         today = yyyy+'-'+mm+'-'+dd;
 
-        var reminder_date_string = parent_tr.find(".todo-date").val().trim();
+        var reminder_date_string = parent_tr.find(".todo-date").val();
 
-        var reminder_year = reminder_date_string.split("-")[2];
-        var reminder_month = reminder_date_string.split("-")[1] - 1;
-        var reminder_day = reminder_date_string.split("-")[0];
+        if(reminder_date_string) {
+            reminder_date_string = reminder_date_string.trim();
+            var reminder_year = reminder_date_string.split("-")[2];
+            var reminder_month = reminder_date_string.split("-")[1] - 1;
+            var reminder_day = reminder_date_string.split("-")[0];
 
-        var reminder_date = new Date(reminder_year, reminder_month, reminder_day);
-        $('.tododateedit').datetimepicker({
-           defaultDate: reminder_date,
-           format: 'YYYY-MM-DD',
-           pickTime: false
+            var reminder_date = new Date(reminder_year, reminder_month, reminder_day);
+            parent_tr.find('.tododateedit').datetimepicker({
+               defaultDate: reminder_date,
+               format: 'YYYY-MM-DD',
+               pickTime: false
+            });
+        } else {
+            parent_tr.find('.tododateedit').datetimepicker({
+               format: 'YYYY-MM-DD',
+               pickTime: false
+            });
+        }
+        var todo_priority = parent_tr.find(".todo-priority").val();
+        var transform_val = 1.8;
+        parent_tr.find(".priority-flag-"+todo_priority).css({
+            'transform':'scale('+transform_val+')',
+            '-webkit-transform':'scale('+transform_val+')',
+            '-ms-transform':'scale('+transform_val+')',
+            '-moz-transform':'scale('+transform_val+')',
+            '-o-transform':'scale('+transform_val+')'
+        });
+    }
+);
+
+$( document ).on( "click" ,"input[name^='todonamesave']",
+    function(event) {
+        event.preventDefault();
+        var parent_tr = $(event.target).parent().parent().parent();
+        var todo_name_element = parent_tr.find(".list-todo-name");
+        var todo_reminder_date = parent_tr.find(".reminder-date")
+        var name = parent_tr.find(".todonameedit").val();
+        var reminder_date = parent_tr.find(".tododateedit").val();
+        var frmated_reminder_date = ""
+        parent_tr.find(".list-todo-edit").css('display', 'none');
+        parent_tr.find(".status").css('display', '');
+        parent_tr.find(".status").find("glyphicon-resize-vertical").css('display', 'none');
+        parent_tr.find(".name-todo").css('display', '');
+        parent_tr.find(".list-todo-edit").css('display', 'none');
+        if(reminder_date) {
+            var reminder_year = reminder_date.split("-")[0];
+            var reminder_month = parseInt(reminder_date.split("-")[1] - 1);
+            var reminder_dt = reminder_date.split("-")[2];
+            frmated_reminder_date = month[reminder_month]+" "+reminder_dt;
+        } else {
+            frmated_reminder_date = "";
+        }
+
+        todo_name_element.html(name);
+        todo_reminder_date.html(frmated_reminder_date);
+        var todo_id = parent_tr.find(".todo-id").val();
+        var todo_name = name;
+        var todo_priority = parent_tr.find(".todo-priority").val();
+        quickedit_todo(todo_id,todo_name, todo_priority, reminder_date);
+    }
+);
+
+$( document ).on( "click" , "input[name^='todonamecancel']",
+    function(event) {
+        event.preventDefault();
+        var parent_tr = $(event.target).parent().parent().parent();
+        var todo_name_element = parent_tr.find(".list-todo-name");
+        var todo_name_before_edit = todo_name_element.html();
+        todo_name_element.html(todo_name_before_edit);
+        parent_tr.find(".list-todo-edit").css('display', 'none');
+        parent_tr.find(".status").css('display', '');
+        parent_tr.find(".status").find("glyphicon-resize-vertical").css('display', 'none');
+        parent_tr.find(".name-todo").css('display', '');
+        parent_tr.find(".list-todo-edit").css('display', 'none');
+    }
+);
+
+$("#a-todo-list-add").click(function() {
+    $(".list-todo-new").css({
+        'display': ''
+    });
+    $(".list-todo-new").find(".tododatenew").attr("placeholder","due by..");;
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth(); //January is 0!
+    var yyyy = today.getFullYear();
+
+    if(dd<10) { dd='0'+dd }
+    if(mm<10) { mm='0'+mm }
+
+    today = yyyy+'-'+mm+'-'+dd;
+//    console.log(today);
+    var reminder_date = new Date(yyyy, mm, dd);
+    $(".list-todo-new").find(".tododatenew").datetimepicker({
+//       defaultDate: reminder_date,
+       format: 'YYYY-MM-DD',
+       pickTime: false
+    });
+});
+
+$(".div-todo-priority span").click(function() {
+    event.stopPropagation();
+    var div_priority = $(this).parent();
+    var parent_tr = $(this).parent().parent().parent();
+    var before_transform_val = 1.3;
+    div_priority.find("span").css({
+        'transform':'scale('+before_transform_val+')',
+        '-webkit-transform':'scale('+before_transform_val+')',
+        '-ms-transform':'scale('+before_transform_val+')',
+        '-moz-transform':'scale('+before_transform_val+')',
+        '-o-transform':'scale('+before_transform_val+')'
+    });
+    var transform_val = 1.8;
+    $(this).css({
+        'transform':'scale('+transform_val+')',
+        '-webkit-transform':'scale('+transform_val+')',
+        '-ms-transform':'scale('+transform_val+')',
+        '-moz-transform':'scale('+transform_val+')',
+        '-o-transform':'scale('+transform_val+')'
+    });
+    var priority_selected = $(this).attr('class');
+    if(priority_selected.toLowerCase().indexOf('severe') >=0 ) {
+        parent_tr.find(".todo-priority").val("severe");
+        parent_tr.find(".square").attr('class', 'square shadow severe');
+    }
+    if(priority_selected.toLowerCase().indexOf('high') >=0 ) {
+        parent_tr.find(".todo-priority").val("high");
+        parent_tr.find(".square").attr('class', 'square shadow high');
+    }
+    if(priority_selected.toLowerCase().indexOf('medium') >=0 ) {
+        parent_tr.find(".todo-priority").val("medium");
+        parent_tr.find(".square").attr('class', 'square shadow medium');
+    }
+    if(priority_selected.toLowerCase().indexOf('low') >=0 ) {
+        parent_tr.find(".todo-priority").val("low");
+        parent_tr.find(".square").attr('class', 'square shadow low');
+    }
+
+});
+
+
+$(".div-todo-new-priority span").click(function() {
+    event.stopPropagation();
+    var div_priority = $(this).parent();
+    var td_todo_new = $(this).parent().parent().parent();
+    var before_transform_val = 1.3;
+    div_priority.find("span").css({
+        'transform':'scale('+before_transform_val+')',
+        '-webkit-transform':'scale('+before_transform_val+')',
+        '-ms-transform':'scale('+before_transform_val+')',
+        '-moz-transform':'scale('+before_transform_val+')',
+        '-o-transform':'scale('+before_transform_val+')'
+    });
+    var transform_val = 1.8;
+    $(this).css({
+        'transform':'scale('+transform_val+')',
+        '-webkit-transform':'scale('+transform_val+')',
+        '-ms-transform':'scale('+transform_val+')',
+        '-moz-transform':'scale('+transform_val+')',
+        '-o-transform':'scale('+transform_val+')'
+    });
+    td_todo_new.find(".todo-priority").val("low");
+    var priority_selected = $(this).attr('class');
+    if(priority_selected.toLowerCase().indexOf('severe') >=0 ) {
+        td_todo_new.find(".todo-priority").val("severe");
+    }
+    if(priority_selected.toLowerCase().indexOf('high') >=0 ) {
+        td_todo_new.find(".todo-priority").val("high");
+    }
+    if(priority_selected.toLowerCase().indexOf('medium') >=0 ) {
+        td_todo_new.find(".todo-priority").val("medium");
+    }
+    if(priority_selected.toLowerCase().indexOf('low') >=0 ) {
+        td_todo_new.find(".todo-priority").val("low");
+    }
+});
+
+var month = new Array();
+month[0] = "Jan";
+month[1] = "Feb";
+month[2] = "Mar";
+month[3] = "Apr";
+month[4] = "May";
+month[5] = "Jun";
+month[6] = "Jul";
+month[7] = "Aug";
+month[8] = "Sep";
+month[9] = "Oct";
+month[10] = "Nov";
+month[11] = "Dec";
+
+
+$("input[name^='todonamenewsave']").on('click',
+    function(event) {
+        event.preventDefault();
+        // Parent table referrence
+        var parent_table = $(event.target).parent().parent().parent().parent();
+        var parent_tr = $(event.target).parent().parent();
+        var tr = parent_table.find("tr");
+        // Create new todo values.
+        var newTodoVal = parent_tr.find(".todonamenew").val();
+        var newTodoPriority = parent_tr.find(".todo-priority").val()
+        var newTodoReminderDate = parent_tr.find(".tododatenew").val();
+        // format the date in mmm dd format
+        var frmated_reminder_date = "";
+        if(newTodoReminderDate) {
+            var reminder_year = newTodoReminderDate.split("-")[0];
+            var reminder_month = parseInt(newTodoReminderDate.split("-")[1] - 1);
+            var reminder_date = newTodoReminderDate.split("-")[2];
+            frmated_reminder_date = month[reminder_month]+" "+reminder_date;
+        } else {
+            frmated_reminder_date = "";
+        }
+//        quickAddTodo(newTodoVal, newTodoPriority, newTodoReminderDate);
+        $.ajax({
+            url : "quickadd_todo/",
+            type : "POST",
+            data : {
+                'todoname' : newTodoVal ,
+                'todopriority' : newTodoPriority,
+                'todoreminder_date' : newTodoReminderDate
+            },
+            success : function(json) {
+                // Inserted New Todo data
+                if(json.todoreminderdate) {
+                    console.log(json.todoid );
+                    newTodoId = "101";
+                    newTodoVal = json.todoname;
+                    newTodoPriority = json.todopriority;
+                    newTodoReminderDate = json.todoreminderdate;
+                } else {
+                    console.log(json.todoid );
+                    newTodoId = "101";
+                    newTodoVal = json.todoname;
+                    newTodoPriority = json.todopriority;
+                    newTodoReminderDate = "";
+                }
+                // Find new row insert position
+                var totalRows = parent_table.find("tr").length;
+                var insertIndex = parseInt(totalRows - 3);
+                // create new todo elements (new tr)
+                var newTr = $("<tr></tr>");
+                newTr.addClass("drag-todo-item ui-sortable-handle");
+                // 3 td comprise of each tr for todo.
+                // 1. creating status td and its elements
+                var statusTd = $("<td></td>");
+                statusTd.addClass("status");
+                statusTd.css({
+                    'width' : '10%'
+                });
+                var dragSpan = $("<span></span>");
+                dragSpan.addClass("glyphicon glyphicon-resize-vertical");
+                dragSpan.css({
+                    'display' : 'none',
+                    'float' : 'left',
+                    'margin-left' : '-10px'
+                });
+                var statusDiv = $("<div name='todocompleted' value='false' ></div>");
+                statusDiv.addClass("square shadow "+newTodoPriority);
+                statusDiv.attr("id", "todocompleted"+newTodoId);
+                statusDiv.attr("title", newTodoPriority);
+                statusDiv.attr("onclick", "markasCompleted('"+newTodoVal+"','"+newTodoId +"')")
+                // To-do add name, id, value, onclick, title - statusDiv
+                var priorityInput = $("<input type='hidden' name='todo-priority' />");
+                priorityInput.addClass("todo-priority");
+                priorityInput.val(newTodoPriority);
+
+                statusDiv.append(priorityInput);
+                statusTd.append(dragSpan);
+                statusTd.append(statusDiv);
+                newTr.append(statusTd);
+
+                // 2. creating todo name td and its elements
+                var nameTd = $("<td></td>");
+                nameTd.addClass("name-todo");
+                nameTd.css({
+                    'width' : '90%'
+                });
+                var idInput = $("<input type=hidden name='todo-id' />");
+                idInput.val(newTodoId);
+                idInput.addClass("todo-id"); //need to add todo value
+                var nameDiv = $("<div></div>");
+                nameDiv.addClass("list-todo-name");
+                nameDiv.html(newTodoVal);
+                var nameInput = $("<input type=text name='todoname' />"); //  need to add id, value
+                nameInput.css({
+                    'display' : 'none'
+                });
+                nameInput.attr("id", "todoname"+newTodoId);
+                nameInput.val(newTodoId);
+                var todoDetailSpan = $("<span></span>");
+                todoDetailSpan.addClass("glyphicon glyphicon-list");
+                todoDetailSpan.css({
+                    'display' : 'none'
+                });
+                var dateSpan = $("<span></span>");
+                dateSpan.addClass("reminder-date"); // need to add title = with no of days left
+                dateSpan.html(frmated_reminder_date)
+
+                var dateInput = $("<input type=hidden name='todo-date' />");
+                dateInput.addClass("todo-date");
+                dateInput.val(newTodoReminderDate);
+                nameTd.append(idInput);
+                nameTd.append(nameDiv);
+                nameTd.append(nameInput);
+                nameTd.append(todoDetailSpan);
+                nameTd.append(dateSpan);
+                nameTd.append(dateInput);
+                newTr.append(nameTd);
+
+                var editTd = $("<td></td>");
+                editTd.addClass("list-todo-edit");
+                editTd.attr("colspan", "2");
+                editTd.css('display', 'none');
+                var divEdit = $("<div class='div-todo-list-edit'> </div> ");
+                var inputNameEdit = $("<input class='todonameedit' type='text' name='todonameedit' />");
+                inputNameEdit.val(newTodoVal);
+                var inputDateEdit = $("<input class='tododateedit' type='text' name='tododateedit' />");
+                inputDateEdit.val(newTodoReminderDate);
+                divEdit.append(inputNameEdit);
+                divEdit.append(inputDateEdit);
+
+                var paraEditButtons = $("<p class='todoeditbuttons'> </p>");
+                var btnSaveEdit = $("<input type='button' name='todonamesave' value='save' />");
+                var btnCancelEdit = $("<input type='button' name='todonamecancel' value='cancel' />");
+                paraEditButtons.append(btnSaveEdit);
+                paraEditButtons.append(btnCancelEdit);
+
+                var divPriority = $("<div class='div-todo-priority' ></div>");
+                var prioritySevere = $("<span class='glyphicon glyphicon-flag priority-flag-severe' title='severe'></span>");
+                var priorityHigh = $("<span class='glyphicon glyphicon-flag priority-flag-high' title='high'></span>");
+                var priorityMedium = $("<span class='glyphicon glyphicon-flag priority-flag-medium' title='medium'></span>");
+                var priorityLow = $("<span class='glyphicon glyphicon-flag priority-flag-low' title='low'></span>");
+
+                divPriority.append(prioritySevere);
+                divPriority.append(priorityHigh);
+                divPriority.append(priorityMedium);
+                divPriority.append(priorityLow);
+                paraEditButtons.append(divPriority);
+
+
+                editTd.append(divEdit);
+                editTd.append(paraEditButtons);
+                newTr.append(editTd);
+
+                $(tr[insertIndex]).after(  // get the last tr before new todo div
+                    newTr
+                );
+                parent_tr.find(".todonamenew").val("");
+                parent_tr.find(".tododatenew").val("");
+
+                parent_tr.parent().find(".list-todo-new").css({
+                    'display' : 'none'
+                });
+                var div_priority = $(this).parent();
+                var before_transform_val = 1.3;
+                div_priority.find("span").css({
+                    'transform':'scale('+before_transform_val+')',
+                    '-webkit-transform':'scale('+before_transform_val+')',
+                    '-ms-transform':'scale('+before_transform_val+')',
+                    '-moz-transform':'scale('+before_transform_val+')',
+                    '-o-transform':'scale('+before_transform_val+')'
+                });
+
+
+            },
+            error : function(xhr,errmsg,err) {
+                $('#error-results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                    " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+            }
         });
 
-        $("input[name^='todonamesave']").on('click',
-            function(event) {
-                event.preventDefault();
-                var parent_tr = $(event.target).parent().parent().parent();
-                var name = parent_tr.find(".todonameedit").val();
-                parent_tr.find(".list-todo-edit").css('display', 'none');
-                parent_tr.find(".status").css('display', '');
-                parent_tr.find(".status").find("glyphicon-resize-vertical").css('display', 'none');
-                parent_tr.find(".name-todo").css('display', '');
-                parent_tr.find(".list-todo-edit").css('display', 'none');
-                todo_name_element.html(temp_todo_name);
-                var todo_id = parent_tr.find(".todo-id").val();
-                var todo_name = temp_todo_name;
-                var todo_priority = parent_tr.find(".todo-priority").val();
+    }
+);
 
-                quickedit_todo(todo_id,todo_name, todo_priority);
-            }
-        );
-
-        $("input[name^='todonamecancel']").on('click',
-            function(event) {
-                event.preventDefault();
-                var parent_tr = $(event.target).parent().parent().parent();
-                todo_name_element.html(todo_name_before_edit);
-                parent_tr.find(".list-todo-edit").css('display', 'none');
-                parent_tr.find(".status").css('display', '');
-                parent_tr.find(".status").find("glyphicon-resize-vertical").css('display', 'none');
-                parent_tr.find(".name-todo").css('display', '');
-                parent_tr.find(".list-todo-edit").css('display', 'none');
-            }
-        );
-
+$("input[name^='todonamenewcancel']").on('click',
+    function(event) {
+        event.preventDefault();
+        var parent_tr = $(event.target).parent().parent().parent();
+        parent_tr.find(".list-todo-new").css({
+            'display' : 'none'
+        });
+        parent_tr.find(".todonamenew").val("");
+        parent_tr.find(".tododatenew").val("");
+        var div_priority = $(this).parent();
+        var td_todo_new = $(this).parent().parent().parent();
+        var before_transform_val = 1.3;
+        div_priority.find("span").css({
+            'transform':'scale('+before_transform_val+')',
+            '-webkit-transform':'scale('+before_transform_val+')',
+            '-ms-transform':'scale('+before_transform_val+')',
+            '-moz-transform':'scale('+before_transform_val+')',
+            '-o-transform':'scale('+before_transform_val+')'
+        });
     }
 );
 
