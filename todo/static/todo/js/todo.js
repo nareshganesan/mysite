@@ -191,20 +191,12 @@ $( "#addTodoSubmit" ).click(function() {
 
 function showDeleteTodoDiv( todoid, todotype) {
 
-
-    if(todotype == 'todo') {
-        var todoname = $("#todoname"+todoid).val();
-        $("#deleteTodoName").html(todoname);
-        $("#deleteTodoId").html(todoid);
-        showTodoFeature(FEATURELIST.DELETEFEATURE);
-    } else if (todotype == 'completedtodo') {
-        var todoname = $("#ctodoname"+todoid).html();
-        $("#deletecTodoName").html(todoname);
-        $("#deletectodoid").html(todoid);
-        showCompletedTodoFeature(FEATURELIST.DELETEFEATURE);
-    } else {
-
-    }
+    var todoname = $("#ctodoname"+todoid).html();
+    console.log(todoname);
+    $("#deleteTodoName").html(todoname);
+    $("#deleteTodoId").html(todoid);
+    showTodoFeature(FEATURELIST.DELETEFEATURE);
+    hideTodoElementsById("tabs-todo-types");
 
 }
 
@@ -512,6 +504,7 @@ $(document).ready(function() {
 
     $('#deleteTodoCancel').click( function() {
         showTodoFeature(FEATURELIST.LISTFEATURE);
+        showTodoElementsById("tabs-todo-types");
     });
 
     $('#deletecTodoCancel').click( function() {
@@ -575,19 +568,42 @@ function ctodolist() {
             $('#table-ctodo-list').empty();
             var resCount = json.length;
             if(resCount > 0){
-                var header = "<tr><td> Name </td><td>Priority</td><td>Todo page</td><td>Delete Todo </td></tr>";
-                $('#table-ctodo-list').append(header);
-                     for (var i =0; i < resCount; i ++ ) {
-                        var ctodonameinput = "<input readonly type=\"text\" class=\"ctodoname\" id=\"ctodoname"+json[i].id +"\" value=\""+ json[i].name +"\" />";
-                        var ctodoname = "<td id=\"ctodoname"+json[i].id +"\" >" + json[i].name + "</td>";
-                        var ctodopriority = "<td>" + json[i].priority + "</td>";
-                        var ctodoview = "<td> view </td>";
-                        var ctododeletelink = "<a href=\"#\"  onclick=\"showDeleteTodoDiv(\'"+ json[i].id + "\', \'completedtodo\')\" > delete </a>";
-                        var ctododelete = "<td> " + ctododeletelink + " </td>";
-                        var ctodo = "<tr>" + ctodoname + ctodopriority + ctodoview + ctododelete + "</tr>";
-                        $('#table-ctodo-list').append(ctodo);
+                for (var i =0; i < resCount; i ++ ) {
+                    var squareCheckedDiv = $("<div class='square-checked shadow'></div>");
+                    var img = $("<img />");
+                    img.attr('src', "../static/todo/images/tick-symbol.png");
+                    img.css({
+                        'width' : '12px',
+                        'height' : '11px',
+                        'margin-bottom' : '9px',
+                        'padding' : '1px'
+                    });
+                    squareCheckedDiv.append(img);
+                    var squareDiv = $("<div class='square shadow'></div>");
+                    squareDiv.css('display', 'none');
+                    var ctd = $("<td style='text-align: center;' > </td>");
+                    ctd.append(squareCheckedDiv);
+                    ctd.append(squareDiv);
+                    var ctodoname = $("<td style='text-decoration: line-through' > </td>");
+                    ctodoname.attr('id', "ctodoname"+json[i].id );
+                    var cDivTodoName = $("<div style='text-align: left;' > </div>");
+                    cDivTodoName.html(json[i].name);
+                    var ctodoid = $("<input type=hidden class='todo-id' name='todo-id' />");
+                    ctodoid.val(json[i].id);
+                    ctodoname.append(cDivTodoName);
+                    ctodoname.append(ctodoid);
+                    var ctododeletelink = $("<a href='#' > </a>");
+                    ctododeletelink.attr('onclick', "showDeleteTodoDiv('"+ json[i].id +"' , 'completedtodo')" );
+                    ctododeletelink.html("delete");
+                    var ctododelete = $("<td> </td>");
+                    ctododelete.append(ctododeletelink);
+                    var ctodo = $("<tr> </tr>");
+                    ctodo.append(ctd);
+                    ctodo.append(ctodoname);
+                    ctodo.append(ctododelete);
+                    $('#table-ctodo-list').append(ctodo);
 
-                    }
+                }
             }
         },
 
@@ -598,6 +614,36 @@ function ctodolist() {
     });
 
 }
+
+$(document).on("click", "#table-ctodo-list .square-checked", function(event) {
+    var parent_td = $(event.target).parent().parent();
+    var parent_tr = $(event.target).parent().parent().parent();
+    $(this).css('display', 'none');
+    parent_td.find(".square").css('display', 'block');
+    parent_tr.find("td[id^=ctodoname]").css("text-decoration", "");
+    var todoid = parent_tr.find(".todo-id").val();
+    console.log(parent_tr.find(".todo-id").val());
+    var unmark_as_completed_url = "unmark_as_completed/";
+
+    $.ajax({
+        url : unmark_as_completed_url, // the endpoint
+        type : "POST", // http method
+        // data sent with the post request
+        data : {
+        'todoid' : todoid
+        },
+
+        // handle a successful response
+        success : function(json) {
+            location.reload();
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            $('#error-results').html("Quick Edit failed");
+        }
+    });
+});
 
 
   /* Completed Todo functions end */
@@ -618,19 +664,17 @@ function dtodolist() {
             $('#table-dtodo-list').empty();
             var resCount = json.length;
             if(resCount > 0){
-                var header = "<tr><td> Name </td><td>Priority</td><td>Todo page</td></tr>";
-                $('#table-dtodo-list').append(header);
-                     for (var i =0; i < resCount; i ++ ) {
-                        var ctodonameinput = "<input readonly type=\"text\" class=\"ctodoname\" id=\"ctodoname"+json[i].id +"\" value=\""+ json[i].name +"\" />";
-                        var ctodoname = "<td id=\"ctodoname"+json[i].id +"\" >" + json[i].name + "</td>";
-                        var ctodopriority = "<td>" + json[i].priority + "</td>";
-                        var ctodoview = "<td> view </td>";
-//                        var ctododeletelink = "<a href=\"#\"  onclick=\"showDeleteTodoDiv(\'"+ json[i].id + "\', \'completedtodo\')\" > delete </a>";
-//                        var ctododelete = "<td> " + ctododeletelink + " </td>";
-                        var ctodo = "<tr>" + ctodoname + ctodopriority + ctodoview + "</tr>";
-                        $('#table-dtodo-list').append(ctodo);
+                for (var i =0; i < resCount; i ++ ) {
+                    var ctodonameinput = "<input readonly type=\"text\" class=\"ctodoname\" id=\"ctodoname"+json[i].id +"\" value=\""+ json[i].name +"\" />";
+                    var dtodoname = $("<td> </td>");
+                    dtodoname.attr('id', "dtodoname"+json[i].id);
+                    dtodoname.css('text-decoration', 'line-through');
+                    dtodoname.html(json[i].name);
+                    var dtodo = $("<tr> </tr>");
+                    dtodo.append(dtodoname);
+                    $('#table-dtodo-list').append(dtodo);
 
-                    }
+                }
             }
         },
 

@@ -21,7 +21,7 @@
         top:30px;
     }
     .table-todo-list {
-        width: 90%;
+        width: 100%;
     }
 }
 
@@ -358,7 +358,7 @@ body {
     width : 15px;
     height : 15px;
     border-radius : 3px;
-    background: red;
+    background: white;
     text-align: center;
     margin: auto;
     border: 1px solid lightgrey;
@@ -368,8 +368,23 @@ body {
     border: 1px solid black;
 }
 
+.square-checked {
+    width : 15px;
+    height : 15px;
+    border-radius : 3px;
+    background: white;
+    text-align: center;
+    margin: auto;
+    border: 1px solid lightgrey;
+    background: url('../images/tick-symbol.png');
+}
+
+.square-checked:hover {
+    border: 1px solid black;
+}
+
 .table-todo-list-1 {
-    margin-left: 20px;
+    margin-left: 0px;
 }
 
 .table-todo-list-1 td.status {

@@ -286,6 +286,26 @@ def mark_as_completed(request):
             content_type="application/json"
         )
 
+@login_required
+def unmark_as_completed(request):
+    'Un mark a todo as Completed.'
+    if request.method == 'POST':
+        todoid = request.POST.get('todoid')
+        todo = get_object_or_404(Todo, pk=todoid)
+        todo.iscompleted = False
+        todo.save()
+        response_data = dict()
+        response_data['responsetype'] = 'success'
+        return HttpResponse(
+            json.dumps(response_data),
+            content_type="application/json"
+        )
+    return HttpResponse(
+            json.dumps({"No Data": "Are you kidding me !! :)"}),
+            content_type="application/json"
+        )
+
+
 
 @login_required
 def quickdelete_todo(request):
