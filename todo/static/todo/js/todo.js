@@ -1205,3 +1205,14 @@ $( "div.square" ).hover(
 
 
 /* New Todo list Feature end   */
+
+/* Todo Project Feature start */
+
+function showProjectTodo() {
+    $("#tabs-todo-types").css('display', 'none');
+    showTodoFeature(FEATURELIST.PROJECTFEATURE);
+
+
+}
+
+/* Todo Project Feature end */

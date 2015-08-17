@@ -20,12 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/dev/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'g40og158=@#2fjlp51r&2$atyc(kguf6(uz+do$ph-g^hmr2zu'
+SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True   # "DJANGO_DEBUG" in os.environ
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -123,6 +123,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# Media files if the users upload any files.
+
+MEDIA_URL = '/media/'
+
 LOGIN_URL = '/login/' # django login - '/accounts/login/'
 
 LOGOUT_URL = '/accounts/logout/'
@@ -132,3 +136,9 @@ TEMPLATE_DIRS = (
     'todo/templates',
     'polls/templates',
 )
+
+# Path to save all Static files in the project
+# python manage.py collectstatic
+STATIC_ROOT = os.path.join(BASE_DIR, 'static-files')
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media-files')

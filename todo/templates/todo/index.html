@@ -211,7 +211,7 @@
                 </div>
 
                 <div class="row placeholders" id="div-feature-add" style="display:none;">
-                        <div class="well-sm">
+                        <div class="well-sm" style="width: 95%;">
                             <form class="form-horizontal" id="form-add-todo" action="" method="post">
                                 {% csrf_token %}
                                 <fieldset>
@@ -323,7 +323,7 @@
                     <div id="detail-update-success" class="alert alert-success" role="alert" style="display: none;">
 
                     </div>
-                    <div class="well-sm">
+                    <div class="well-sm" style="width: 95%;">
                       <form class="form-horizontal" action="" method="post">
                       <fieldset>
                         <!--<legend class="" id="header-todo-detail-name">View / Edit Todo</legend>-->
@@ -474,7 +474,13 @@
 
                 <!--<h4 class="sub-header" id="header-todo-project" > Project Todo's</h4>-->
                 <div class="row placeholders" id="div-feature-project" >
+                    <div>
+                        <p>
+                            This is the space to organise projects.
 
+                        </p>
+
+                    </div>
                 </div>
 
                 <!--<h2 class="sub-header" id="header-todo-tags" > Todo Tags</h2>-->
