@@ -20,12 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/dev/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
+SECRET_KEY = os.environ['DJANGO_SECRET_KEY']  # 'g40og158=@#2fjlp51r&2$atyc(kguf6(uz+do$ph-g^hmr2zu'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True   # "DJANGO_DEBUG" in os.environ
+DEBUG = False   # "DJANGO_DEBUG" in os.environ
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
 
 # Application definition
@@ -85,24 +85,8 @@ DATABASES = {
         'PASSWORD': '',
         'HOST': '0.0.0.0',
         'PORT': '3306',
-        # 'STORAGE_ENGINE': 'INNODB'
         }
-
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': 'mysite',
-    #     'USER': 'root',
-    #     'PASSWORD': 'password',
-    #     'HOST': '127.0.0.1',
-    #     'PORT': '5432',
-    # }
 }
-
-# Django - DB Migration Tool called South
-# South Migration adapter settings got MySQL
-# SOUTH_DATABASE_ADAPTERS = {
-#     'default': "south.db.mysql"
-# }
 
 # Internationalization
 # https://docs.djangoproject.com/en/dev/topics/i18n/

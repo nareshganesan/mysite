@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="{% static 'todo/images/favicon.ico' %} ">
-    <title>Django Practice Apps Home Page</title>
+    <title>Todo-task</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{% static 'todo/css/bootstrap.min.css' %}" rel="stylesheet">
@@ -29,11 +29,22 @@
     {% endif %}
     <div class="container">
         <div class="col-lg-6">
-            <h4>Register</h4>
+            <h4><strong>Register</strong></h4>
                 {% block content %}
                     <form action="" method="post">
-                      {% csrf_token %}
-                      {{ form.as_p }}
+                        {% csrf_token %}
+                        {% for hidden in form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+                        <ul>
+                        {% for field in form.visible_fields %}
+                                <li style="list-style: none; margin-bottom: 5px;"> {{ field.label }} {{ field }} {{ field.help_text }} </li>
+                            {% if field.errors %}
+                                <li  style="list-style: none; margin-bottom: 5px;">{{ field.errors }} </li>
+                            {% endif %}
+                        {% endfor %}
+                        </ul>
+                        <!--  'first_name','last_name','username', 'email', 'password1', 'password2' -->
                       <input type="submit" value="Create the account">
                     </form>
                 {% endblock %}

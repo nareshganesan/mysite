@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="icon" href="images/favicon.ico">
 
-    <title>Django Practice Apps Home Page</title>
+    <title>Todo-task</title>
 
     {% load staticfiles %}
 
@@ -66,6 +66,7 @@
                         <li><a  href="#tab-completed-todo" data-target="#tab-completed-todo" data-toggle="tab">Completed Todo</a></li>
                         <li><a  href="#tab-deleted-todo" data-target="#tab-deleted-todo" data-toggle="tab">Deleted Todo</a></li>
                     </ul>
+
                     <div class="tab-content">
 
                         <div class="tab-pane active" id="tab-todo">
@@ -97,8 +98,8 @@
                                                                    style="display: none;">
                                                             <span class="glyphicon glyphicon-list" style="display: none;"></span>
                                                             <span class="reminder-date" title="">
-                                                                {% if todo.created_date %}
-                                                                    {{ todo.reminder_date.date|date:"M d" }}
+                                                                {% if todo.reminder_date %}
+                                                                    {{ todo.reminder_date.date|date:"M d" }}, {{ todo.reminder_date|time:"g:i A" }}
                                                                 {% endif %}
                                                             </span>
                                                             <input type="hidden" class="todo-date" name="todo-date"

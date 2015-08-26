@@ -513,9 +513,9 @@ $(document).ready(function() {
 
     $(".drag-todo-item").each(function() {
         var today = new Date();
-        var dd = today.getDate();
-        var mm = today.getMonth()+1;
-        var yyyy = today.getFullYear();
+        var current_date = today.getDate();
+        var current_month = today.getMonth();
+        var current_year = today.getFullYear();
 
         var reminder_date_string = $(this).find(".todo-date").val().trim();
 
@@ -524,9 +524,43 @@ $(document).ready(function() {
         var reminder_day = reminder_date_string.split("-")[0];
 
         var reminder_date = new Date(reminder_year, reminder_month, reminder_day);
-        var days_left = (reminder_date - today);
-        days_left = Math.floor(days_left/1000/60/60/24);
-        $(this).find(".reminder-date").attr('title', "Days left "+ days_left);
+        var days_left = "";
+        if(reminder_date_string) {
+            if(current_year == reminder_year) {
+                if(current_month == reminder_month){
+                    if(current_date == reminder_day) {
+                        days_left = "Today";
+                    } else {
+                        if(reminder_day > current_date) {
+                            days_left = "Days left "+ (reminder_day - current_date) ;
+                        } else {
+                            if ((current_date - reminder_day) == 7 ) {
+                                days_left = "Week ago" ;
+                            }
+                            else if ((current_date - reminder_day) == 14 ) {
+                                days_left = "2 Weeks ago" ;
+                            }
+                            else if ((current_date - reminder_day) == 21 ) {
+                                days_left = "3 Weeks ago" ;
+                            } else {
+                                days_left = (current_date - reminder_day ) + " days ago" ;
+                            }
+                        }
+                    }
+                } else {
+                    days_left = reminder_date - today;
+                    days_left = Math.floor(days_left/1000/60/60/24);
+                    days_left = "Days left "+ days_left;
+                }
+            } else {
+                days_left = reminder_date - today;
+                days_left = Math.floor(days_left/1000/60/60/24);
+                days_left = "Days left "+ days_left;
+            }
+        } else {
+            days_left = "";
+        }
+        $(this).find(".reminder-date").attr('title', days_left);
     });
 
 
@@ -807,13 +841,12 @@ $( document ).on( "click" , ".name-todo" ,
             var reminder_date = new Date(reminder_year, reminder_month, reminder_day);
             parent_tr.find('.tododateedit').datetimepicker({
                defaultDate: reminder_date,
-               format: 'YYYY-MM-DD',
-               pickTime: false
+               minuteStepping: 5
             });
         } else {
             parent_tr.find('.tododateedit').datetimepicker({
-               format: 'YYYY-MM-DD',
-               pickTime: false
+               minuteStepping: 5
+
             });
         }
         var todo_priority = parent_tr.find(".todo-priority").val();
@@ -843,10 +876,11 @@ $( document ).on( "click" ,"input[name^='todonamesave']",
         parent_tr.find(".name-todo").css('display', '');
         parent_tr.find(".list-todo-edit").css('display', 'none');
         if(reminder_date) {
-            var reminder_year = reminder_date.split("-")[0];
-            var reminder_month = parseInt(reminder_date.split("-")[1] - 1);
-            var reminder_dt = reminder_date.split("-")[2];
-            frmated_reminder_date = month[reminder_month]+" "+reminder_dt;
+            var reminder_time = reminder_date.split(" ")[1] + " " + reminder_date.split(" ")[2]
+            var reminder_year = reminder_date.split(" ")[0].split("/")[2];
+            var reminder_month = parseInt(reminder_date.split(" ")[0].split("/")[0] - 1);
+            var reminder_dt = reminder_date.split(" ")[0].split("/")[1];
+            frmated_reminder_date = month[reminder_month]+" "+reminder_dt +" "+ reminder_time;
         } else {
             frmated_reminder_date = "";
         }

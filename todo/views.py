@@ -159,8 +159,8 @@ def quickedit_todo(request):
         print str(todoreminderdate)
         response_data = dict()
         if todoreminderdate:
-            todoreminderdate = datetime.strptime(todoreminderdate, '%Y-%m-%d').date()
-            todoreminderdate = datetime.combine(todoreminderdate, time.min)
+            todoreminderdate = datetime.strptime(todoreminderdate, '%m/%d/%Y %I:%M  %p')
+            # todoreminderdate = datetime.combine(todoreminderdate, time.min)
             t = Todo(id=todoid, name=todoname, priority=todopriority,
                  user_id=todouser, reminder_date=todoreminderdate)
         else:
@@ -172,7 +172,7 @@ def quickedit_todo(request):
         response_data['todoid'] = t.pk
         response_data['todoname'] = t.name
         response_data['todopriority'] = t.priority
-        response_data['todoreminderdate'] = str(t .reminder_date.strftime("%d-%m-%Y"))
+        response_data['todoreminderdate'] = str(t.reminder_date.strftime('%m/%d/%Y %I:%M  %p'))
 
         return HttpResponse(
             json.dumps(response_data),
@@ -541,6 +541,9 @@ def reports(request):
 
 def home(request):
 	return render(request, 'todo/home.html')
+
+def about(request):
+	return render(request, 'todo/about.html')
 
 def todo_tab_test(request):
     todo_list = Todo.objects.filter(user=request.user.id).filter(iscompleted=False).filter(isdeleted=False).order_by('-created_date')

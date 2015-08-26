@@ -19,6 +19,8 @@ from django.contrib import admin
 urlpatterns = [
     # Home page for the site.
     url(r'^$', 'todo.views.home', name='home'),
+    # About page for the site.
+    url(r'^about$', 'todo.views.about', name='about'),
     # registration page for the site.
     url(r'^register', 'views.register', name='register'),
     # registration page for the site.
@@ -29,8 +31,6 @@ urlpatterns = [
     url(r'^logout', 'django.contrib.auth.views.logout', {'next_page': '/'}, name='logout'),
     # admin module provided by django.
     url(r'^admin/', include(admin.site.urls)),
-    # Polls app created from the django book tutorial.
-    url(r'^polls/', include('polls.urls', namespace="polls")),
     # Todo app created on my own for learning purpose.
     url(r'^todo/', include('todo.urls', namespace="todo")),
     # Custom login attempt for Todo app.

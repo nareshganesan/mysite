@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="{% static 'todo/images/favicon.ico' %} ">
-    <title>Django Practice Apps Home Page</title>
+    <title>Todo-task : Home Page</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{% static 'todo/css/bootstrap.min.css' %}" rel="stylesheet">
@@ -33,37 +33,23 @@
     -->
 
     <div class="container">
-
-        <!-- Main component for a primary marketing message or call to action -->
-        <div class="jumbotron">
-            <h1>Django Apps</h1>
-            <p> This is a template for apps which I'm creating using Django 1.9. The Templates are
-                responsive and so it adapts to your viewport and device.</p>
-        </div>
-
-    </div> <!-- /container -->
-
-    <div class="container">
         <div class="col-lg-6">
             {% if user.is_authenticated %}
-                <h4><a href="{% url 'polls:index' %}"> Polls </a> </h4>
-            {% else %}
-                <!--<h4><a href="{% url 'login' %}"> Polls </a> </h4>-->
-                <h4><a href="{% url 'polls:index' %}"> Polls </a> </h4>
-            {% endif %}
-            <p>Django app to create new  polls, user based polls. </p>
-            {% if user.is_authenticated %}
-                <h4><a href="{% url 'todo:index' %}"> Todo </a></h4>
+                <h4><a href="{% url 'todo:index' %}"> Todo-task </a></h4>
             {% else %}
                 <!--<h4><a href="{% url 'login' %}"> Todo </a></h4>-->
-                <h4><a href="{% url 'todo:index' %}"> Todo </a></h4>
+                <h4><a href="{% url 'todo:index' %}"> Todo-task </a></h4>
             {% endif %}
 
-            <p>Django app to add, edit, delete, mark as completed Todo's. I will be adding more features as I keep developing.
-                The Todo's are user specific and you can add Tags, Projects and prioritise Todo's. <br/>
-                Todo's can be shared to users.<br/>
-                Group the tasks related to a project.<br/>
-                Create sub-task's to drill down complex tasks.<br/>
+            <p>This is a app to organise your todo's / reminders / tasks all in one place.
+                We'll be adding more features to the todo-task app by including third party api's (Evernote, GIT, googledocs etc).
+                Todo-task app's basic features are add, edit, delete, mark as completed Todo's. We will be adding more features as we keep developing.
+                <ul>
+                    <li> The Todo's are user specific and you can add Tags, Projects and prioritise Todo's. </li>
+                    <li> Todo's can be shared to users. </li>
+                    <li> Group the tasks related to a project.</li>
+                    <li> Create sub-task's to drill down complex tasks.</li>
+                </ul>
 
             </p>
             <!--<h4><a href="{% url 'login_request' %}"> login Test </a></h4>-->

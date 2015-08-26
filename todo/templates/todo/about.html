@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="images/favicon.ico">
+
+    <title>Django Practice Apps Home Page</title>
+
+    {% load staticfiles %}
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'todo/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" href="{% static 'todo/css/todo.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'todo/css/datepicker.min.css' %}" rel="stylesheet" />
+
+    <!-- Javscript constants -->
+    <script type="text/javascript" src="{% static 'todo/js/todo-constants.js' %}"></script>
+
+
+</head>
+<body >
+    {% if user.is_authenticated %}
+        {% include "todo/header.html" with isAuthenticated="True"%}
+    {% else %}
+        {% include "todo/header.html" %}
+    {% endif %}
+
+    <div class="container">
+        <div class="row">
+            {% if user.is_authenticated %}
+                {% include "todo/sidebar.html" with isAuthenticated="True"%}
+            {% else %}
+                {% include "todo/sidebar.html" %}
+            {% endif %}
+            <div class="col-sm-9 col-md-10 custom-main">
+
+                <!--<h4 class="sub-header" id="header-todo-search"> Search Results</h4>-->
+                <div class="row placeholders" id="div-about-content" >
+
+                    {% if user.is_authenticated %}
+                        <h4><a href="{% url 'todo:index' %}"> Todo-task </a></h4>
+                    {% else %}
+                        <!--<h4><a href="{% url 'login' %}"> Todo </a></h4>-->
+                        <h4><a href="{% url 'todo:index' %}"> Todo-task </a></h4>
+                    {% endif %}
+
+                    <p>This is a app to organise your todo's / reminders / tasks all in one place.
+                        We'll be adding more features to the todo-task app by including third party api's (Evernote, GIT, googledocs etc).
+                        Todo-task app's basic features are add, edit, delete, mark as completed Todo's. We will be adding more features as we keep developing.
+                        <ul>
+                            <li> The Todo's are user specific and you can add Tags, Projects and prioritise Todo's. </li>
+                            <li> Todo's can be shared to users. </li>
+                            <li> Group the tasks related to a project.</li>
+                            <li> Create sub-task's to drill down complex tasks.</li>
+                        </ul>
+
+                    </p>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Loading Footer , Javascript / Jquery files -->
+
+    {% if user.is_authenticated %}
+        {% include "todo/footer.html" with isAuthenticated="True"%}
+    {% else %}
+        {% include "todo/footer.html" %}
+    {% endif %}
+
+    <!-- Loading Javascript specific to page -->
+
+
+</body>
+</html>
