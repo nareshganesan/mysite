@@ -15,14 +15,15 @@
             <ul class="nav navbar-nav">
                 {% if user.is_authenticated %}
                     <li class="active"><a href="{% url 'todo:index' %}">Todo</a></li>
+                    <li><a href="#" onclick="showReportTodo()" id="scrollTo">Reports</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
                 {% else %}
                     <!--<h4><a href="{% url 'login' %}"> Todo </a></h4>-->
                     <li class="active"><a href="{% url 'todo:index' %}">Todo</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
                 {% endif %}
-
-
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
 
             </ul>
             {%if isAuthenticated == "True" %}

@@ -504,12 +504,15 @@
 
 
 
+    <!-- Footer for Todo-task app -->
+    {% include "todo/footer.html" %}
+
     <!-- Loading Footer , Javascript / Jquery files -->
 
     {% if user.is_authenticated %}
-        {% include "todo/footer.html" with isAuthenticated="True"%}
+        {% include "todo/footer-includes.html" with isAuthenticated="True"%}
     {% else %}
-        {% include "todo/footer.html" %}
+        {% include "todo/footer-includes.html" %}
     {% endif %}
 
     <!-- Loading Javascript specific to reports html -->
