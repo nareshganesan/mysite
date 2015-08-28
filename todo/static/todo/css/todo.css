@@ -70,6 +70,24 @@
     }
 }
 
+@media (min-width: 1280px) {
+    .custom-sidebar {
+        width: 24%;
+    }
+}
+
+@media (min-width: 1360px) {
+    .custom-sidebar {
+        width: 22%;
+    }
+}
+
+@media (min-width: 1680px) {
+    .custom-sidebar {
+        width: 18%;
+    }
+}
+
 
 input[name^="todo"], input[name^="todo"]:focus, input[name^="todo"]:hover {
     border: 0px solid #000000; !important
