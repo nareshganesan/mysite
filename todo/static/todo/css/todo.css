@@ -1,6 +1,29 @@
 
 /* Todo Main page media query styling for side bar and main container. */
 
+@media (max-width: 479px) {
+    .custom-sidebar {
+        display: none;
+    }
+    .custom-main {
+        padding-right:15px;
+        padding-left: 15x;
+        top:30px;
+        width: 100%;
+    }
+    .table-todo-list-1 {
+        width: 97%;
+    }
+    #div-startdate, #div-enddate, #div-cstartdate, #div-cenddate {
+        width: 200px;
+    }
+    #startDateLabel, #endDateLabel, #cstartDateLabel, #cendDateLabel {
+        width: 50px;
+        margin-top: 5px;
+    }
+}
+
+
 @media (min-width: 480px) {
     .custom-sidebar {
         display: none;
@@ -13,6 +36,15 @@
     }
     .table-todo-list-1 {
         width: 97%;
+    }
+    #div-startdate, #div-enddate, #div-cstartdate, #div-cenddate {
+        width: 200px;
+        float: left;
+    }
+    #startDateLabel, #endDateLabel, #cstartDateLabel, #cendDateLabel  {
+        float: left;
+        width: 50px;
+        margin-top: 5px;
     }
 }
 
@@ -41,6 +73,15 @@
     .table-todo-list {
         width: 100%;
     }
+    #div-startdate, #div-enddate, #div-cstartdate, #div-cenddate {
+        width: 200px;
+        float: left;
+    }
+    #startDateLabel, #endDateLabel, #cstartDateLabel, #cendDateLabel  {
+        float: left;
+        width: 50px;
+        margin-top: 5px;
+    }
 }
 
 @media (min-width: 992px) {
@@ -68,11 +109,29 @@
     .table-todo-list {
         width: 90%;
     }
+    #div-startdate, #div-enddate, #div-cstartdate, #div-cenddate {
+        width: 200px;
+        float: left;
+    }
+    #startDateLabel, #endDateLabel, #cstartDateLabel, #cendDateLabel  {
+        float: left;
+        width: 50px;
+        margin-top: 5px;
+    }
 }
 
 @media (min-width: 1280px) {
     .custom-sidebar {
         width: 24%;
+    }
+    #div-startdate, #div-enddate, #div-cstartdate, #div-cenddate {
+        width: 200px;
+        float: left;
+    }
+    #startDateLabel, #endDateLabel, #cstartDateLabel, #cendDateLabel  {
+        float: left;
+        width: 50px;
+        margin-top: 5px;
     }
 }
 
@@ -80,11 +139,29 @@
     .custom-sidebar {
         width: 22%;
     }
+    #div-startdate, #div-enddate, #div-cstartdate, #div-cenddate {
+        width: 200px;
+        float: left;
+    }
+    #startDateLabel, #endDateLabel, #cstartDateLabel, #cendDateLabel  {
+        float: left;
+        width: 50px;
+        margin-top: 5px;
+    }
 }
 
 @media (min-width: 1680px) {
     .custom-sidebar {
-        width: 18%;
+        width: 16%;
+    }
+    #div-startdate, #div-enddate, #div-cstartdate, #div-cenddate {
+        width: 200px;
+        float: left;
+    }
+    #startDateLabel, #endDateLabel, #cstartDateLabel, #cendDateLabel  {
+        float: left;
+        width: 50px;
+        margin-top: 5px;
     }
 }
 
@@ -328,15 +405,8 @@ body {
 
 /* Bootstrap Date time picker custom style start  */
 
-#div-startdate, #div-enddate, #div-cstartdate, #div-cenddate {
-    width: 200px;
-    float: left;
-}
-#startDateLabel, #endDateLabel, #cstartDateLabel, #cendDateLabel  {
-    float: left;
-    width: 50px;
-    margin-top: 5px;
-}
+
+
 
 #endDateLabel, #cendDateLabel {
     margin-left: 10px;
@@ -380,6 +450,7 @@ body {
     margin-top: 30px;
     width:100%;
     height:314px;
+    margin-bottom: 30px;
 }
 
 .highcharts-container{width:100% !important; height:100% !important;}

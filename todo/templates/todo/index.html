@@ -63,8 +63,8 @@
 
                     <ul id="ul-tab-todo-types" class="nav nav-tabs">
                         <li class="active"><a href="#tab-todo" data-target="#tab-todo" data-toggle="tab">Todo</a></li>
-                        <li><a  href="#tab-completed-todo" data-target="#tab-completed-todo" data-toggle="tab">Completed Todo</a></li>
-                        <li><a  href="#tab-deleted-todo" data-target="#tab-deleted-todo" data-toggle="tab">Deleted Todo</a></li>
+                        <li><a  href="#tab-completed-todo" data-target="#tab-completed-todo" data-toggle="tab">Completed </a></li>
+                        <li><a  href="#tab-deleted-todo" data-target="#tab-deleted-todo" data-toggle="tab">Deleted </a></li>
                     </ul>
 
                     <div class="tab-content">
@@ -110,7 +110,8 @@
                                                         <td class="list-todo-edit" colspan="2" style="display: none;">
                                                             <div class="div-todo-list-edit" >
                                                                 <input class = "todonameedit" type="text" name="todonameedit" />
-                                                                <input class = "tododateedit" type="text" name="tododateedit" />
+                                                                <input class = "tododateedit" type="text" name="tododateedit"
+                                                                        value='{{ todo.reminder_date.date|date:"M d" }}, {{ todo.reminder_date|time:"g:i A" }}'/>
                                                             </div>
                                                             <p class="todoeditbuttons"  >
                                                                 <input type="button" name="todonamesave" value="Save" />
@@ -426,7 +427,7 @@
                 </div>
 
 
-                <div class="row placeholders" id="div-feature-report" >
+                <div class="row placeholders" id="div-feature-report" style="display: none;" >
 
                     <div class="form-group" id="div-report-group" >
                         <div id="startDateLabel" > Start : </div>
@@ -455,7 +456,7 @@
                 </div>
 
                 <!--<h4 class="sub-header" id="header-todo-delete"> Delete Todo</h4>-->
-                <div class="row placeholders" id="div-feature-delete" >
+                <div class="row placeholders" id="div-feature-delete"  style="display: none;">
                     <div id="delete_todo_div" >
                         Are you sure you want to delete <span id="deleteTodoName"></span> ?
                         <span id="deleteTodoId" style="display:none;"></span>
@@ -468,13 +469,13 @@
                 </div>
 
                 <!--<h4 class="sub-header" id="header-todo-completed"> Completed Todo's</h4>-->
-                <div class="row placeholders" id="div-feature-completed" >
+                <div class="row placeholders" id="div-feature-completed" style="display: none;" >
 
                 </div>
 
 
                 <!--<h4 class="sub-header" id="header-todo-project" > Project Todo's</h4>-->
-                <div class="row placeholders" id="div-feature-project" >
+                <div class="row placeholders" id="div-feature-project" style="display: none;" >
                     <div>
                         <p>
                             This is the space to organise projects.
@@ -485,12 +486,12 @@
                 </div>
 
                 <!--<h2 class="sub-header" id="header-todo-tags" > Todo Tags</h2>-->
-                <div class="row placeholders" id="div-feature-tags" >
+                <div class="row placeholders" id="div-feature-tags" style="display: none;" >
 
                 </div>
 
                 <!--<h4 class="sub-header" id="header-todo-search"> Search Results</h4>-->
-                <div class="row placeholders" id="div-search-results-container" >
+                <div class="row placeholders" id="div-search-results-container" style="display: none;" >
 
                     <ol id="search-results">
 
