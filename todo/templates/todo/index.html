@@ -32,7 +32,7 @@
         {% include "todo/header.html" %}
     {% endif %}
 
-    <div class="container">
+    <div class="container body-container">
         <div class="row">
             {% if user.is_authenticated %}
                 {% include "todo/sidebar.html" with isAuthenticated="True"%}
@@ -60,12 +60,13 @@
                 <div id="error-results"></div>
 
                 <div class="tabbable" id="tabs-todo-types">
-
-                    <ul id="ul-tab-todo-types" class="nav nav-tabs">
-                        <li class="active"><a href="#tab-todo" data-target="#tab-todo" data-toggle="tab">Todo</a></li>
-                        <li><a  href="#tab-completed-todo" data-target="#tab-completed-todo" data-toggle="tab">Completed </a></li>
-                        <li><a  href="#tab-deleted-todo" data-target="#tab-deleted-todo" data-toggle="tab">Deleted </a></li>
-                    </ul>
+                    <div style="display: block; background-color: white;" >
+                        <ul id="ul-tab-todo-types" class="nav nav-tabs">
+                            <li class="active"><a href="#tab-todo" data-target="#tab-todo" data-toggle="tab">Todo</a></li>
+                            <li><a  href="#tab-completed-todo" data-target="#tab-completed-todo" data-toggle="tab">Completed </a></li>
+                            <li><a  href="#tab-deleted-todo" data-target="#tab-deleted-todo" data-toggle="tab">Deleted </a></li>
+                        </ul>
+                    </div>
 
                     <div class="tab-content">
 
@@ -99,7 +100,12 @@
                                                             <span class="glyphicon glyphicon-list" style="display: none;"></span>
                                                             <span class="reminder-date" title="">
                                                                 {% if todo.reminder_date %}
-                                                                    {{ todo.reminder_date.date|date:"M d" }}, {{ todo.reminder_date|time:"g:i A" }}
+                                                                    {{ todo.reminder_date.date|date:"m/d/y" }} {{ todo.reminder_date|time:"H:i" }}
+                                                                {% endif %}
+                                                            </span>
+                                                            <span style="display: none;" class="actual-reminder-date" >
+                                                                {% if todo.reminder_date %}
+                                                                    {{ todo.reminder_date.date|date:"m/d/y" }} {{ todo.reminder_date|time:"H:i" }}
                                                                 {% endif %}
                                                             </span>
                                                             <input type="hidden" class="todo-date" name="todo-date"
@@ -110,8 +116,8 @@
                                                         <td class="list-todo-edit" colspan="2" style="display: none;">
                                                             <div class="div-todo-list-edit" >
                                                                 <input class = "todonameedit" type="text" name="todonameedit" />
-                                                                <input class = "tododateedit" type="text" name="tododateedit"
-                                                                        value='{{ todo.reminder_date.date|date:"M d" }}, {{ todo.reminder_date|time:"g:i A" }}'/>
+                                                                <input class = "tododateedit" type="text" name="tododateedit" readonly placeholder='due by'
+                                                                        value='{{ todo.reminder_date.date|date:"m/d/y" }} {{ todo.reminder_date|time:"H:i" }}'/>
                                                             </div>
                                                             <p class="todoeditbuttons"  >
                                                                 <input type="button" name="todonamesave" value="Save" />
@@ -129,9 +135,9 @@
                                                 {% endfor %}
                                                 <tr class="tr-todo-list-new" >
                                                     <td class="list-todo-new" colspan="2" style="display: none;">
-                                                        <div class="div-todo-list-new" >
+                                                        <div class="div-todo-list-new" tabindex="4" >
                                                             <input class = "todonamenew" type="text" name="todonameedit" value=""/>
-                                                            <input class = "tododatenew" type="text" name="tododateedit" />
+                                                            <input class = "tododatenew" type="text" name="tododateedit" readonly placeholder='due by' />
                                                             <input type="hidden" class="todo-priority" name="todo-priority" value="high" />
                                                         </div>
                                                         <div class="todoaddnewbuttons"  >
@@ -160,21 +166,6 @@
                                         </table>
                                     </form>
 
-                                    <div class="pagination">
-                                        <span class="step-links">
-                                            {% if latest_todo_list.has_previous %}
-                                                <a href="?page={{ latest_todo_list.previous_page_number }}">previous</a>
-                                            {% endif %}
-
-                                            <span class="current">
-                                                Page {{ latest_todo_list.number }} of {{ latest_todo_list.paginator.num_pages }}.
-                                            </span>
-
-                                            {% if latest_todo_list.has_next %}
-                                                <a href="?page={{ latest_todo_list.next_page_number }}">next</a>
-                                            {% endif %}
-                                        </span>
-                                    </div>
 
                                 {% else %}
                                     <p> Yay!!! No todo's. </p>
@@ -223,7 +214,8 @@
                                     <div class="form-group">
                                       <label class="col-md-3 control-label" for="id_name">Name</label>
                                       <div class="col-md-9">
-                                          <input id="id_name" maxlength="200" name="id_name" type="text" placeholder="Todo name" class="form-control">
+                                          <input id="id_name" maxlength="200" name="id_name" type="text"  placeholder="Todo name" class="form-control" required>
+                                          <div class="field-required" style="margin: 10px 0px 0px 10px; display: none;">  Todo name cannot be empty. </div>
                                       </div>
                                     </div>
 
@@ -298,10 +290,6 @@
                                       </div>
                                     </div>
 
-
-
-
-
                                     <!-- Form actions -->
                                     <div class="form-group">
                                       <div class="col-md-12 text-center">
@@ -335,6 +323,7 @@
                           <label class="col-md-3 control-label" for="body-todo-detail-name">Name</label>
                           <div class="col-md-9">
                             <input id="body-todo-detail-name" name="body-todo-detail-name" type="text" placeholder="Todo name" class="form-control">
+                            <div class="field-required" style="margin: 10px 0px 0px 10px; display: none;">  Todo name cannot be empty. </div>
                           </div>
                         </div>
 

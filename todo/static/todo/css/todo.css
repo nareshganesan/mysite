@@ -11,8 +11,27 @@
         top:30px;
         width: 100%;
     }
+    #div-search-add-container {
+        position: fixed;
+        margin-top: -73px;
+        background-color: white;
+        z-index: 3;
+    }
+
+    #ul-tab-todo-types {
+        position: fixed;
+        margin-top: -9px;
+        background-color: white;
+        width: 93%;
+        z-index: 3;
+    }
+
+    .tab-content {
+        margin-top: 103px;
+        position: relative;
+    }
     .table-todo-list-1 {
-        width: 97%;
+        width: 98%;
     }
     #div-startdate, #div-enddate, #div-cstartdate, #div-cenddate {
         width: 200px;
@@ -34,8 +53,27 @@
         top:30px;
         width: 100%;
     }
+    #div-search-add-container {
+        position: fixed;
+        margin-top: -73px;
+        background-color: white;
+        z-index: 3;
+    }
+
+    #ul-tab-todo-types {
+        position: fixed;
+        margin-top: -9px;
+        background-color: white;
+        width: 94%;
+        z-index: 3;
+    }
+
+    .tab-content {
+        margin-top: 103px;
+        position: relative;
+    }
     .table-todo-list-1 {
-        width: 97%;
+        width: 98%;
     }
     #div-startdate, #div-enddate, #div-cstartdate, #div-cenddate {
         width: 200px;
@@ -62,7 +100,6 @@
         border-right: 1px solid #eee;
         width: 25%;
     }
-
     .custom-main {
         padding-right: 40px;
         padding-left: 55px;
@@ -70,8 +107,27 @@
         top:30px;
         width: 75%;
     }
+    #div-search-add-container {
+        position: fixed;
+        margin-top: 30px;
+        background-color: white;
+        z-index: 3;
+    }
+
+    #ul-tab-todo-types {
+        position: fixed;
+        margin-top: -9px;
+        background-color: white;
+        width: 62%;
+        z-index: 3;
+    }
+
+    .tab-content {
+        margin-top: 103px;
+        position: relative;
+    }
     .table-todo-list {
-        width: 100%;
+        width: 98%;
     }
     #div-startdate, #div-enddate, #div-cstartdate, #div-cenddate {
         width: 200px;
@@ -106,8 +162,27 @@
         top:30px;
         width: 75%;
     }
+    #div-search-add-container {
+        position: fixed;
+        margin-top: 30px;
+        background-color: white;
+        z-index: 3;
+    }
+
+    #ul-tab-todo-types {
+        position: fixed;
+        margin-top: -9px;
+        background-color: white;
+        width: 63%;
+        z-index: 3;
+    }
+
+    .tab-content {
+        margin-top: 103px;
+        position: relative;
+    }
     .table-todo-list {
-        width: 90%;
+        width: 98%;
     }
     #div-startdate, #div-enddate, #div-cstartdate, #div-cenddate {
         width: 200px;
@@ -124,6 +199,25 @@
     .custom-sidebar {
         width: 24%;
     }
+    #div-search-add-container {
+        position: fixed;
+        margin-top: 30px;
+        background-color: white;
+        z-index: 3;
+    }
+
+    #ul-tab-todo-types {
+        position: fixed;
+        margin-top: -9px;
+        background-color: white;
+        width: 58%;
+        z-index: 3;
+    }
+
+    .tab-content {
+        margin-top: 103px;
+        position: relative;
+    }
     #div-startdate, #div-enddate, #div-cstartdate, #div-cenddate {
         width: 200px;
         float: left;
@@ -139,6 +233,25 @@
     .custom-sidebar {
         width: 22%;
     }
+    #div-search-add-container {
+        position: fixed;
+        margin-top: 30px;
+        background-color: white;
+        z-index: 3;
+    }
+
+    #ul-tab-todo-types {
+        position: fixed;
+        margin-top: -9px;
+        background-color: white;
+        width: 54%;
+        z-index: 3;
+    }
+
+    .tab-content {
+        margin-top: 103px;
+        position: relative;
+    }
     #div-startdate, #div-enddate, #div-cstartdate, #div-cenddate {
         width: 200px;
         float: left;
@@ -153,6 +266,25 @@
 @media (min-width: 1680px) {
     .custom-sidebar {
         width: 16%;
+    }
+    #div-search-add-container {
+        position: fixed;
+        margin-top: 30px;
+        background-color: white;
+        z-index: 3;
+    }
+
+    #ul-tab-todo-types {
+        position: fixed;
+        margin-top: -9px;
+        background-color: white;
+        width: 53%;
+        z-index: 3;
+    }
+
+    .tab-content {
+        margin-top: 103px;
+        position: relative;
     }
     #div-startdate, #div-enddate, #div-cstartdate, #div-cenddate {
         width: 200px;
@@ -285,6 +417,10 @@ body {
   /*padding-top: 50px;*/
 }
 
+.body-container {
+    margin-bottom: 65px;
+}
+
 
 /*
  * Global add-ons
@@ -398,8 +534,16 @@ body {
   box-shadow: 0 0 8px rgba(0,255,0, 0.6);
 }
 
-#div-feature-add {
-    margin-top: 10px;
+#div-feature-add, #div-feature-detail, #div-feature-delete, #div-feature-project {
+    margin-top: 105px;
+}
+
+#div-feature-report {
+    margin-top: 105px;
+}
+
+#div-search-results-container {
+    margin-top: 105px;
 }
 
 

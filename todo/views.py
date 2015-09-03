@@ -26,19 +26,10 @@ from .models import Todo
 def todolist(request):
     'list view of the todo app.'
     todo_list = Todo.objects.filter(user=request.user.id).filter(iscompleted=False).filter(isdeleted=False).order_by('-created_date')
-    paginator = Paginator(todo_list, 15)
     prioritylist = Todo.PRIORITY_LIST
-    page = request.GET.get('page')
-    try:
-        latest_todo_list = paginator.page(page)
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        latest_todo_list = paginator.page(1)
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        latest_todo_list = paginator.page(paginator.num_pages)
+
     context = {
-        'latest_todo_list': latest_todo_list,
+        'latest_todo_list': todo_list,
         'prioritylist': prioritylist,
     }
     return render(request, 'todo/index.html', context)
@@ -156,10 +147,9 @@ def quickedit_todo(request):
         todopriority = request.POST.get('todopriority')
         todoreminderdate = request.POST.get('todoreminderdate')
         todouser = request.user.id
-        print str(todoreminderdate)
         response_data = dict()
         if todoreminderdate:
-            todoreminderdate = datetime.strptime(todoreminderdate, '%m/%d/%Y %I:%M  %p')
+            todoreminderdate = datetime.strptime(todoreminderdate, '%m/%d/%y %H:%M')
             # todoreminderdate = datetime.combine(todoreminderdate, time.min)
             t = Todo(id=todoid, name=todoname, priority=todopriority,
                  user_id=todouser, reminder_date=todoreminderdate)
@@ -167,12 +157,12 @@ def quickedit_todo(request):
             t = Todo(id=todoid, name=todoname, priority=todopriority,
                  user_id=todouser)
         t.save()
-
+        print t
         response_data['result'] = 'Update Todo successful!'
         response_data['todoid'] = t.pk
         response_data['todoname'] = t.name
         response_data['todopriority'] = t.priority
-        response_data['todoreminderdate'] = str(t.reminder_date.strftime('%m/%d/%Y %I:%M  %p'))
+        response_data['todoreminderdate'] = str(t.reminder_date.strftime('%m/%d/%y %H:%M'))
 
         return HttpResponse(
             json.dumps(response_data),
@@ -195,15 +185,14 @@ def quickadd_todo(request):
         todouser = request.user.id
         response_data = dict()
         if todo_reminder_date:
-            todo_reminder_date = datetime.strptime(todo_reminder_date, '%Y-%m-%d').date()
-            todo_reminder_date = datetime.combine(todo_reminder_date, time.min)
+            todo_reminder_date = datetime.strptime(todo_reminder_date, '%m/%d/%y %H:%M')
             t = Todo(name=todoname, priority=todopriority, user_id=todouser, reminder_date=todo_reminder_date)
             t.save()
             response_data['result'] = 'Update Todo successful!'
             response_data['todoid'] = t.pk
             response_data['todoname'] = t.name
             response_data['todopriority'] = t.priority
-            response_data['todoreminderdate'] = str(t .reminder_date.strftime("%d-%m-%Y"))
+            response_data['todoreminderdate'] = str(t .reminder_date.strftime('%m/%d/%y %H:%M'))
         else:
             t = Todo(name=todoname, priority=todopriority, user_id=todouser)
             t.save()

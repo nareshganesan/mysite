@@ -140,12 +140,18 @@ $('#link-show-add').click( function() {
     $("#tabs-todo-types").css("display", "none");
 });
 
-$('#form-add-todo').on('submit', function(event){
+/*$('#form-add-todo').on('submit', function(event){
     event.preventDefault();
-});
+});*/
 
 $( "#addTodoSubmit" ).click(function() {
     var todoname = $("#id_name").val()
+    if(!todoname) {
+        $("#id_name").parent().find(".field-required").css('display', '');
+        return;
+    } else {
+         $("#id_name").parent().find(".field-required").css('display', 'none');
+    }
     var tododescription = $("#id_description").val()
     var todopriority = $("#id_priority").val()
     var todonotes = $("#id_notes").val()
@@ -299,6 +305,12 @@ $( "#deletecTodoSubmit" ).click(function() {
     $( "#detailTodoUpdate" ).click(function() {
         var todoid = $("#detail-todo-id").html()
         var todoname = $("#body-todo-detail-name").val()
+        if(!todoname) {
+            $("#body-todo-detail-name").parent().find(".field-required").css('display', '');
+            return;
+        } else {
+             $("#body-todo-detail-name").parent().find(".field-required").css('display', 'none');
+        }
         var todopriority = $("#body-todo-detail-priority").val()
         var tododescription = $("#body-todo-detail-description").val()
         var todonotes = $("#body-todo-detail-notes").val()
@@ -389,6 +401,7 @@ $('#input-search-box').keyup(function(e){
             hideTodoElementsById("div-feature-report");
             hideTodoElementsById("tabs-todo-types");
             hideTodoElementsById("div-feature-detail");
+            hideTodoElementsById("div-feature-add");
         todoSearch(searchQuery);
         }
     } else {
@@ -397,6 +410,7 @@ $('#input-search-box').keyup(function(e){
             hideTodoElementsById("div-feature-report");
             hideTodoElementsById("tabs-todo-types");
             hideTodoElementsById("div-feature-detail");
+            hideTodoElementsById("div-feature-add");
         todoSearch(searchQuery);
         }
     }
@@ -575,13 +589,15 @@ $("#ul-tab-todo-types a").click( function(e){
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
       var selectedTab = $(e.target).attr("href");
       if ((selectedTab == FEATURETABS.TODO)) {
-        showTodoFeature(FEATURELIST.LISTFEATURE);
+        location.reload();
       }else if ((selectedTab == FEATURETABS.COMPLETEDTODO)){
         showCompletedTodoFeature(FEATURELIST.LISTFEATURE);
+        hideTodoElementsById("div-feature-detail");
         ctodolist();
       } else {
          // Operation todo when other tabs load.
          showDeletedTodoFeature(FEATURELIST.LISTFEATURE);
+         hideTodoElementsById("div-feature-detail");
          dtodolist();
       }
   });
@@ -841,10 +857,12 @@ $( document ).on( "click" , ".name-todo" ,
             var reminder_date = new Date(reminder_year, reminder_month, reminder_day);
             parent_tr.find('.tododateedit').datetimepicker({
                defaultDate: reminder_date,
+               format: "MM/DD/YY HH:mm",
                minuteStepping: 5
             });
         } else {
             parent_tr.find('.tododateedit').datetimepicker({
+               format: "MM/DD/YY HH:mm",
                minuteStepping: 5
 
             });
@@ -876,11 +894,7 @@ $( document ).on( "click" ,"input[name^='todonamesave']",
         parent_tr.find(".name-todo").css('display', '');
         parent_tr.find(".list-todo-edit").css('display', 'none');
         if(reminder_date) {
-            var reminder_time = reminder_date.split(" ")[1] + " " + reminder_date.split(" ")[2]
-            var reminder_year = reminder_date.split(" ")[0].split("/")[2];
-            var reminder_month = parseInt(reminder_date.split(" ")[0].split("/")[0] - 1);
-            var reminder_dt = reminder_date.split(" ")[0].split("/")[1];
-            frmated_reminder_date = month[reminder_month]+" "+reminder_dt +" "+ reminder_time;
+            frmated_reminder_date = reminder_date;
         } else {
             frmated_reminder_date = "";
         }
@@ -911,8 +925,12 @@ $( document ).on( "click" , "input[name^='todonamecancel']",
 
 $("#a-todo-list-add").click(function() {
     $(".list-todo-new").css({
-        'display': ''
+        'display': '',
     });
+    $('html,body').animate({
+       scrollTop: $(".div-todo-list-new").offset().top
+    }, 2000);
+    $(".div-todo-list-new").focus();
     $(".list-todo-new").find(".tododatenew").attr("placeholder","due by..");;
     var today = new Date();
     var dd = today.getDate();
@@ -927,8 +945,8 @@ $("#a-todo-list-add").click(function() {
     var reminder_date = new Date(yyyy, mm, dd);
     $(".list-todo-new").find(".tododatenew").datetimepicker({
 //       defaultDate: reminder_date,
-       format: 'YYYY-MM-DD',
-       pickTime: false
+       format: 'MM/DD/YY HH:mm',
+       pickTime: true
     });
 });
 
@@ -1033,15 +1051,23 @@ $("input[name^='todonamenewsave']").on('click',
         var tr = parent_table.find("tr");
         // Create new todo values.
         var newTodoVal = parent_tr.find(".todonamenew").val();
+        if(!newTodoVal) {
+            parent_tr.find(".todonamenew").prop('placeholder', 'Todo name...');
+            parent_tr.find(".todonamenew").focus();
+            return;
+        } else {
+            parent_tr.find(".todonamenew").prop('placeholder', '');
+        }
         var newTodoPriority = parent_tr.find(".todo-priority").val()
+        if(!newTodoPriority) {
+            parent_tr.find(".todo-priority").focus();
+            return;
+        }
         var newTodoReminderDate = parent_tr.find(".tododatenew").val();
         // format the date in mmm dd format
         var frmated_reminder_date = "";
         if(newTodoReminderDate) {
-            var reminder_year = newTodoReminderDate.split("-")[0];
-            var reminder_month = parseInt(newTodoReminderDate.split("-")[1] - 1);
-            var reminder_date = newTodoReminderDate.split("-")[2];
-            frmated_reminder_date = month[reminder_month]+" "+reminder_date;
+            frmated_reminder_date = newTodoReminderDate;
         } else {
             frmated_reminder_date = "";
         }
@@ -1057,14 +1083,12 @@ $("input[name^='todonamenewsave']").on('click',
             success : function(json) {
                 // Inserted New Todo data
                 if(json.todoreminderdate) {
-                    console.log(json.todoid );
-                    newTodoId = "101";
+                    newTodoId = json.todoid;
                     newTodoVal = json.todoname;
                     newTodoPriority = json.todopriority;
                     newTodoReminderDate = json.todoreminderdate;
                 } else {
-                    console.log(json.todoid );
-                    newTodoId = "101";
+                    newTodoId = json.todoid;
                     newTodoVal = json.todoname;
                     newTodoPriority = json.todopriority;
                     newTodoReminderDate = "";
@@ -1149,7 +1173,7 @@ $("input[name^='todonamenewsave']").on('click',
                 var divEdit = $("<div class='div-todo-list-edit'> </div> ");
                 var inputNameEdit = $("<input class='todonameedit' type='text' name='todonameedit' />");
                 inputNameEdit.val(newTodoVal);
-                var inputDateEdit = $("<input class='tododateedit' type='text' name='tododateedit' />");
+                var inputDateEdit = $("<input class='tododateedit' type='text' name='tododateedit' readonly placeholder='due by' />");
                 inputDateEdit.val(newTodoReminderDate);
                 divEdit.append(inputNameEdit);
                 divEdit.append(inputDateEdit);
