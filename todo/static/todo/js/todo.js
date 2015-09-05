@@ -1093,9 +1093,7 @@ $("input[name^='todonamenewsave']").on('click',
                     newTodoPriority = json.todopriority;
                     newTodoReminderDate = "";
                 }
-                // Find new row insert position
-                var totalRows = parent_table.find("tr").length;
-                var insertIndex = parseInt(totalRows - 3);
+
                 // create new todo elements (new tr)
                 var newTr = $("<tr></tr>");
                 newTr.addClass("drag-todo-item ui-sortable-handle");
@@ -1196,14 +1194,24 @@ $("input[name^='todonamenewsave']").on('click',
                 divPriority.append(priorityLow);
                 paraEditButtons.append(divPriority);
 
-
                 editTd.append(divEdit);
                 editTd.append(paraEditButtons);
                 newTr.append(editTd);
 
-                $(tr[insertIndex]).after(  // get the last tr before new todo div
-                    newTr
-                );
+                // Find new row insert position
+                var totalRows = parent_table.find("tr").length;
+                if(totalRows < 3) {
+                    var insertIndex = 0;
+                    $(tr[insertIndex]).before(  // Insert the new todo on index 0.
+                        newTr
+                    );
+                } else {
+                    var insertIndex = parseInt(totalRows - 3);
+                    $(tr[insertIndex]).after(  // get the last tr before new todo div
+                        newTr
+                    );
+                }
+
                 parent_tr.find(".todonamenew").val("");
                 parent_tr.find(".tododatenew").val("");
 

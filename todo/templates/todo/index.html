@@ -168,7 +168,44 @@
 
 
                                 {% else %}
-                                    <p> Yay!!! No todo's. </p>
+                                    <!--<p> Yay!!! No todo's. </p>-->
+                                    <form method="POST" id="quickedit-todo-form">
+                                        {% csrf_token %}
+                                        <table class="table table-todo-list-1">
+                                            <tbody>
+                                                <tr class="tr-todo-list-new" >
+                                                    <td class="list-todo-new" colspan="2" style="display: none;">
+                                                        <div class="div-todo-list-new" tabindex="4" >
+                                                            <input class = "todonamenew" type="text" name="todonameedit" value=""/>
+                                                            <input class = "tododatenew" type="text" name="tododateedit" readonly placeholder='due by' />
+                                                            <input type="hidden" class="todo-priority" name="todo-priority" value="high" />
+                                                        </div>
+                                                        <div class="todoaddnewbuttons"  >
+                                                            <input type="button" name="todonamenewsave" value="Add Todo" />
+                                                            <input type="button" name="todonamenewcancel" value="Cancel"/>
+                                                            <div class="div-todo-new-priority">
+                                                                <span class="glyphicon glyphicon-flag priority-flag-severe" title="severe"></span>
+                                                                <span class="glyphicon glyphicon-flag priority-flag-high" title="high"></span>
+                                                                <span class="glyphicon glyphicon-flag priority-flag-medium" title="medium"></span>
+                                                                <span class="glyphicon glyphicon-flag priority-flag-low" title="low"></span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr class="tr-todo-list-add" >
+                                                    <td id="td-todo-list-add" colspan="2" >
+                                                        <div class="div-todo-list-edit" style="text-align: left">
+                                                            <a href="#" id="a-todo-list-add" onclick="">
+                                                                <img id="img-todo-list-add-todo" src="{% static 'todo/images/Plus-sign.png' %}" title="Add Todo"/>
+                                                                Add Todo
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </form>
                                 {% endif %}
 
                             </div>
