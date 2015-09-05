@@ -973,6 +973,9 @@ $( document ).on( "click" , ".div-todo-priority span", function() {
         '-moz-transform':'scale('+transform_val+')',
         '-o-transform':'scale('+transform_val+')'
     });
+    console.log("dsdsdgdsfg ");
+    console.log(parent_tr);
+    console.log($(this))
     var priority_selected = $(this).attr('class');
     if(priority_selected.toLowerCase().indexOf('severe') >=0 ) {
         parent_tr.find(".todo-priority").val("severe");
@@ -993,8 +996,7 @@ $( document ).on( "click" , ".div-todo-priority span", function() {
 
 });
 
-
-$(".div-todo-new-priority span").click(function() {
+$( document ).on( "click" , ".div-todo-new-priority span", function() {
     event.stopPropagation();
     var div_priority = $(this).parent();
     var td_todo_new = $(this).parent().parent().parent();
@@ -1167,6 +1169,7 @@ $("input[name^='todonamenewsave']").on('click',
                 nameTd.append(dateInput);
                 newTr.append(nameTd);
 
+                // 3. creating todo name edit td with edit input / buttons
                 var editTd = $("<td></td>");
                 editTd.addClass("list-todo-edit");
                 editTd.attr("colspan", "2");
@@ -1195,10 +1198,10 @@ $("input[name^='todonamenewsave']").on('click',
                 divPriority.append(priorityHigh);
                 divPriority.append(priorityMedium);
                 divPriority.append(priorityLow);
-                paraEditButtons.append(divPriority);
 
                 editTd.append(divEdit);
                 editTd.append(paraEditButtons);
+                editTd.append(divPriority);
                 newTr.append(editTd);
 
                 // Find new row insert position
