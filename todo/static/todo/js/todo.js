@@ -886,7 +886,7 @@ $( document ).on( "click" ,"input[name^='todonamesave']",
         var todo_name_element = parent_tr.find(".list-todo-name");
         var todo_reminder_date = parent_tr.find(".reminder-date")
         var name = parent_tr.find(".todonameedit").val();
-        var reminder_date = parent_tr.find(".tododateedit").val();
+        var reminder_date = $.trim(parent_tr.find(".tododateedit").val());
         var frmated_reminder_date = ""
         parent_tr.find(".list-todo-edit").css('display', 'none');
         parent_tr.find(".status").css('display', '');
@@ -901,6 +901,7 @@ $( document ).on( "click" ,"input[name^='todonamesave']",
 
         todo_name_element.html(name);
         todo_reminder_date.html(frmated_reminder_date);
+        reminder_date = frmated_reminder_date;
         var todo_id = parent_tr.find(".todo-id").val();
         var todo_name = name;
         var todo_priority = parent_tr.find(".todo-priority").val();

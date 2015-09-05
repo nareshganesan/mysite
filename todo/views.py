@@ -153,16 +153,21 @@ def quickedit_todo(request):
             # todoreminderdate = datetime.combine(todoreminderdate, time.min)
             t = Todo(id=todoid, name=todoname, priority=todopriority,
                  user_id=todouser, reminder_date=todoreminderdate)
+            t.save()
+            response_data['result'] = 'Update Todo successful!'
+            response_data['todoid'] = t.pk
+            response_data['todoname'] = t.name
+            response_data['todopriority'] = t.priority
+            response_data['todoreminderdate'] = str(t.reminder_date.strftime('%m/%d/%y %H:%M'))
         else:
             t = Todo(id=todoid, name=todoname, priority=todopriority,
                  user_id=todouser)
-        t.save()
+            t.save()
+            response_data['result'] = 'Update Todo successful!'
+            response_data['todoid'] = t.pk
+            response_data['todoname'] = t.name
+            response_data['todopriority'] = t.priority
         print t
-        response_data['result'] = 'Update Todo successful!'
-        response_data['todoid'] = t.pk
-        response_data['todoname'] = t.name
-        response_data['todopriority'] = t.priority
-        response_data['todoreminderdate'] = str(t.reminder_date.strftime('%m/%d/%y %H:%M'))
 
         return HttpResponse(
             json.dumps(response_data),
