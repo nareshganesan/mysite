@@ -120,6 +120,7 @@ function quickedit_todo(todoId,todoName, todoPriority, todoreminder_date) {
         success : function(json) {
             $("#todoname"+todoId).val(json.todoname)
             $("#todopriority"+todoId).val(json.todopriority)
+            $("#todocompleted"+todoId).attr('title', json.todopriority)
             $("#priority_dropdown"+todoId+" option[value="+json.todopriority+"]").attr('selected','selected');
         },
 
