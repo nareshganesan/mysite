@@ -950,8 +950,10 @@ $("#a-todo-list-add").click(function() {
     });
 });
 
-$(".div-todo-priority span").click(function() {
+$( document ).on( "click" , ".div-todo-priority span", function() {
+//$(".div-todo-priority span").click(function() {
     event.stopPropagation();
+    console.log("asdfasdf");
     var div_priority = $(this).parent();
     var parent_tr = $(this).parent().parent().parent();
     var before_transform_val = 1.3;
